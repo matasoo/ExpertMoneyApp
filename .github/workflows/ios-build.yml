@@ -262,6 +262,13 @@ jobs:
 
           if [ "$PROJECT_TYPE" = "flutter" ]; then
             cd "$GITHUB_WORKSPACE"
+            
+            # --- START BYPASS APPLE SIGNING ---
+            echo "CODE_SIGNING_ALLOWED=NO" >> ios/Flutter/Debug.xcconfig
+            echo "CODE_SIGNING_ALLOWED=NO" >> ios/Flutter/Release.xcconfig
+            sed -i '' 's/ProvisioningStyle = Automatic;/ProvisioningStyle = Manual;/g' ios/Runner.xcodeproj/project.pbxproj
+            # --- END BYPASS ---
+
             if [ "$CONFIGURATION" = "Debug" ]; then
               echo "Building Flutter iOS Debug..."
               flutter build ios --debug --no-codesign
