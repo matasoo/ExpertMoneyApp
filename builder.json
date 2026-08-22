@@ -1,0 +1,15 @@
+{
+  "project": "ExpertMoney",
+  "platform": "ios",
+  "github": {
+    "owner": "matasoo",
+    "repo": "ExpertMoneyApp"
+  },
+  "ios": {},
+  "flutter": {
+    "version": "3.44.3",
+    "watch": {}
+  },
+  "reactNative": {},
+  "mobai": {}
+}
