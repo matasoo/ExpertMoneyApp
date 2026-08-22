@@ -264,10 +264,9 @@ jobs:
             cd "$GITHUB_WORKSPACE"
             
             # --- START BYPASS APPLE SIGNING ---
-            echo "CODE_SIGNING_ALLOWED=NO" >> ios/Flutter/Debug.xcconfig
-            echo "CODE_SIGNING_ALLOWED=NO" >> ios/Flutter/Release.xcconfig
+            export FLUTTER_XCODE_BUILD_ARGS="CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=- EXPANDED_CODE_SIGN_IDENTITY=-"
             sed -i '' 's/ProvisioningStyle = Automatic;/ProvisioningStyle = Manual;/g' ios/Runner.xcodeproj/project.pbxproj
-            sed -i '' 's/CODE_SIGN_IDENTITY = .*/CODE_SIGN_IDENTITY = "";/g' ios/Runner.xcodeproj/project.pbxproj
+            sed -i '' 's/DevelopmentTeam = .*/DevelopmentTeam = "";/g' ios/Runner.xcodeproj/project.pbxproj
             # --- END BYPASS ---
 
             if [ "$CONFIGURATION" = "Debug" ]; then
