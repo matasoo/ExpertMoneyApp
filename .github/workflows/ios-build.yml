@@ -239,7 +239,8 @@ jobs:
             if [ "$USE_SIGNING" = "true" ]; then
               flutter build ios --$FLUTTER_CONF
               cd "$IOS_PATH"
-              ARCHIVE_CMD="xcodebuild -workspace '${WORKSPACE:-Runner.xcworkspace}' -scheme '${SCHEME:-Runner}' -configuration '$CONFIGURATION' -destination 'generic/platform=iOS' -derivedDataPath '$DERIVED_DATA_PATH' COMPILER_INDEX_STORE_ENABLE=NO DEVELOPMENT_TEAM='$DEVELOPMENT_TEAM' CODE_SIGN_STYLE=Manual PROVISIONING_PROFILE_SPECIFIER='$PROVISIONING_PROFILE_NAME' -quiet -archivePath '$GITHUB_WORKSPACE/build/App.xcarchive' archive"
+              if [ -n "$WORKSPACE" ]; then TARGET_ARGS="-workspace '$WORKSPACE'"; else TARGET_ARGS="-project '${PROJECT:-Runner.xcodeproj}'"; fi
+              ARCHIVE_CMD="xcodebuild $TARGET_ARGS -scheme '${SCHEME:-Runner}' -configuration '$CONFIGURATION' -destination 'generic/platform=iOS' -derivedDataPath '$DERIVED_DATA_PATH' COMPILER_INDEX_STORE_ENABLE=NO DEVELOPMENT_TEAM='$DEVELOPMENT_TEAM' CODE_SIGN_STYLE=Manual PROVISIONING_PROFILE_SPECIFIER='$PROVISIONING_PROFILE_NAME' -quiet -archivePath '$GITHUB_WORKSPACE/build/App.xcarchive' archive"
               eval $ARCHIVE_CMD
             else
               echo "=== Forcing Flutter to setup project WITHOUT compiling ==="
@@ -250,7 +251,8 @@ jobs:
               sed -i '' 's/ProvisioningStyle = Automatic;/ProvisioningStyle = Manual;/g' Runner.xcodeproj/project.pbxproj 2>/dev/null || true
               
               echo "=== Native Xcode Build (Strictly Unsigned) ==="
-              BUILD_CMD="xcodebuild build -workspace '${WORKSPACE:-Runner.xcworkspace}' -scheme '${SCHEME:-Runner}' -configuration '$CONFIGURATION' -destination 'generic/platform=iOS' -derivedDataPath '$DERIVED_DATA_PATH' CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY='' EXPANDED_CODE_SIGN_IDENTITY='' COMPILER_INDEX_STORE_ENABLE=NO -quiet"
+              if [ -n "$WORKSPACE" ]; then TARGET_ARGS="-workspace '$WORKSPACE'"; else TARGET_ARGS="-project '${PROJECT:-Runner.xcodeproj}'"; fi
+              BUILD_CMD="xcodebuild build $TARGET_ARGS -scheme '${SCHEME:-Runner}' -configuration '$CONFIGURATION' -destination 'generic/platform=iOS' -derivedDataPath '$DERIVED_DATA_PATH' CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY='' EXPANDED_CODE_SIGN_IDENTITY='' COMPILER_INDEX_STORE_ENABLE=NO -quiet"
               eval $BUILD_CMD
             fi
 
