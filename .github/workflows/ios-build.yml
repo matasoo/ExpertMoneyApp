@@ -48,6 +48,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Create temporary .env file
+        run: touch .env
+
       - name: Checkout working-tree snapshot
         if: inputs.snapshot_ref != ''
         env:
