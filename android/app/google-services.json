@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "882159044456",
+    "project_id": "expertmoney-3f96c",
+    "storage_bucket": "expertmoney-3f96c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:882159044456:android:2ee267cb9a81e8fc8f38dd",
+        "android_client_info": {
+          "package_name": "com.example.expert_money_flutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCU3juBuh258dLXQBHYYcf--0enZZOOXU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,46 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Check if the user is signed in
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Check if the user is the owner of the document
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    match /users/{userId} {
+      // Row-Level Security: Only the owner can read/write their user profile
+      allow read, write: if isAuthenticated() && isOwner(userId);
+      
+      // Transactions
+      match /transactions/{transactionId} {
+        allow read, write: if isAuthenticated() && isOwner(userId);
+      }
+      
+      // Goals
+      match /goals/{goalId} {
+        allow read, write: if isAuthenticated() && isOwner(userId);
+      }
+      
+      // Recurring Payments
+      match /recurring_payments/{paymentId} {
+        allow read, write: if isAuthenticated() && isOwner(userId);
+      }
+      
+      // Credits/Debts
+      match /credits/{creditId} {
+        allow read, write: if isAuthenticated() && isOwner(userId);
+      }
+      
+      // Accounts/Wallets
+      match /accounts/{accountId} {
+        allow read, write: if isAuthenticated() && isOwner(userId);
+      }
+    }
+  }
+}
