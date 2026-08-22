@@ -24,6 +24,14 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>UISupportsDocumentBrowser</key>
+	<true/>
+	<key>NSFaceIDUsageDescription</key>
+	<string>This app requires Face ID to securely lock and protect your financial data.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>This app requires access to the camera to take pictures of your receipts and invoices.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app requires access to your photo library to upload receipts and profile pictures.</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIApplicationSceneManifest</key>
