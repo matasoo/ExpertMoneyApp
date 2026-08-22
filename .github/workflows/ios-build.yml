@@ -267,6 +267,7 @@ jobs:
             echo "CODE_SIGNING_ALLOWED=NO" >> ios/Flutter/Debug.xcconfig
             echo "CODE_SIGNING_ALLOWED=NO" >> ios/Flutter/Release.xcconfig
             sed -i '' 's/ProvisioningStyle = Automatic;/ProvisioningStyle = Manual;/g' ios/Runner.xcodeproj/project.pbxproj
+            sed -i '' 's/CODE_SIGN_IDENTITY = .*/CODE_SIGN_IDENTITY = "";/g' ios/Runner.xcodeproj/project.pbxproj
             # --- END BYPASS ---
 
             if [ "$CONFIGURATION" = "Debug" ]; then
