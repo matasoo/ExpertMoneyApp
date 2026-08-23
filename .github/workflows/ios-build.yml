@@ -29,10 +29,10 @@ on:
         type: boolean
         default: false
       configuration:
-        description: 'Build configuration (Debug is faster, Release for production)'
+        description: 'Build configuration (use Release for sideloading — Debug builds need a debugger attached and crash at launch on device)'
         required: false
         type: string
-        default: 'Debug'
+        default: 'Release'
       flutter_version:
         description: 'Flutter version to use (e.g., 3.24.0). Empty means latest stable.'
         required: false
@@ -260,7 +260,7 @@ jobs:
               
               echo "=== Native Xcode Build (Strictly Unsigned & Forced iOS 15.0) ==="
               if [ -d "Runner.xcworkspace" ]; then TARGET_ARGS="-workspace 'Runner.xcworkspace'"; else TARGET_ARGS="-project 'Runner.xcodeproj'"; fi
-              BUILD_CMD="xcodebuild build $TARGET_ARGS -scheme '${SCHEME:-Runner}' -configuration '$CONFIGURATION' -destination 'generic/platform=iOS' -derivedDataPath '$DERIVED_DATA_PATH' IPHONEOS_DEPLOYMENT_TARGET=15.0 CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY='' EXPANDED_CODE_SIGN_IDENTITY='' COMPILER_INDEX_STORE_ENABLE=NO -quiet"
+              BUILD_CMD="xcodebuild build $TARGET_ARGS -scheme '${SCHEME:-Runner}' -configuration '$CONFIGURATION' -destination 'generic/platform=iOS' -derivedDataPath '$DERIVED_DATA_PATH' IPHONEOS_DEPLOYMENT_TARGET=15.0 CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY='' EXPANDED_CODE_SIGN_IDENTITY='' COMPILER_INDEX_STORE_ENABLE=NO ENABLE_DEBUG_DYLIB=NO -quiet"
               eval $BUILD_CMD
             fi
 
@@ -342,6 +342,21 @@ jobs:
             rm -rf Payload
             echo "Created unsigned IPA: build/$BUILD_ID.ipa"
           fi
+
+      - name: Verify IPA is runnable on device
+        if: steps.detect.outputs.type == 'flutter'
+        env:
+          BUILD_ID: ${{ inputs.build_id }}
+        run: |
+          set -e
+          cd "$GITHUB_WORKSPACE"
+          rm -rf /tmp/ipa-verify && mkdir -p /tmp/ipa-verify
+          unzip -q "build/$BUILD_ID.ipa" -d /tmp/ipa-verify
+          if find /tmp/ipa-verify/Payload -name kernel_blob.bin | grep -q .; then
+            echo "::error::This is a JIT (Debug) Flutter build. It will show a white screen and crash on launch when installed on a device. Re-run with configuration=Release."
+            exit 1
+          fi
+          echo "AOT build confirmed — no kernel_blob.bin."
 
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
