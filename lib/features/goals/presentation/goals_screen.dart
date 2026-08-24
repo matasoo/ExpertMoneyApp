@@ -13,7 +13,7 @@ import '../providers/budgets_provider.dart';
 import 'widgets/add_budget_bottom_sheet.dart';
 import '../../../../core/providers/shared_prefs_provider.dart';
 import '../../../../core/widgets/tutorial_slider.dart';
-import '../../../wallet/providers/accounts_provider.dart';
+import '../../wallet/providers/accounts_provider.dart';
 
 class GoalsScreen extends ConsumerStatefulWidget {
   const GoalsScreen({super.key});
