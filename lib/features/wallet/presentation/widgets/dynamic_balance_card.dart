@@ -9,6 +9,7 @@ import '../../../security/providers/privacy_provider.dart';
 class DynamicBalanceCard extends ConsumerStatefulWidget {
   final int accountsCount;
   final double totalBalance;
+  final double netWorth;
   final double monthlyChange;
   final String currentMonthName;
   
@@ -16,6 +17,7 @@ class DynamicBalanceCard extends ConsumerStatefulWidget {
     super.key,
     required this.accountsCount,
     required this.totalBalance,
+    required this.netWorth,
     required this.monthlyChange,
     required this.currentMonthName,
   });
@@ -96,9 +98,20 @@ class _DynamicBalanceCardState extends ConsumerState<DynamicBalanceCard> with Si
                       final isPrivacyOn = ref.watch(privacyProvider);
                       final currency = ref.watch(currencyProvider);
                       final displayBalance = isPrivacyOn ? '****' : widget.totalBalance.toStringAsFixed(2);
-                      return Text(
-                        '${ref.watch(currencyProvider)} $displayBalance',
-                        style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 36, fontWeight: FontWeight.w800, letterSpacing: -1.0),
+                      final displayNetWorth = isPrivacyOn ? '****' : widget.netWorth.toStringAsFixed(2);
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '$currency $displayBalance',
+                            style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 36, fontWeight: FontWeight.w800, letterSpacing: -1.0),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            'Net Worth: $currency $displayNetWorth',
+                            style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8), fontSize: 14, fontWeight: FontWeight.w600),
+                          ),
+                        ],
                       );
                     }
                   ),

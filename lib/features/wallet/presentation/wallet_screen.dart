@@ -127,6 +127,7 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                 DynamicBalanceCard(
                   accountsCount: accounts.length,
                   totalBalance: totalBalance,
+                  netWorth: netWorth,
                   monthlyChange: monthlyChange,
                   currentMonthName: currentMonthName,
                 ),
@@ -135,25 +136,10 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                 // --- ACCOUNTS LIST HEADER ---
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Accounts',
-                          style: GoogleFonts.manrope(fontSize: 20, fontWeight: FontWeight.w800, color: Theme.of(context).colorScheme.onSurface, letterSpacing: -0.5),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          'Total: $currency${totalBalance.toStringAsFixed(0)}',
-                          style: GoogleFonts.manrope(fontSize: 14, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)),
-                        ),
-                        Text(
-                          'Net Worth: $currency${netWorth.toStringAsFixed(0)}',
-                          style: GoogleFonts.manrope(fontSize: 12, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)),
-                        ),
-                      ],
+                    Text(
+                      'Accounts',
+                      style: GoogleFonts.manrope(fontSize: 20, fontWeight: FontWeight.w800, color: Theme.of(context).colorScheme.onSurface, letterSpacing: -0.5),
                     ),
                     GestureDetector(
                       onTap: () {
@@ -161,12 +147,9 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                           _isManaging = !_isManaging;
                         });
                       },
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: 4),
-                        child: Text(
-                          _isManaging ? 'Done' : 'Manage >',
-                          style: GoogleFonts.manrope(color: Theme.of(context).primaryColor, fontSize: 14, fontWeight: FontWeight.w600),
-                        ),
+                      child: Text(
+                        _isManaging ? 'Done' : 'Manage >',
+                        style: GoogleFonts.manrope(color: Theme.of(context).primaryColor, fontSize: 14, fontWeight: FontWeight.w600),
                       ),
                     ),
                   ],
