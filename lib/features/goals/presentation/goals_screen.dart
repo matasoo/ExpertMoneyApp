@@ -103,10 +103,7 @@ class _GoalsScreenState extends ConsumerState<GoalsScreen> {
               if (amount > 0) {
                 if (goal.linkedAccountId != null) {
                   try {
-                    final accounts = ref.read(accountsProvider);
-                    final account = accounts.firstWhere((a) => a.id == goal.linkedAccountId);
-                    final updatedAccount = account.copyWith(balance: account.balance + amount);
-                    ref.read(accountsProvider.notifier).updateAccount(updatedAccount);
+                    ref.read(accountsProvider.notifier).updateAccountBalance(goal.linkedAccountId!, amount, isExpense: false);
                   } catch (e) {
                     print('Linked account not found');
                   }
