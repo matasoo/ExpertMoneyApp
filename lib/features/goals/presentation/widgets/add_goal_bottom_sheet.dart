@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:uuid/uuid.dart';
 import '../../domain/models/goal.dart';
 import '../../providers/goals_provider.dart';
+import '../../../wallet/providers/accounts_provider.dart';
 
 class AddGoalBottomSheet extends ConsumerStatefulWidget {
   final GoalModel? goalToEdit;
@@ -25,6 +26,7 @@ class _AddGoalBottomSheetState extends ConsumerState<AddGoalBottomSheet> {
 
   Color? _selectedColor;
   bool _isAutoDeduct = false;
+  String? _linkedAccountId;
 
   List<Color> get _colorOptions => [
     Theme.of(context).primaryColor,
@@ -46,6 +48,7 @@ class _AddGoalBottomSheetState extends ConsumerState<AddGoalBottomSheet> {
       _currentController.text = goal.currentAmount.toStringAsFixed(0);
       _selectedColor = Color(goal.colorValue ?? Theme.of(context).primaryColor.toARGB32());
       _isAutoDeduct = goal.isAutoDeduct;
+      _linkedAccountId = goal.linkedAccountId;
       if (goal.autoDeductDay != null) {
         _dayController.text = goal.autoDeductDay.toString();
       }
@@ -92,6 +95,7 @@ class _AddGoalBottomSheetState extends ConsumerState<AddGoalBottomSheet> {
       colorValue: _selectedColor!.toARGB32(),
       isAutoDeduct: _isAutoDeduct,
       autoDeductDay: _isAutoDeduct ? day : null,
+      linkedAccountId: _linkedAccountId,
     );
 
     if (widget.goalToEdit != null) {
@@ -156,11 +160,54 @@ class _AddGoalBottomSheetState extends ConsumerState<AddGoalBottomSheet> {
               _buildTextField('Vacation 2027', _titleController, TextInputType.text),
               SizedBox(height: 20),
               
-              // --- INITIAL SAVED AMOUNT ---
-              Text(widget.goalToEdit != null ? 'Current saved amount' : 'Initial saved amount', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 13, fontWeight: FontWeight.w600)),
+              // --- LINKED ACCOUNT ---
+              Text('Link to Account (Optional)', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 13, fontWeight: FontWeight.w600)),
               SizedBox(height: 8),
-              _buildTextField('e.g. 1000', _currentController, TextInputType.numberWithOptions(decimal: true), prefix: currency),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String?>(
+                    isExpanded: true,
+                    value: _linkedAccountId,
+                    dropdownColor: Theme.of(context).colorScheme.surface,
+                    style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.w600),
+                    hint: Text('Select an account', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
+                    items: [
+                      DropdownMenuItem<String?>(
+                        value: null,
+                        child: Text('None (Manual Tracking)', style: GoogleFonts.manrope()),
+                      ),
+                      ...ref.watch(accountsProvider).map((account) {
+                        return DropdownMenuItem<String?>(
+                          value: account.id,
+                          child: Text('${account.name} (${currency} ${account.balance.toStringAsFixed(0)})', style: GoogleFonts.manrope()),
+                        );
+                      }).toList(),
+                    ],
+                    onChanged: (value) {
+                      setState(() {
+                        _linkedAccountId = value;
+                        if (value != null) {
+                          _isAutoDeduct = false; // Disable auto-deduct if linked
+                        }
+                      });
+                    },
+                  ),
+                ),
+              ),
               SizedBox(height: 20),
+
+              // --- INITIAL SAVED AMOUNT ---
+              if (_linkedAccountId == null) ...[
+                Text(widget.goalToEdit != null ? 'Current saved amount' : 'Initial saved amount', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 13, fontWeight: FontWeight.w600)),
+                SizedBox(height: 8),
+                _buildTextField('e.g. 1000', _currentController, TextInputType.numberWithOptions(decimal: true), prefix: currency),
+                SizedBox(height: 20),
+              ],
               
               // --- TARGET AND DATE ---
               Row(
@@ -191,55 +238,59 @@ class _AddGoalBottomSheetState extends ConsumerState<AddGoalBottomSheet> {
               SizedBox(height: 24),
 
               // --- CONTRIBUTION OPTIONS ---
-              Text('Monthly Contribution', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 13, fontWeight: FontWeight.w600)),
-              SizedBox(height: 8),
-              _buildTextField('${ref.watch(currencyProvider)} 0', _monthlyController, TextInputType.numberWithOptions(decimal: true)),
-              SizedBox(height: 20),
-
-              Text('Contribution Type', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 13, fontWeight: FontWeight.w600)),
-              SizedBox(height: 12),
-              Row(
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () => setState(() => _isAutoDeduct = false),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 14),
-                        decoration: BoxDecoration(
-                          color: !_isAutoDeduct ? _selectedColor!.withValues(alpha: 0.15) : Theme.of(context).colorScheme.surface,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: !_isAutoDeduct ? _selectedColor! : Colors.transparent),
-                        ),
-                        alignment: Alignment.center,
-                        child: Text('Manual Add', style: GoogleFonts.manrope(color: !_isAutoDeduct ? _selectedColor! : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontWeight: FontWeight.w700)),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 12),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () => setState(() => _isAutoDeduct = true),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 14),
-                        decoration: BoxDecoration(
-                          color: _isAutoDeduct ? _selectedColor!.withValues(alpha: 0.15) : Theme.of(context).colorScheme.surface,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: _isAutoDeduct ? _selectedColor! : Colors.transparent),
-                        ),
-                        alignment: Alignment.center,
-                        child: Text('Auto Deduct', style: GoogleFonts.manrope(color: _isAutoDeduct ? _selectedColor! : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontWeight: FontWeight.w700)),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              if (_isAutoDeduct) ...[
-                SizedBox(height: 16),
-                Text('Day of the month', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 13, fontWeight: FontWeight.w600)),
+              if (_linkedAccountId == null) ...[
+                Text('Monthly Contribution', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 13, fontWeight: FontWeight.w600)),
                 SizedBox(height: 8),
-                _buildTextField('e.g., 15', _dayController, TextInputType.number, isRequired: true),
+                _buildTextField('${ref.watch(currencyProvider)} 0', _monthlyController, TextInputType.numberWithOptions(decimal: true)),
+                SizedBox(height: 20),
               ],
-              SizedBox(height: 24),
+
+              if (_linkedAccountId == null) ...[
+                Text('Contribution Type', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 13, fontWeight: FontWeight.w600)),
+                SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => setState(() => _isAutoDeduct = false),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(vertical: 14),
+                          decoration: BoxDecoration(
+                            color: !_isAutoDeduct ? _selectedColor!.withValues(alpha: 0.15) : Theme.of(context).colorScheme.surface,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: !_isAutoDeduct ? _selectedColor! : Colors.transparent),
+                          ),
+                          alignment: Alignment.center,
+                          child: Text('Manual Add', style: GoogleFonts.manrope(color: !_isAutoDeduct ? _selectedColor! : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontWeight: FontWeight.w700)),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => setState(() => _isAutoDeduct = true),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(vertical: 14),
+                          decoration: BoxDecoration(
+                            color: _isAutoDeduct ? _selectedColor!.withValues(alpha: 0.15) : Theme.of(context).colorScheme.surface,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: _isAutoDeduct ? _selectedColor! : Colors.transparent),
+                          ),
+                          alignment: Alignment.center,
+                          child: Text('Auto Deduct', style: GoogleFonts.manrope(color: _isAutoDeduct ? _selectedColor! : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontWeight: FontWeight.w700)),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                if (_isAutoDeduct) ...[
+                  SizedBox(height: 16),
+                  Text('Day of the month', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 13, fontWeight: FontWeight.w600)),
+                  SizedBox(height: 8),
+                  _buildTextField('e.g., 15', _dayController, TextInputType.number, isRequired: true),
+                ],
+                SizedBox(height: 24),
+              ],
 
               // --- COLOR PICKER ---
               Text('Color', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 13, fontWeight: FontWeight.w600)),

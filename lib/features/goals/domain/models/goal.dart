@@ -10,6 +10,7 @@ class GoalModel {
   final int? colorValue;
   final bool isAutoDeduct;
   final int? autoDeductDay;
+  final String? linkedAccountId;
 
   GoalModel({
     required this.id,
@@ -21,6 +22,7 @@ class GoalModel {
     this.colorValue,
     this.isAutoDeduct = false,
     this.autoDeductDay,
+    this.linkedAccountId,
   });
 
   Map<String, dynamic> toMap() {
@@ -34,6 +36,7 @@ class GoalModel {
       'colorValue': colorValue,
       'isAutoDeduct': isAutoDeduct,
       'autoDeductDay': autoDeductDay,
+      'linkedAccountId': linkedAccountId,
     };
   }
 
@@ -48,6 +51,7 @@ class GoalModel {
       colorValue: map['colorValue'],
       isAutoDeduct: map['isAutoDeduct'] ?? false,
       autoDeductDay: map['autoDeductDay'],
+      linkedAccountId: map['linkedAccountId'],
     );
   }
 
@@ -65,6 +69,7 @@ class GoalModel {
     int? colorValue,
     bool? isAutoDeduct,
     int? autoDeductDay,
+    String? linkedAccountId,
   }) {
     return GoalModel(
       id: id ?? this.id,
@@ -76,6 +81,7 @@ class GoalModel {
       colorValue: colorValue ?? this.colorValue,
       isAutoDeduct: isAutoDeduct ?? this.isAutoDeduct,
       autoDeductDay: autoDeductDay ?? this.autoDeductDay,
+      linkedAccountId: linkedAccountId ?? this.linkedAccountId,
     );
   }
 }

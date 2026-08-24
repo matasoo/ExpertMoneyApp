@@ -13,6 +13,7 @@ import '../providers/budgets_provider.dart';
 import 'widgets/add_budget_bottom_sheet.dart';
 import '../../../../core/providers/shared_prefs_provider.dart';
 import '../../../../core/widgets/tutorial_slider.dart';
+import '../../../wallet/providers/accounts_provider.dart';
 
 class GoalsScreen extends ConsumerStatefulWidget {
   const GoalsScreen({super.key});
@@ -100,8 +101,19 @@ class _GoalsScreenState extends ConsumerState<GoalsScreen> {
             onPressed: () {
               final amount = double.tryParse(controller.text) ?? 0;
               if (amount > 0) {
-                final updatedGoal = goal.copyWith(currentAmount: goal.currentAmount + amount);
-                ref.read(goalsProvider.notifier).updateGoal(updatedGoal);
+                if (goal.linkedAccountId != null) {
+                  try {
+                    final accounts = ref.read(accountsProvider);
+                    final account = accounts.firstWhere((a) => a.id == goal.linkedAccountId);
+                    final updatedAccount = account.copyWith(balance: account.balance + amount);
+                    ref.read(accountsProvider.notifier).updateAccount(updatedAccount);
+                  } catch (e) {
+                    print('Linked account not found');
+                  }
+                } else {
+                  final updatedGoal = goal.copyWith(currentAmount: goal.currentAmount + amount);
+                  ref.read(goalsProvider.notifier).updateGoal(updatedGoal);
+                }
               }
               Navigator.pop(context);
             },
@@ -113,7 +125,21 @@ class _GoalsScreenState extends ConsumerState<GoalsScreen> {
   }
 
   Widget _buildGoalItem(GoalModel goal, String currency) {
-    double percentage = goal.targetAmount > 0 ? goal.currentAmount / goal.targetAmount : 0;
+    double currentAmount = goal.currentAmount;
+    String linkedAccountName = '';
+    
+    if (goal.linkedAccountId != null) {
+      final accounts = ref.watch(accountsProvider);
+      try {
+        final account = accounts.firstWhere((a) => a.id == goal.linkedAccountId);
+        currentAmount = account.balance;
+        linkedAccountName = account.name;
+      } catch (e) {
+        // Account deleted or not found
+      }
+    }
+
+    double percentage = goal.targetAmount > 0 ? currentAmount / goal.targetAmount : 0;
     if (percentage > 1.0) percentage = 1.0;
     final color = goal.colorValue != null ? Color(goal.colorValue!) : Theme.of(context).primaryColor;
 
@@ -166,7 +192,14 @@ class _GoalsScreenState extends ConsumerState<GoalsScreen> {
                     children: [
                       Icon(Icons.flag_outlined, color: color, size: 20),
                       SizedBox(width: 12),
-                      Text(goal.title, style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w500)),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(goal.title, style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w500)),
+                          if (linkedAccountName.isNotEmpty)
+                            Text('Linked: $linkedAccountName', style: GoogleFonts.inter(color: Theme.of(context).primaryColor, fontSize: 11, fontWeight: FontWeight.w500)),
+                        ],
+                      ),
                     ],
                   ),
                   Row(
@@ -195,7 +228,7 @@ class _GoalsScreenState extends ConsumerState<GoalsScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('${ref.watch(currencyProvider)}${goal.currentAmount.toStringAsFixed(0)} / ${ref.watch(currencyProvider)}${goal.targetAmount.toStringAsFixed(0)}', style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 13, fontWeight: FontWeight.w400)),
+                  Text('${ref.watch(currencyProvider)}${currentAmount.toStringAsFixed(0)} / ${ref.watch(currencyProvider)}${goal.targetAmount.toStringAsFixed(0)}', style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 13, fontWeight: FontWeight.w400)),
                   Text('+${ref.watch(currencyProvider)}${goal.monthlyContribution.toStringAsFixed(0)}/mo', style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 13, fontWeight: FontWeight.w400)),
                 ],
               ),
@@ -314,7 +347,18 @@ class _GoalsScreenState extends ConsumerState<GoalsScreen> {
     final currency = ref.watch(currencyProvider);
     final goals = ref.watch(goalsProvider);
     final budgets = ref.watch(budgetsProvider);
-    final totalSaved = goals.fold(0.0, (sum, goal) => sum + goal.currentAmount);
+    final accounts = ref.watch(accountsProvider);
+    final totalSaved = goals.fold(0.0, (sum, goal) {
+      if (goal.linkedAccountId != null) {
+        try {
+          final account = accounts.firstWhere((a) => a.id == goal.linkedAccountId);
+          return sum + account.balance;
+        } catch (_) {
+          return sum + goal.currentAmount;
+        }
+      }
+      return sum + goal.currentAmount;
+    });
 
     return SafeArea(
       bottom: false,
