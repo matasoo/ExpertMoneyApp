@@ -66,6 +66,52 @@ class _GoalsScreenState extends ConsumerState<GoalsScreen> {
     );
   }
 
+  Future<void> _showAddFundsDialog(GoalModel goal) async {
+    final currency = ref.read(currencyProvider);
+    final controller = TextEditingController();
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+        title: Text('Add Funds', style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.w600, fontSize: 18)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Enter amount to add to ${goal.title}:', style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8), fontSize: 14)),
+            SizedBox(height: 16),
+            TextField(
+              controller: controller,
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onSurface, fontSize: 16),
+              decoration: InputDecoration(
+                prefixText: currency,
+                prefixStyle: GoogleFonts.inter(color: Theme.of(context).colorScheme.onSurface, fontSize: 16),
+                enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2))),
+                focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Theme.of(context).primaryColor)),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: Text('Cancel', style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)))),
+          TextButton(
+            onPressed: () {
+              final amount = double.tryParse(controller.text) ?? 0;
+              if (amount > 0) {
+                final updatedGoal = goal.copyWith(currentAmount: goal.currentAmount + amount);
+                ref.read(goalsProvider.notifier).updateGoal(updatedGoal);
+              }
+              Navigator.pop(context);
+            },
+            child: Text('Add', style: GoogleFonts.inter(color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600)),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildGoalItem(GoalModel goal, String currency) {
     double percentage = goal.targetAmount > 0 ? goal.currentAmount / goal.targetAmount : 0;
     if (percentage > 1.0) percentage = 1.0;
@@ -123,9 +169,25 @@ class _GoalsScreenState extends ConsumerState<GoalsScreen> {
                       Text(goal.title, style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w500)),
                     ],
                   ),
-                  Text(
-                    '${(percentage * 100).toInt()}%',
-                    style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w500),
+                  Row(
+                    children: [
+                      Text(
+                        '${(percentage * 100).toInt()}%',
+                        style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w500),
+                      ),
+                      SizedBox(width: 8),
+                      GestureDetector(
+                        onTap: () => _showAddFundsDialog(goal),
+                        child: Container(
+                          padding: EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2)),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(Icons.add, size: 14, color: Theme.of(context).colorScheme.onSurface),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

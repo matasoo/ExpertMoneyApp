@@ -616,6 +616,66 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
   );
 }
 
+  Future<void> _showMakePaymentDialog(CreditModel credit) async {
+    final currency = ref.read(currencyProvider);
+    final controller = TextEditingController();
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text('Make Payment', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.w800)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Enter payment amount for ${credit.name}:', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface)),
+            SizedBox(height: 16),
+            TextField(
+              controller: controller,
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w600),
+              decoration: InputDecoration(
+                prefixText: currency,
+                prefixStyle: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w600),
+                filled: true,
+                fillColor: Theme.of(context).colorScheme.surface,
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1))),
+                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1))),
+                focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide(color: Theme.of(context).primaryColor)),
+                contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: Text('Cancel', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)))),
+          TextButton(
+            onPressed: () {
+              final amount = double.tryParse(controller.text) ?? 0;
+              if (amount > 0) {
+                final newPaid = (credit.paidAmount + amount).clamp(0.0, credit.totalAmount);
+                final newCredit = CreditModel(
+                  id: credit.id,
+                  name: credit.name,
+                  totalAmount: credit.totalAmount,
+                  paidAmount: newPaid,
+                  monthlyContribution: credit.monthlyContribution,
+                  icon: credit.icon,
+                  nextPaymentDate: credit.nextPaymentDate,
+                  accountId: credit.accountId,
+                );
+                ref.read(creditsProvider.notifier).updateCredit(newCredit);
+              }
+              Navigator.pop(context);
+            },
+            child: Text('Pay', style: GoogleFonts.manrope(color: Theme.of(context).primaryColor, fontWeight: FontWeight.w700)),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildCreditCard(BuildContext context, WidgetRef ref, CreditModel credit) {
     return Dismissible(
       key: Key(credit.id),
@@ -741,9 +801,25 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      '${ref.watch(currencyProvider)}${credit.paidAmount.toStringAsFixed(0)} paid',
-                      style: GoogleFonts.manrope(color: Theme.of(context).primaryColor, fontSize: 12, fontWeight: FontWeight.w600),
+                    Row(
+                      children: [
+                        Text(
+                          '${ref.watch(currencyProvider)}${credit.paidAmount.toStringAsFixed(0)} paid',
+                          style: GoogleFonts.manrope(color: Theme.of(context).primaryColor, fontSize: 12, fontWeight: FontWeight.w600),
+                        ),
+                        SizedBox(width: 8),
+                        GestureDetector(
+                          onTap: () => _showMakePaymentDialog(credit),
+                          child: Container(
+                            padding: EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(Icons.add, size: 12, color: Theme.of(context).primaryColor),
+                          ),
+                        ),
+                      ],
                     ),
                     Text(
                       '${ref.watch(currencyProvider)}${credit.totalAmount.toStringAsFixed(0)} total',

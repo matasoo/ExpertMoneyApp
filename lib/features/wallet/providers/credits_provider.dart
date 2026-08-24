@@ -41,4 +41,8 @@ class CreditsNotifier extends Notifier<List<CreditModel>> {
   void removeCredit(String id) {
     firestoreService.deleteDocument('credits', id);
   }
+
+  void updateCredit(CreditModel credit) {
+    firestoreService.updateDocument('credits', credit.id, credit.toMap());
+  }
 }

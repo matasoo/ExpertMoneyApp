@@ -20,6 +20,7 @@ class _AddGoalBottomSheetState extends ConsumerState<AddGoalBottomSheet> {
   final _dateController = TextEditingController(); // "Jul 2027"
   final _monthlyController = TextEditingController(); // inside the green card
   final _dayController = TextEditingController();
+  final _currentController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   Color? _selectedColor;
@@ -42,6 +43,7 @@ class _AddGoalBottomSheetState extends ConsumerState<AddGoalBottomSheet> {
       _targetController.text = goal.targetAmount.toStringAsFixed(0);
       _dateController.text = goal.targetDate ?? '';
       _monthlyController.text = goal.monthlyContribution.toStringAsFixed(0);
+      _currentController.text = goal.currentAmount.toStringAsFixed(0);
       _selectedColor = Color(goal.colorValue ?? Theme.of(context).primaryColor.toARGB32());
       _isAutoDeduct = goal.isAutoDeduct;
       if (goal.autoDeductDay != null) {
@@ -63,6 +65,7 @@ class _AddGoalBottomSheetState extends ConsumerState<AddGoalBottomSheet> {
     _dateController.dispose();
     _monthlyController.dispose();
     _dayController.dispose();
+    _currentController.dispose();
     super.dispose();
   }
 
@@ -71,6 +74,7 @@ class _AddGoalBottomSheetState extends ConsumerState<AddGoalBottomSheet> {
 
     final target = double.tryParse(_targetController.text.replaceAll(ref.watch(currencyProvider), '').replaceAll(',', '')) ?? 0;
     final monthly = double.tryParse(_monthlyController.text.replaceAll(ref.watch(currencyProvider), '').replaceAll(',', '')) ?? 0;
+    final current = double.tryParse(_currentController.text.replaceAll(ref.watch(currencyProvider), '').replaceAll(',', '')) ?? (widget.goalToEdit?.currentAmount ?? 0);
     final day = int.tryParse(_dayController.text);
 
     if (_isAutoDeduct && day == null) {
@@ -82,7 +86,7 @@ class _AddGoalBottomSheetState extends ConsumerState<AddGoalBottomSheet> {
       id: widget.goalToEdit?.id ?? Uuid().v4(),
       title: _titleController.text.trim(),
       targetAmount: target,
-      currentAmount: widget.goalToEdit?.currentAmount ?? 0, // Starts at 0 if new
+      currentAmount: current,
       monthlyContribution: monthly,
       targetDate: _dateController.text.trim(),
       colorValue: _selectedColor!.toARGB32(),
@@ -150,6 +154,12 @@ class _AddGoalBottomSheetState extends ConsumerState<AddGoalBottomSheet> {
               Text('Goal name', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 13, fontWeight: FontWeight.w600)),
               SizedBox(height: 8),
               _buildTextField('Vacation 2027', _titleController, TextInputType.text),
+              SizedBox(height: 20),
+              
+              // --- INITIAL SAVED AMOUNT ---
+              Text(widget.goalToEdit != null ? 'Current saved amount' : 'Initial saved amount', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 13, fontWeight: FontWeight.w600)),
+              SizedBox(height: 8),
+              _buildTextField('e.g. 1000', _currentController, TextInputType.numberWithOptions(decimal: true), prefix: currency),
               SizedBox(height: 20),
               
               // --- TARGET AND DATE ---
@@ -272,13 +282,14 @@ class _AddGoalBottomSheetState extends ConsumerState<AddGoalBottomSheet> {
     );
   }
 
-  Widget _buildTextField(String hint, TextEditingController controller, TextInputType type, {bool isRequired = true}) {
+  Widget _buildTextField(String hint, TextEditingController controller, TextInputType type, {bool isRequired = true, String? prefix}) {
     return TextFormField(
       controller: controller,
       keyboardType: type,
       style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.w600),
       decoration: InputDecoration(
         hintText: hint,
+        prefixText: prefix != null ? '$prefix ' : null,
         hintStyle: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)),
         filled: true,
         fillColor: Theme.of(context).colorScheme.surface, // Match screenshot textfield bg
