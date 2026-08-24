@@ -388,10 +388,10 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
           }
         },
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          padding: EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface, // Dark tile background
-            borderRadius: BorderRadius.circular(20),
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(24),
             border: Border.all(color: _isManaging ? Theme.of(context).primaryColor.withValues(alpha: 0.3) : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
           ),
           child: Row(
@@ -534,10 +534,10 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
           }
         },
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          padding: EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface, // Dark tile background
-            borderRadius: BorderRadius.circular(20),
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(24),
             border: Border.all(color: _isManaging ? Theme.of(context).primaryColor.withValues(alpha: 0.3) : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
           ),
           child: Row(
@@ -716,10 +716,10 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
           }
         },
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          padding: EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface, // Dark tile background
-            borderRadius: BorderRadius.circular(20),
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(24),
             border: Border.all(color: _isManaging ? Theme.of(context).primaryColor.withValues(alpha: 0.3) : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
           ),
           child: Column(
@@ -797,7 +797,7 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                 ],
               ),
               if (!_isManaging && credit.totalAmount > 0) ...[
-                SizedBox(height: 16),
+                SizedBox(height: 24),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -827,14 +827,14 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 8),
+                SizedBox(height: 12),
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(4),
+                  borderRadius: BorderRadius.circular(2),
                   child: LinearProgressIndicator(
                     value: credit.progress,
-                    backgroundColor: Theme.of(context).colorScheme.surface,
+                    backgroundColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05),
                     color: Theme.of(context).primaryColor,
-                    minHeight: 6,
+                    minHeight: 4,
                   ),
                 ),
               ],
