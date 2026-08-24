@@ -66,254 +66,115 @@ class _GoalsScreenState extends ConsumerState<GoalsScreen> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final currency = ref.watch(currencyProvider);
-    final goals = ref.watch(goalsProvider);
-    final budgets = ref.watch(budgetsProvider);
-    final totalSaved = goals.fold(0.0, (sum, goal) => sum + goal.currentAmount);
-
-    return SafeArea(
-      bottom: false,
-      child: ScrollConfiguration(
-        behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-        child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // --- HEADER ---
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const ExpertMoneyLogo(),
-                    SizedBox(),
-                  ],
-                ),
-                SizedBox(height: 32),
-                
-                Text(
-                  'Savings Goals',
-                  style: GoogleFonts.manrope(fontSize: 28, fontWeight: FontWeight.w800, color: Theme.of(context).colorScheme.onSurface, letterSpacing: -1.0),
-                ),
-                SizedBox(height: 4),
-                Text(
-                  '${ref.watch(currencyProvider)}${totalSaved.toStringAsFixed(0)} saved across ${goals.length} goals',
-                  style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 14, fontWeight: FontWeight.w500),
-                ),
-                SizedBox(height: 32),
-
-                // --- GOALS LIST ---
-                if (goals.isEmpty)
-                  Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(40.0),
-                      child: Text('No goals yet. Set one up!', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 16)),
-                    ),
-                  )
-                else
-                  ListView.builder(
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: goals.length,
-                    itemBuilder: (context, index) {
-                      return _buildGoalCard(context, ref, goals[index])
-                          .animate()
-                          .fade(duration: 400.ms, delay: (50 * index).ms)
-                          .slideY(begin: 0.2, end: 0, curve: Curves.easeOutQuad, duration: 400.ms);
-                    },
-                  ),
-
-                // --- ADD NEW GOAL BUTTON ---
-                GestureDetector(
-                  onTap: () {
-                    showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      backgroundColor: Colors.transparent,
-                      builder: (context) => AddGoalBottomSheet(),
-                    );
-                  },
-                  child: Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.symmetric(vertical: 20),
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Theme.of(context).colorScheme.surface, width: 2), // Solid thin border as fallback for dashed
-                    ),
-                    alignment: Alignment.center,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.add, color: Theme.of(context).primaryColor, size: 20),
-                        SizedBox(width: 8),
-                        Text('New savings goal', style: GoogleFonts.manrope(color: Theme.of(context).primaryColor, fontSize: 16, fontWeight: FontWeight.w700)),
-                      ],
-                    ),
-                  ),
-                ),
-
-                SizedBox(height: 48),
-
-                // --- BUDGETS HEADER ---
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Budgets',
-                      style: GoogleFonts.manrope(fontSize: 28, fontWeight: FontWeight.w800, color: Theme.of(context).colorScheme.onSurface, letterSpacing: -1.0),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          builder: (context) => AddBudgetBottomSheet(),
-                        );
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        decoration: BoxDecoration(color: Theme.of(context).primaryColor.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
-                        child: Text('+ Add', style: GoogleFonts.manrope(color: Theme.of(context).primaryColor, fontWeight: FontWeight.w700)),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 24),
-
-                // --- BUDGETS LIST ---
-                if (budgets.isEmpty)
-                  Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(40.0),
-                      child: Text('No budgets yet.', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 16)),
-                    ),
-                  )
-                else
-                  ListView.builder(
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: budgets.length,
-                    itemBuilder: (context, index) {
-                      return _buildBudgetCard(context, ref, budgets[index])
-                          .animate()
-                          .fade(duration: 400.ms, delay: (50 * index).ms)
-                          .slideX(begin: -0.2, end: 0, curve: Curves.easeOutQuad, duration: 400.ms);
-                    },
-                  ),
-
-                SizedBox(height: 120), // Padding for floating nav bar
-              ],
-            ),
-          ),
+  Widget _buildHeroCard(double totalSaved, String currency) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(32),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(32),
+        gradient: LinearGradient(
+          colors: [Theme.of(context).primaryColor, Theme.of(context).primaryColor.withValues(alpha: 0.7)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
+            blurRadius: 20,
+            offset: Offset(0, 10),
+          )
+        ],
       ),
-    );
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.savings_rounded, color: Colors.white.withValues(alpha: 0.8), size: 24),
+              SizedBox(width: 8),
+              Text(
+                'Total Saved',
+                style: GoogleFonts.manrope(color: Colors.white.withValues(alpha: 0.9), fontSize: 16, fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
+          SizedBox(height: 16),
+          Text(
+            '$currency${totalSaved.toStringAsFixed(0)}',
+            style: GoogleFonts.manrope(color: Colors.white, fontSize: 42, fontWeight: FontWeight.w800, letterSpacing: -1.5),
+          ),
+        ],
+      ),
+    ).animate().fadeIn(duration: 600.ms).slideY(begin: -0.1, end: 0, curve: Curves.easeOut);
   }
 
-  Widget _buildGoalCard(BuildContext context, WidgetRef ref, GoalModel goal) {
+  Widget _buildGoalCard(GoalModel goal, String currency) {
     double percentage = goal.targetAmount > 0 ? goal.currentAmount / goal.targetAmount : 0;
     if (percentage > 1.0) percentage = 1.0;
     final color = goal.colorValue != null ? Color(goal.colorValue!) : Theme.of(context).primaryColor;
 
-    return Dismissible(
-      key: Key(goal.id),
-      direction: DismissDirection.horizontal,
-      background: Container(
-        margin: EdgeInsets.only(bottom: 20),
-        decoration: BoxDecoration(color: Color(0xFF3b82f6).withValues(alpha: 0.8), borderRadius: BorderRadius.circular(24)),
-        alignment: Alignment.centerLeft,
-        padding: EdgeInsets.only(left: 24),
-        child: Icon(Icons.edit_outlined, color: Theme.of(context).colorScheme.onSurface, size: 28),
-      ),
-      secondaryBackground: Container(
-        margin: EdgeInsets.only(bottom: 20),
-        decoration: BoxDecoration(color: Theme.of(context).colorScheme.error.withValues(alpha: 0.8), borderRadius: BorderRadius.circular(24)),
-        alignment: Alignment.centerRight,
-        padding: EdgeInsets.only(right: 24),
-        child: Icon(Icons.delete_outline, color: Theme.of(context).colorScheme.onSurface, size: 28),
-      ),
-      confirmDismiss: (direction) async {
-        if (direction == DismissDirection.startToEnd) {
-          // Edit action
-          showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            backgroundColor: Colors.transparent,
-            builder: (context) => AddGoalBottomSheet(goalToEdit: goal),
-          );
-          return false; // Prevent dismissing
-        }
-        
-        // Delete action
-        return await showDialog(
+    return GestureDetector(
+      onTap: () {
+        showModalBottomSheet(
           context: context,
-          builder: (context) => AlertDialog(
-            backgroundColor: Theme.of(context).colorScheme.surface,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            title: Text('Delete Goal?', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.w800)),
-            content: Text('Are you sure you want to delete this savings goal?', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface)),
-            actions: [
-              TextButton(onPressed: () => Navigator.pop(context, false), child: Text('Cancel', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)))),
-              TextButton(onPressed: () => Navigator.pop(context, true), child: Text('Delete', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.error, fontWeight: FontWeight.w700))),
-            ],
-          ),
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          builder: (context) => AddGoalBottomSheet(goalToEdit: goal),
         );
       },
-      onDismissed: (direction) {
-        ref.read(goalsProvider.notifier).removeGoal(goal.id);
-      },
       child: Container(
-        margin: EdgeInsets.only(bottom: 20),
+        width: 240,
+        margin: EdgeInsets.only(right: 16),
         padding: EdgeInsets.all(24),
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(28),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.03),
+              blurRadius: 10,
+              offset: Offset(0, 4),
+            )
+          ],
         ),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // Circular Progress Indicator
-            SizedBox(
-              width: 70,
-              height: 70,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  CircularProgressIndicator(
-                    value: percentage,
-                    strokeWidth: 8,
-                    backgroundColor: Theme.of(context).colorScheme.surface,
-                    valueColor: AlwaysStoppedAnimation<Color>(color),
-                    strokeCap: StrokeCap.round,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: color.withValues(alpha: 0.1),
+                    shape: BoxShape.circle,
                   ),
-                  Center(
-                    child: Text(
-                      '${(percentage * 100).toInt()}%',
-                      style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w800),
-                    ),
-                  ),
-                ],
-              ),
+                  child: Icon(Icons.flag_rounded, color: color, size: 24),
+                ),
+                Text(
+                  '${(percentage * 100).toInt()}%',
+                  style: GoogleFonts.manrope(color: color, fontSize: 18, fontWeight: FontWeight.w800),
+                ),
+              ],
             ),
-            SizedBox(width: 24),
-            // Goal Info
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(goal.title, style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w800)),
-                  SizedBox(height: 6),
-                  Text('${ref.watch(currencyProvider)}${goal.currentAmount.toStringAsFixed(0)} of \$${goal.targetAmount.toStringAsFixed(0)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 13, fontWeight: FontWeight.w600)),
-                  SizedBox(height: 6),
-                  Text('+${ref.watch(currencyProvider)}${goal.monthlyContribution.toStringAsFixed(0)} / month', style: GoogleFonts.manrope(color: color, fontSize: 13, fontWeight: FontWeight.w700)),
-                ],
-              ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(goal.title, style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w800), maxLines: 1, overflow: TextOverflow.ellipsis),
+                SizedBox(height: 4),
+                Text('$currency${goal.currentAmount.toStringAsFixed(0)} / $currency${goal.targetAmount.toStringAsFixed(0)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 14, fontWeight: FontWeight.w600)),
+                SizedBox(height: 16),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: LinearProgressIndicator(
+                    value: percentage,
+                    backgroundColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05),
+                    valueColor: AlwaysStoppedAnimation<Color>(color),
+                    minHeight: 8,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -321,7 +182,7 @@ class _GoalsScreenState extends ConsumerState<GoalsScreen> {
     );
   }
 
-  Widget _buildBudgetCard(BuildContext context, WidgetRef ref, BudgetModel budget) {
+  Widget _buildBudgetCard(BudgetModel budget, String currency) {
     double percentage = budget.limitAmount > 0 ? budget.currentSpent / budget.limitAmount : 0;
     if (percentage > 1.0) percentage = 1.0;
     final isOverBudget = budget.currentSpent > budget.limitAmount;
@@ -329,34 +190,15 @@ class _GoalsScreenState extends ConsumerState<GoalsScreen> {
 
     return Dismissible(
       key: Key(budget.id),
-      direction: DismissDirection.horizontal,
+      direction: DismissDirection.endToStart,
       background: Container(
         margin: EdgeInsets.only(bottom: 16),
-        decoration: BoxDecoration(color: Color(0xFF3b82f6).withValues(alpha: 0.8), borderRadius: BorderRadius.circular(20)),
-        alignment: Alignment.centerLeft,
-        padding: EdgeInsets.only(left: 24),
-        child: Icon(Icons.edit_outlined, color: Theme.of(context).colorScheme.onSurface, size: 28),
-      ),
-      secondaryBackground: Container(
-        margin: EdgeInsets.only(bottom: 16),
-        decoration: BoxDecoration(color: Theme.of(context).colorScheme.error.withValues(alpha: 0.8), borderRadius: BorderRadius.circular(20)),
+        decoration: BoxDecoration(color: Theme.of(context).colorScheme.error, borderRadius: BorderRadius.circular(24)),
         alignment: Alignment.centerRight,
         padding: EdgeInsets.only(right: 24),
-        child: Icon(Icons.delete_outline, color: Theme.of(context).colorScheme.onSurface, size: 28),
+        child: Icon(Icons.delete_outline, color: Colors.white, size: 28),
       ),
       confirmDismiss: (direction) async {
-        if (direction == DismissDirection.startToEnd) {
-          // Edit action
-          showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            backgroundColor: Colors.transparent,
-            builder: (context) => AddBudgetBottomSheet(budgetToEdit: budget),
-          );
-          return false; // Prevent dismissing
-        }
-        
-        // Delete action
         return await showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -374,61 +216,248 @@ class _GoalsScreenState extends ConsumerState<GoalsScreen> {
       onDismissed: (direction) {
         ref.read(budgetsProvider.notifier).removeBudget(budget.id);
       },
-      child: Container(
-        margin: EdgeInsets.only(bottom: 16),
-        padding: EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: GestureDetector(
+        onTap: () {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent,
+            builder: (context) => AddBudgetBottomSheet(budgetToEdit: budget),
+          );
+        },
+        child: Container(
+          margin: EdgeInsets.only(bottom: 16),
+          padding: EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.02),
+                blurRadius: 8,
+                offset: Offset(0, 4),
+              )
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                  padding: EdgeInsets.all(12),
-                  decoration: BoxDecoration(color: Theme.of(context).primaryColor.withValues(alpha: 0.1), shape: BoxShape.circle),
-                  child: Icon(IconUtils.getIconData(budget.icon), size: 24, color: Theme.of(context).primaryColor),
-                ),
-                  SizedBox(width: 12),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
                     children: [
-                      Text(budget.category, style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w700)),
-                      Text('${budget.resetPeriod} limit', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 12, fontWeight: FontWeight.w500)),
+                      Container(
+                        padding: EdgeInsets.all(14),
+                        decoration: BoxDecoration(color: Theme.of(context).primaryColor.withValues(alpha: 0.1), shape: BoxShape.circle),
+                        child: Icon(IconUtils.getIconData(budget.icon), size: 24, color: Theme.of(context).primaryColor),
+                      ),
+                      SizedBox(width: 16),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(budget.category, style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w800)),
+                          Text('${budget.resetPeriod} limit', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 13, fontWeight: FontWeight.w600)),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text('$currency${budget.currentSpent.toStringAsFixed(0)}', style: GoogleFonts.manrope(color: isOverBudget ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.onSurface, fontSize: 20, fontWeight: FontWeight.w800)),
+                      Text('of $currency${budget.limitAmount.toStringAsFixed(0)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 13, fontWeight: FontWeight.w600)),
                     ],
                   ),
                 ],
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text('${ref.watch(currencyProvider)}${budget.currentSpent.toStringAsFixed(0)}', style: GoogleFonts.manrope(color: isOverBudget ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w800)),
-                  Text('of \$${budget.limitAmount.toStringAsFixed(0)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 13, fontWeight: FontWeight.w600)),
-                ],
+              SizedBox(height: 20),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: LinearProgressIndicator(
+                  value: percentage,
+                  backgroundColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05),
+                  valueColor: AlwaysStoppedAnimation<Color>(barColor),
+                  minHeight: 10,
+                ),
               ),
             ],
           ),
-          SizedBox(height: 16),
-          // Progress Bar
-          Container(
-            height: 8,
-            width: double.infinity,
-            decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface, borderRadius: BorderRadius.circular(4)),
-            child: FractionallySizedBox(
-              alignment: Alignment.centerLeft,
-              widthFactor: percentage,
-              child: Container(
-                decoration: BoxDecoration(color: barColor, borderRadius: BorderRadius.circular(4)),
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
-    ));
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final currency = ref.watch(currencyProvider);
+    final goals = ref.watch(goalsProvider);
+    final budgets = ref.watch(budgetsProvider);
+    final totalSaved = goals.fold(0.0, (sum, goal) => sum + goal.currentAmount);
+
+    return SafeArea(
+      bottom: false,
+      child: ScrollConfiguration(
+        behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // --- HEADER ---
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const ExpertMoneyLogo(),
+                  ],
+                ),
+              ),
+              
+              // --- HERO CARD ---
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.0),
+                child: _buildHeroCard(totalSaved, currency),
+              ),
+              SizedBox(height: 40),
+              
+              // --- SAVINGS GOALS (Horizontal Gallery) ---
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Goals',
+                      style: GoogleFonts.manrope(fontSize: 24, fontWeight: FontWeight.w800, color: Theme.of(context).colorScheme.onSurface, letterSpacing: -0.5),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.add_circle, color: Theme.of(context).primaryColor, size: 28),
+                      onPressed: () {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          builder: (context) => AddGoalBottomSheet(),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 16),
+              
+              if (goals.isEmpty)
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24.0),
+                  child: Center(
+                    child: Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.all(32),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.surface,
+                        borderRadius: BorderRadius.circular(28),
+                        border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1), width: 1),
+                      ),
+                      child: Column(
+                        children: [
+                          Icon(Icons.savings_outlined, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3), size: 48),
+                          SizedBox(height: 16),
+                          Text('No goals yet', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 16, fontWeight: FontWeight.w600)),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              else
+                SizedBox(
+                  height: 220,
+                  child: ListView.builder(
+                    padding: EdgeInsets.symmetric(horizontal: 24),
+                    scrollDirection: Axis.horizontal,
+                    physics: BouncingScrollPhysics(),
+                    itemCount: goals.length,
+                    itemBuilder: (context, index) {
+                      return _buildGoalCard(goals[index], currency)
+                          .animate()
+                          .fade(duration: 400.ms, delay: (50 * index).ms)
+                          .slideX(begin: 0.2, end: 0, curve: Curves.easeOutQuad, duration: 400.ms);
+                    },
+                  ),
+                ),
+                
+              SizedBox(height: 40),
+
+              // --- BUDGETS LIST ---
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Budgets',
+                          style: GoogleFonts.manrope(fontSize: 24, fontWeight: FontWeight.w800, color: Theme.of(context).colorScheme.onSurface, letterSpacing: -0.5),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.add_circle, color: Theme.of(context).primaryColor, size: 28),
+                          onPressed: () {
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              backgroundColor: Colors.transparent,
+                              builder: (context) => AddBudgetBottomSheet(),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16),
+                    
+                    if (budgets.isEmpty)
+                      Center(
+                        child: Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.all(32),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.surface,
+                            borderRadius: BorderRadius.circular(28),
+                            border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1), width: 1),
+                          ),
+                          child: Column(
+                            children: [
+                              Icon(Icons.pie_chart_outline, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3), size: 48),
+                              SizedBox(height: 16),
+                              Text('No budgets yet', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 16, fontWeight: FontWeight.w600)),
+                            ],
+                          ),
+                        ),
+                      )
+                    else
+                      ListView.builder(
+                        padding: EdgeInsets.zero,
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: budgets.length,
+                        itemBuilder: (context, index) {
+                          return _buildBudgetCard(budgets[index], currency)
+                              .animate()
+                              .fade(duration: 400.ms, delay: (50 * index).ms)
+                              .slideY(begin: 0.1, end: 0, curve: Curves.easeOutQuad, duration: 400.ms);
+                        },
+                      ),
+                  ],
+                ),
+              ),
+              
+              SizedBox(height: 120), // Padding for floating nav bar
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

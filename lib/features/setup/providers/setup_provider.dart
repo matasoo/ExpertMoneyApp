@@ -24,7 +24,7 @@ class SetupState {
     this.isVariableIncome = false,
     this.savingsRate = 0.2,
     this.fixedCosts = const [],
-    this.mainGoal = 'Emergency fund',
+    this.mainGoal = 'None',
   });
 
   SetupState copyWith({
@@ -59,7 +59,7 @@ class SetupState {
       isVariableIncome: map['isVariableIncome'] ?? false,
       savingsRate: map['savingsRate']?.toDouble() ?? 0.2,
       fixedCosts: (map['fixedCosts'] as List<dynamic>?)?.map((e) => FixedCost.fromMap(e)).toList() ?? [],
-      mainGoal: map['mainGoal'] ?? 'Emergency fund',
+      mainGoal: map['mainGoal'] ?? 'None',
     );
   }
 
