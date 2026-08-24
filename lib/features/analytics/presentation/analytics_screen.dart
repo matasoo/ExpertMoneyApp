@@ -20,6 +20,8 @@ import '../../../../core/utils/icon_utils.dart';
 import '../../wallet/providers/recurring_payments_provider.dart';
 
 import '../../../../core/providers/premium_provider.dart';
+import '../../../../core/providers/shared_prefs_provider.dart';
+import '../../../../core/widgets/tutorial_slider.dart';
 
 class AnalyticsScreen extends ConsumerStatefulWidget {
   const AnalyticsScreen({super.key});
@@ -32,6 +34,50 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   int _mainTabIndex = 0; // 0 = Overview, 1 = Subscriptions, 2 = Credits
   int _selectedPeriodIndex = 1; // 0 = Week, 1 = Month, 2 = Year
   DateTime _selectedDate = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final hasSeen = ref.read(hasSeenAnalyticsTutorialProvider);
+      if (!hasSeen) {
+        _showTutorial();
+      }
+    });
+  }
+
+  void _showTutorial() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => TutorialSlider(
+        slides: [
+          TutorialSlide(
+            title: 'Expense Breakdown',
+            description: 'See exactly where your money goes with clear categories and visual charts.',
+            icon: Icons.pie_chart_outline,
+          ),
+          TutorialSlide(
+            title: 'Cashflow Analysis',
+            description: 'Track your income vs expenses over time to ensure you stay positive.',
+            icon: Icons.auto_graph,
+            color: Colors.green,
+          ),
+          TutorialSlide(
+            title: 'Trend Tracking',
+            description: 'Compare current spending with past periods to identify habits and improve.',
+            icon: Icons.timeline,
+            color: Colors.purple,
+          ),
+        ],
+        onDismiss: () {
+          ref.read(hasSeenAnalyticsTutorialProvider.notifier).set(true);
+          Navigator.pop(context);
+        },
+      ),
+    );
+  }
 
   List<TransactionModel> _getFilteredTransactions(List<TransactionModel> allTransactions) {
     return allTransactions.where((t) {

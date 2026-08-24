@@ -14,6 +14,7 @@ class HasSeenOnboardingNotifier extends Notifier<bool> {
 
   void set(bool value) {
     state = value;
+    ref.read(sharedPreferencesProvider).setBool('hasSeenOnboarding', value);
   }
 }
 
@@ -36,3 +37,55 @@ class IsUserLoggedInNotifier extends Notifier<bool> {
 final isUserLoggedInProvider = NotifierProvider<IsUserLoggedInNotifier, bool>(() {
   return IsUserLoggedInNotifier();
 });
+
+class HasSeenAnalyticsTutorialNotifier extends Notifier<bool> {
+  @override
+  bool build() {
+    final prefs = ref.watch(sharedPreferencesProvider);
+    return prefs.getBool('hasSeenAnalyticsTutorial') ?? false;
+  }
+
+  void set(bool value) {
+    state = value;
+    ref.read(sharedPreferencesProvider).setBool('hasSeenAnalyticsTutorial', value);
+  }
+}
+
+final hasSeenAnalyticsTutorialProvider = NotifierProvider<HasSeenAnalyticsTutorialNotifier, bool>(() {
+  return HasSeenAnalyticsTutorialNotifier();
+});
+
+class HasSeenWalletTutorialNotifier extends Notifier<bool> {
+  @override
+  bool build() {
+    final prefs = ref.watch(sharedPreferencesProvider);
+    return prefs.getBool('hasSeenWalletTutorial') ?? false;
+  }
+
+  void set(bool value) {
+    state = value;
+    ref.read(sharedPreferencesProvider).setBool('hasSeenWalletTutorial', value);
+  }
+}
+
+final hasSeenWalletTutorialProvider = NotifierProvider<HasSeenWalletTutorialNotifier, bool>(() {
+  return HasSeenWalletTutorialNotifier();
+});
+
+class HasSeenGoalsTutorialNotifier extends Notifier<bool> {
+  @override
+  bool build() {
+    final prefs = ref.watch(sharedPreferencesProvider);
+    return prefs.getBool('hasSeenGoalsTutorial') ?? false;
+  }
+
+  void set(bool value) {
+    state = value;
+    ref.read(sharedPreferencesProvider).setBool('hasSeenGoalsTutorial', value);
+  }
+}
+
+final hasSeenGoalsTutorialProvider = NotifierProvider<HasSeenGoalsTutorialNotifier, bool>(() {
+  return HasSeenGoalsTutorialNotifier();
+});
+

@@ -17,6 +17,8 @@ import 'widgets/add_recurring_payment_bottom_sheet.dart';
 import 'widgets/add_credit_bottom_sheet.dart';
 import 'widgets/dynamic_balance_card.dart';
 import 'package:intl/intl.dart';
+import '../../../../core/providers/shared_prefs_provider.dart';
+import '../../../../core/widgets/tutorial_slider.dart';
 
 class WalletScreen extends ConsumerStatefulWidget {
   const WalletScreen({super.key});
@@ -27,6 +29,50 @@ class WalletScreen extends ConsumerStatefulWidget {
 
 class _WalletScreenState extends ConsumerState<WalletScreen> {
   bool _isManaging = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final hasSeen = ref.read(hasSeenWalletTutorialProvider);
+      if (!hasSeen) {
+        _showTutorial();
+      }
+    });
+  }
+
+  void _showTutorial() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => TutorialSlider(
+        slides: [
+          TutorialSlide(
+            title: 'Bank Accounts',
+            description: 'Manage all your accounts in one place. Add cash, cards, and savings.',
+            icon: Icons.account_balance,
+          ),
+          TutorialSlide(
+            title: 'Subscriptions & Bills',
+            description: 'Never miss a payment again. Keep track of all your recurring expenses.',
+            icon: Icons.live_tv,
+            color: Colors.orange,
+          ),
+          TutorialSlide(
+            title: 'Active Credits & Loans',
+            description: 'Monitor your active credits, track payments, and see remaining balances.',
+            icon: Icons.credit_card,
+            color: Colors.purple,
+          ),
+        ],
+        onDismiss: () {
+          ref.read(hasSeenWalletTutorialProvider.notifier).set(true);
+          Navigator.pop(context);
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

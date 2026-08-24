@@ -11,12 +11,63 @@ import '../domain/models/budget.dart';
 import '../../../../core/utils/icon_utils.dart';
 import '../providers/budgets_provider.dart';
 import 'widgets/add_budget_bottom_sheet.dart';
+import '../../../../core/providers/shared_prefs_provider.dart';
+import '../../../../core/widgets/tutorial_slider.dart';
 
-class GoalsScreen extends ConsumerWidget {
+class GoalsScreen extends ConsumerStatefulWidget {
   const GoalsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<GoalsScreen> createState() => _GoalsScreenState();
+}
+
+class _GoalsScreenState extends ConsumerState<GoalsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final hasSeen = ref.read(hasSeenGoalsTutorialProvider);
+      if (!hasSeen) {
+        _showTutorial();
+      }
+    });
+  }
+
+  void _showTutorial() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => TutorialSlider(
+        slides: [
+          TutorialSlide(
+            title: 'Smart Budgets',
+            description: 'Set spending limits by category and track how much you have left.',
+            icon: Icons.track_changes,
+          ),
+          TutorialSlide(
+            title: 'Savings Goals',
+            description: 'Save for your dreams. Create goals and add contributions.',
+            icon: Icons.savings,
+            color: Colors.green,
+          ),
+          TutorialSlide(
+            title: 'Automated Tracking',
+            description: 'Set goals on autopilot with automatic monthly deductions.',
+            icon: Icons.autorenew,
+            color: Colors.blue,
+          ),
+        ],
+        onDismiss: () {
+          ref.read(hasSeenGoalsTutorialProvider.notifier).set(true);
+          Navigator.pop(context);
+        },
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final currency = ref.watch(currencyProvider);
     final goals = ref.watch(goalsProvider);
     final budgets = ref.watch(budgetsProvider);
