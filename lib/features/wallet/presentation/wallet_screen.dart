@@ -82,6 +82,8 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
     final credits = ref.watch(creditsProvider);
     final transactions = ref.watch(transactionsProvider);
     final totalBalance = accounts.fold(0.0, (sum, acc) => sum + acc.balance);
+    final totalDebt = credits.fold(0.0, (sum, credit) => sum + (credit.totalAmount - credit.paidAmount));
+    final netWorth = totalBalance - totalDebt;
 
     final now = DateTime.now();
     final monthlyChange = transactions
@@ -133,10 +135,25 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                 // --- ACCOUNTS LIST HEADER ---
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text(
-                      'Accounts',
-                      style: GoogleFonts.manrope(fontSize: 20, fontWeight: FontWeight.w800, color: Theme.of(context).colorScheme.onSurface, letterSpacing: -0.5),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Accounts',
+                          style: GoogleFonts.manrope(fontSize: 20, fontWeight: FontWeight.w800, color: Theme.of(context).colorScheme.onSurface, letterSpacing: -0.5),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          'Total: $currency${totalBalance.toStringAsFixed(0)}',
+                          style: GoogleFonts.manrope(fontSize: 14, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)),
+                        ),
+                        Text(
+                          'Net Worth: $currency${netWorth.toStringAsFixed(0)}',
+                          style: GoogleFonts.manrope(fontSize: 12, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)),
+                        ),
+                      ],
                     ),
                     GestureDetector(
                       onTap: () {
@@ -144,9 +161,12 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                           _isManaging = !_isManaging;
                         });
                       },
-                      child: Text(
-                        _isManaging ? 'Done' : 'Manage >',
-                        style: GoogleFonts.manrope(color: Theme.of(context).primaryColor, fontSize: 14, fontWeight: FontWeight.w600),
+                      child: Padding(
+                        padding: EdgeInsets.only(bottom: 4),
+                        child: Text(
+                          _isManaging ? 'Done' : 'Manage >',
+                          style: GoogleFonts.manrope(color: Theme.of(context).primaryColor, fontSize: 14, fontWeight: FontWeight.w600),
+                        ),
                       ),
                     ),
                   ],
