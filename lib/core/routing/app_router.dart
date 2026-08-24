@@ -82,30 +82,33 @@ final routerProvider = Provider<GoRouter>((ref) {
       final isGoingToSetup = state.uri.toString() == '/setup';
       final isGoingToAppLock = state.uri.toString() == '/app-lock';
 
-      // 1. Check Onboarding
-      if (!hasSeenOnboarding && !isGoingToOnboarding) {
-        return '/onboarding';
-      }
-
-      // 2. Check Auth
-      if (hasSeenOnboarding && !isUserLoggedIn && !isGoingToLogin && !isGoingToRegister) {
-        return '/login';
-      }
-
-      // 3. Check Setup Wizard
-      if (isUserLoggedIn && !hasCompletedSetup && !isGoingToSetup) {
-        return '/setup';
-      }
-
-      // 4. Check App Lock
-      if (isUserLoggedIn && hasCompletedSetup && isAppLocked && !isGoingToAppLock) {
-        return '/app-lock';
-      }
-
-      // 5. Redirect logged in users away from auth/onboarding/setup/app-lock (if unlocked)
+      // 1. If user is logged in and HAS completed setup
       if (isUserLoggedIn && hasCompletedSetup) {
         if (isGoingToLogin || isGoingToRegister || isGoingToOnboarding || isGoingToSetup || (!isAppLocked && isGoingToAppLock)) {
           return '/'; // Go to Dashboard
+        }
+        if (isAppLocked && !isGoingToAppLock) {
+          return '/app-lock';
+        }
+        return null; // Proceed
+      }
+
+      // 2. If user is logged in but HAS NOT completed setup
+      if (isUserLoggedIn && !hasCompletedSetup) {
+        if (!isGoingToSetup) {
+          return '/setup';
+        }
+        return null; // Let them stay on /setup
+      }
+
+      // 3. If user is NOT logged in
+      if (!isUserLoggedIn) {
+        if (!hasSeenOnboarding) {
+          if (!isGoingToOnboarding) return '/onboarding';
+          return null;
+        } else {
+          if (!isGoingToLogin && !isGoingToRegister) return '/login';
+          return null;
         }
       }
 
