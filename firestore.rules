@@ -27,6 +27,11 @@ service cloud.firestore {
         allow read, write: if isAuthenticated() && isOwner(userId);
       }
       
+      // Budgets
+      match /budgets/{budgetId} {
+        allow read, write: if isAuthenticated() && isOwner(userId);
+      }
+      
       // Recurring Payments
       match /recurring_payments/{paymentId} {
         allow read, write: if isAuthenticated() && isOwner(userId);
