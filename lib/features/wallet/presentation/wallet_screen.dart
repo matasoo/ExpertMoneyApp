@@ -10,6 +10,7 @@ import '../providers/recurring_payments_provider.dart';
 import '../domain/models/recurring_payment.dart';
 import '../providers/credits_provider.dart';
 import '../domain/models/credit_model.dart';
+import '../../../../core/utils/icon_utils.dart';
 import '../../dashboard/providers/transactions_provider.dart';
 import 'widgets/add_account_bottom_sheet.dart';
 import 'widgets/add_recurring_payment_bottom_sheet.dart';
@@ -358,7 +359,7 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                 borderRadius: BorderRadius.circular(14),
               ),
               alignment: Alignment.center,
-              child: Text(account.icon ?? '🏦', style: TextStyle(fontSize: 20)),
+              child: Icon(IconUtils.getIconData(account.icon ?? ''), color: Theme.of(context).primaryColor, size: 24),
             ),
             SizedBox(width: 16),
             
@@ -504,7 +505,7 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                 borderRadius: BorderRadius.circular(14),
               ),
               alignment: Alignment.center,
-              child: Text(payment.icon, style: TextStyle(fontSize: 20)),
+              child: Icon(IconUtils.getIconData(payment.icon), color: Theme.of(context).primaryColor, size: 24),
             ),
             SizedBox(width: 16),
             
@@ -629,7 +630,7 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                       borderRadius: BorderRadius.circular(14),
                     ),
                     alignment: Alignment.center,
-                    child: Text(credit.icon, style: TextStyle(fontSize: 20)),
+                    child: Icon(IconUtils.getIconData(credit.icon), color: Theme.of(context).primaryColor, size: 24),
                   ),
                   SizedBox(width: 16),
                   

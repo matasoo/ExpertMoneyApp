@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:uuid/uuid.dart';
 import '../../domain/models/budget.dart';
 import '../../providers/budgets_provider.dart';
+import '../../../../core/utils/icon_utils.dart';
 
 class AddBudgetBottomSheet extends ConsumerStatefulWidget {
   final BudgetModel? budgetToEdit;
@@ -19,16 +20,16 @@ class _AddBudgetBottomSheetState extends ConsumerState<AddBudgetBottomSheet> {
   final _customCategoryController = TextEditingController();
 
   String _selectedCategory = 'Food';
-  String _selectedIcon = '🍔';
+  String _selectedIcon = Icons.restaurant.codePoint.toString();
   String _selectedReset = 'Monthly';
 
-  final List<Map<String, String>> _categories = [
-    {'name': 'Food', 'icon': '🍔'},
-    {'name': 'Fuel', 'icon': '⛽'},
-    {'name': 'Fun', 'icon': '🎉'},
-    {'name': 'Transport', 'icon': '🚌'},
-    {'name': 'Home', 'icon': '🏠'},
-    {'name': 'Custom', 'icon': '✏️'},
+  final List<Map<String, dynamic>> _categories = [
+    {'name': 'Food', 'icon': Icons.restaurant},
+    {'name': 'Fuel', 'icon': Icons.local_gas_station},
+    {'name': 'Fun', 'icon': Icons.celebration},
+    {'name': 'Transport', 'icon': Icons.directions_bus},
+    {'name': 'Home', 'icon': Icons.home},
+    {'name': 'Custom', 'icon': Icons.edit},
   ];
 
   @override
@@ -141,7 +142,7 @@ class _AddBudgetBottomSheetState extends ConsumerState<AddBudgetBottomSheet> {
                   onTap: () {
                     setState(() {
                       _selectedCategory = cat['name']!;
-                      _selectedIcon = cat['icon']!;
+                      _selectedIcon = (cat['icon'] as IconData).codePoint.toString();
                     });
                   },
                   child: Container(
@@ -154,7 +155,7 @@ class _AddBudgetBottomSheetState extends ConsumerState<AddBudgetBottomSheet> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(cat['icon']!, style: TextStyle(fontSize: 16)),
+                        Icon(cat['icon'] as IconData, size: 18, color: isSelected ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.onSurface),
                         SizedBox(width: 8),
                         Text(
                           cat['name']!,

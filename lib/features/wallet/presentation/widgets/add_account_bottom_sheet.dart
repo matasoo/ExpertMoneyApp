@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:uuid/uuid.dart';
 import '../../providers/accounts_provider.dart';
 import '../../domain/models/account.dart';
+import '../../../../core/utils/icon_utils.dart';
 
 class AddAccountBottomSheet extends ConsumerStatefulWidget {
   final AccountModel? accountToEdit;
@@ -20,7 +21,7 @@ class _AddAccountBottomSheetState extends ConsumerState<AddAccountBottomSheet> {
   final TextEditingController _balanceController = TextEditingController();
   
   Color _selectedColor = const Color(0xFF3b82f6);
-  String _selectedIcon = '🏦';
+  String _selectedIcon = Icons.account_balance.codePoint.toString();
 
   final List<Color> _colors = [
     const Color(0xFF3b82f6), // Blue
@@ -31,7 +32,14 @@ class _AddAccountBottomSheetState extends ConsumerState<AddAccountBottomSheet> {
     const Color(0xFF14B8A6), // Teal
   ];
 
-  final List<String> _icons = ['🏦', '💳', '💵', '💰', '📱', '🏛️'];
+  final List<IconData> _icons = [
+    Icons.account_balance,
+    Icons.credit_card,
+    Icons.attach_money,
+    Icons.savings,
+    Icons.phone_iphone,
+    Icons.account_balance_wallet,
+  ];
 
   @override
   void initState() {
@@ -42,7 +50,7 @@ class _AddAccountBottomSheetState extends ConsumerState<AddAccountBottomSheet> {
       _selectedColor = widget.accountToEdit!.colorValue != null 
           ? Color(widget.accountToEdit!.colorValue!) 
           : _colors[0];
-      _selectedIcon = widget.accountToEdit!.icon ?? _icons[0];
+      _selectedIcon = widget.accountToEdit!.icon ?? _icons[0].codePoint.toString();
     }
   }
 
@@ -156,18 +164,22 @@ class _AddAccountBottomSheetState extends ConsumerState<AddAccountBottomSheet> {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: _icons.map((icon) {
-                  final isSelected = _selectedIcon == icon;
+                  final iconStr = icon.codePoint.toString();
+                  final isSelected = _selectedIcon == iconStr;
                   return GestureDetector(
-                    onTap: () => setState(() => _selectedIcon = icon),
+                    onTap: () {
+                      setState(() {
+                        _selectedIcon = iconStr;
+                      });
+                    },
                     child: Container(
                       margin: const EdgeInsets.only(right: 12),
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: isSelected ? Theme.of(context).colorScheme.surface : Theme.of(context).colorScheme.surface,
+                        color: isSelected ? Theme.of(context).primaryColor.withValues(alpha: 0.1) : Colors.transparent,
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: isSelected ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5) : Colors.transparent),
                       ),
-                      child: Text(icon, style: const TextStyle(fontSize: 24)),
+                      child: Icon(icon, color: isSelected ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.onSurface, size: 28),
                     ),
                   );
                 }).toList(),

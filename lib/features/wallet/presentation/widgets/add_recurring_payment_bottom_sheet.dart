@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import '../../domain/models/recurring_payment.dart';
 import '../../providers/recurring_payments_provider.dart';
+import '../../../../core/utils/icon_utils.dart';
 
 class AddRecurringPaymentBottomSheet extends ConsumerStatefulWidget {
   final RecurringPaymentModel? paymentToEdit;
@@ -20,12 +21,21 @@ class _AddRecurringPaymentBottomSheetState extends ConsumerState<AddRecurringPay
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
   
-  String _selectedIcon = '📺';
+  String _selectedIcon = Icons.live_tv.codePoint.toString();
   PaymentInterval _selectedInterval = PaymentInterval.monthly;
   DateTime _nextPaymentDate = DateTime.now();
   DateTime _startDate = DateTime.now();
 
-  final List<String> _icons = ['📺', '🎵', '🏋️', '🏠', '📱', '🚗', '🎮', '💡'];
+  final List<IconData> _icons = [
+    Icons.live_tv,
+    Icons.music_note,
+    Icons.fitness_center,
+    Icons.home,
+    Icons.phone_iphone,
+    Icons.directions_car,
+    Icons.sports_esports,
+    Icons.lightbulb,
+  ];
 
   @override
   void initState() {
@@ -34,6 +44,9 @@ class _AddRecurringPaymentBottomSheetState extends ConsumerState<AddRecurringPay
       _nameController.text = widget.paymentToEdit!.name;
       _amountController.text = widget.paymentToEdit!.amount.toString();
       _selectedIcon = widget.paymentToEdit!.icon;
+      if (int.tryParse(_selectedIcon) == null) {
+        _selectedIcon = _icons[0].codePoint.toString(); // Fallback for legacy
+      }
       _selectedInterval = widget.paymentToEdit!.interval;
       _nextPaymentDate = widget.paymentToEdit!.nextPaymentDate;
       _startDate = widget.paymentToEdit!.startDate;
@@ -285,18 +298,18 @@ class _AddRecurringPaymentBottomSheetState extends ConsumerState<AddRecurringPay
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: _icons.map((icon) {
-                  final isSelected = _selectedIcon == icon;
+                  final iconStr = icon.codePoint.toString();
+                  final isSelected = _selectedIcon == iconStr;
                   return GestureDetector(
-                    onTap: () => setState(() => _selectedIcon = icon),
+                    onTap: () => setState(() => _selectedIcon = iconStr),
                     child: Container(
                       margin: EdgeInsets.only(right: 12),
                       padding: EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: isSelected ? Theme.of(context).colorScheme.surface : Theme.of(context).colorScheme.surface,
+                        color: isSelected ? Theme.of(context).primaryColor.withValues(alpha: 0.1) : Colors.transparent,
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: isSelected ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5) : Colors.transparent),
                       ),
-                      child: Text(icon, style: TextStyle(fontSize: 24)),
+                      child: Icon(icon, color: isSelected ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.onSurface, size: 28),
                     ),
                   );
                 }).toList(),

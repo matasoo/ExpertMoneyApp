@@ -5,7 +5,9 @@
     "owner": "matasoo",
     "repo": "ExpertMoneyApp"
   },
-  "ios": {},
+  "ios": {
+    "configuration": "Release"
+  },
   "flutter": {
     "version": "3.44.3",
     "watch": {}

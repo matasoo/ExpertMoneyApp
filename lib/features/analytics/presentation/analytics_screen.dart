@@ -14,8 +14,10 @@ import '../../dashboard/domain/models/transaction.dart';
 import '../../dashboard/providers/transactions_provider.dart';
 import '../../goals/providers/budgets_provider.dart';
 import '../../goals/domain/models/budget.dart';
-import '../../wallet/providers/recurring_payments_provider.dart';
+import '../../wallet/providers/accounts_provider.dart';
 import '../../wallet/providers/credits_provider.dart';
+import '../../../../core/utils/icon_utils.dart';
+import '../../wallet/providers/recurring_payments_provider.dart';
 
 import '../../../../core/providers/premium_provider.dart';
 
@@ -603,7 +605,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                 children: [
                   Row(
                     children: [
-                      Text(budget.icon, style: TextStyle(fontSize: 16)),
+                      Center(
+                        child: Icon(IconUtils.getIconData(budget.icon), color: Theme.of(context).primaryColor, size: 20),
+                      ),
                       SizedBox(width: 8),
                       Text(budget.category, style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 14, fontWeight: FontWeight.w700)),
                       SizedBox(width: 4),
@@ -797,9 +801,10 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   Container(
                     width: 48,
                     height: 48,
-                    decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface, borderRadius: BorderRadius.circular(12)),
-                    alignment: Alignment.center,
-                    child: Text(sub.icon, style: TextStyle(fontSize: 20)),
+                    decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface, borderRadius: BorderRadius.circular(16)),
+                    child: Center(
+                      child: Icon(IconUtils.getIconData(sub.icon), color: Theme.of(context).primaryColor, size: 24),
+                    ),
                   ),
                   SizedBox(width: 16),
                   Expanded(

@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import '../../domain/models/credit_model.dart';
 import '../../providers/credits_provider.dart';
+import '../../../../core/utils/icon_utils.dart';
 
 class AddCreditBottomSheet extends ConsumerStatefulWidget {
   final CreditModel? creditToEdit;
@@ -22,10 +23,19 @@ class _AddCreditBottomSheetState extends ConsumerState<AddCreditBottomSheet> {
   final TextEditingController _paidAmountController = TextEditingController();
   final TextEditingController _monthlyContributionController = TextEditingController();
   
-  String _selectedIcon = '🏦';
+  String _selectedIcon = Icons.account_balance.codePoint.toString();
   DateTime _nextPaymentDate = DateTime.now();
 
-  final List<String> _icons = ['🏦', '🚗', '🏠', '💳', '🎓', '📱', '✈️', '💼'];
+  final List<IconData> _icons = [
+    Icons.account_balance,
+    Icons.directions_car,
+    Icons.home,
+    Icons.credit_card,
+    Icons.school,
+    Icons.phone_iphone,
+    Icons.flight,
+    Icons.work,
+  ];
 
   @override
   void initState() {
@@ -36,6 +46,9 @@ class _AddCreditBottomSheetState extends ConsumerState<AddCreditBottomSheet> {
       _paidAmountController.text = widget.creditToEdit!.paidAmount.toString();
       _monthlyContributionController.text = widget.creditToEdit!.monthlyContribution.toString();
       _selectedIcon = widget.creditToEdit!.icon;
+      if (int.tryParse(_selectedIcon) == null) {
+        _selectedIcon = _icons[0].codePoint.toString(); // Fallback for legacy
+      }
       _nextPaymentDate = widget.creditToEdit!.nextPaymentDate;
     }
   }
@@ -244,18 +257,18 @@ class _AddCreditBottomSheetState extends ConsumerState<AddCreditBottomSheet> {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: _icons.map((icon) {
-                  final isSelected = _selectedIcon == icon;
+                  final iconStr = icon.codePoint.toString();
+                  final isSelected = _selectedIcon == iconStr;
                   return GestureDetector(
-                    onTap: () => setState(() => _selectedIcon = icon),
+                    onTap: () => setState(() => _selectedIcon = iconStr),
                     child: Container(
                       margin: EdgeInsets.only(right: 12),
                       padding: EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: isSelected ? Theme.of(context).colorScheme.surface : Theme.of(context).colorScheme.surface,
+                        color: isSelected ? Theme.of(context).primaryColor.withValues(alpha: 0.1) : Colors.transparent,
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: isSelected ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5) : Colors.transparent),
                       ),
-                      child: Text(icon, style: TextStyle(fontSize: 24)),
+                      child: Icon(icon, color: isSelected ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.onSurface, size: 28),
                     ),
                   );
                 }).toList(),

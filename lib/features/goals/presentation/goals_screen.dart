@@ -7,8 +7,9 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../providers/goals_provider.dart';
 import '../domain/models/goal.dart';
 import 'widgets/add_goal_bottom_sheet.dart';
-import '../providers/budgets_provider.dart';
 import '../domain/models/budget.dart';
+import '../../../../core/utils/icon_utils.dart';
+import '../providers/budgets_provider.dart';
 import 'widgets/add_budget_bottom_sheet.dart';
 
 class GoalsScreen extends ConsumerWidget {
@@ -338,10 +339,10 @@ class GoalsScreen extends ConsumerWidget {
               Row(
                 children: [
                   Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface, borderRadius: BorderRadius.circular(12)),
-                    child: Text(budget.icon, style: TextStyle(fontSize: 20)),
-                  ),
+                  padding: EdgeInsets.all(12),
+                  decoration: BoxDecoration(color: Theme.of(context).primaryColor.withValues(alpha: 0.1), shape: BoxShape.circle),
+                  child: Icon(IconUtils.getIconData(budget.icon), size: 24, color: Theme.of(context).primaryColor),
+                ),
                   SizedBox(width: 12),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
