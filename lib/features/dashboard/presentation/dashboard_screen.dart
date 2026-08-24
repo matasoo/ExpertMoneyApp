@@ -512,8 +512,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       return Container(
         padding: EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
+          color: Colors.transparent,
           borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
         ),
         child: Center(
           child: Text(
@@ -527,8 +528,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface, // Very dark card background
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
       ),
       child: Column(
         children: transactions.take(2).toList().asMap().entries.map((entry) {
