@@ -377,8 +377,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
           Container(
             padding: EdgeInsets.all(4),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
+              color: Colors.transparent,
               borderRadius: BorderRadius.circular(24),
+              border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
             ),
             child: Row(
               children: [
@@ -466,8 +467,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   margin: EdgeInsets.only(bottom: 24),
                   padding: EdgeInsets.all(4),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
+                    color: Colors.transparent,
                     borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
                   ),
                   child: Row(
                     children: [
@@ -535,8 +537,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     return Container(
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -608,8 +611,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             width: double.infinity,
             padding: EdgeInsets.symmetric(vertical: 16),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
+              color: Colors.transparent,
               borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
             ),
             alignment: Alignment.center,
             child: Text(
@@ -626,8 +630,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     return Container(
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -725,8 +730,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
       height: 200,
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
       ),
       child: BarChart(
         BarChartData(
@@ -765,7 +771,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   backDrawRodData: BackgroundBarChartRodData(
                     show: true,
                     toY: maxVal * 1.2,
-                    color: Theme.of(context).colorScheme.surface,
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05),
                   ),
                 ),
               ],
@@ -811,8 +817,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
         Container(
           padding: EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
+            color: Colors.transparent,
             borderRadius: BorderRadius.circular(24),
+            border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -839,8 +846,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
               margin: EdgeInsets.only(bottom: 12),
               padding: EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
+                color: Colors.transparent,
                 borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
               ),
               child: Row(
                 children: [
@@ -890,8 +898,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
         Container(
           padding: EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
+            color: Colors.transparent,
             borderRadius: BorderRadius.circular(24),
+            border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
           ),
           child: Row(
             children: [
@@ -943,8 +952,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
               margin: EdgeInsets.only(bottom: 16),
               padding: EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
+                color: Colors.transparent,
                 borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

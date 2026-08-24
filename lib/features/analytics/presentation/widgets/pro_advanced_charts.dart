@@ -56,8 +56,9 @@ class ProCategoriesChart extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: const Color(0xFF18181B), // Slightly darker surface
+        color: Colors.transparent, // Slightly darker surface
         borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,8 +186,9 @@ class ProIncomeExpensesChart extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: const Color(0xFF18181B),
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -312,8 +314,9 @@ class ProTopMerchantsChart extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: const Color(0xFF18181B),
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
