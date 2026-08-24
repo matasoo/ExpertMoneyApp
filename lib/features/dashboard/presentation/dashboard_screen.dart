@@ -389,8 +389,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
