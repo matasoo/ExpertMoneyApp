@@ -227,7 +227,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           Text(
                             dailyBudget == null 
                                 ? 'No Budget' 
-                                : '${ref.watch(currencyProvider)}${todayExpenses.toStringAsFixed(0)} / \$${dailyBudget.toStringAsFixed(0)}',
+                                : '${ref.watch(currencyProvider)}${todayExpenses.toStringAsFixed(0)} / ${ref.watch(currencyProvider)}${dailyBudget.toStringAsFixed(0)}',
                             style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w700),
                           ),
                           SizedBox(height: 4),
@@ -486,7 +486,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ),
                       RichText(
                         text: TextSpan(
-                          text: '\$$wholePart',
+                          text: '${ref.watch(currencyProvider)}$wholePart',
                           style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w800),
                           children: [
                             TextSpan(

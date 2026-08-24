@@ -97,7 +97,7 @@ class _DynamicBalanceCardState extends ConsumerState<DynamicBalanceCard> with Si
                       final currency = ref.watch(currencyProvider);
                       final displayBalance = isPrivacyOn ? '****' : widget.totalBalance.toStringAsFixed(2);
                       return Text(
-                        '$currency $displayBalance',
+                        '${ref.watch(currencyProvider)} $displayBalance',
                         style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 36, fontWeight: FontWeight.w800, letterSpacing: -1.0),
                       );
                     }
@@ -112,7 +112,7 @@ class _DynamicBalanceCardState extends ConsumerState<DynamicBalanceCard> with Si
                       ),
                       SizedBox(width: 4),
                       Text(
-                        '${widget.monthlyChange >= 0 ? '+' : '-'} \$${widget.monthlyChange.abs().toStringAsFixed(2)} in ${widget.currentMonthName}',
+                        '${widget.monthlyChange >= 0 ? '+' : '-'} ${ref.watch(currencyProvider)}${widget.monthlyChange.abs().toStringAsFixed(2)} in ${widget.currentMonthName}',
                         style: GoogleFonts.manrope(
                           color: widget.monthlyChange >= 0 ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.error, 
                           fontSize: 13, 

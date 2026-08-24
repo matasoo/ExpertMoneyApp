@@ -471,7 +471,7 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    '${isNegative ? '- ' : ''}\$ ${account.balance.abs().toStringAsFixed(2)}',
+                    '${isNegative ? '- ' : ''}${ref.watch(currencyProvider)} ${account.balance.abs().toStringAsFixed(2)}',
                     style: GoogleFonts.manrope(
                       color: isNegative ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.onSurface,
                       fontSize: 16,
@@ -632,7 +632,7 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
               keyboardType: TextInputType.numberWithOptions(decimal: true),
               style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w600),
               decoration: InputDecoration(
-                prefixText: currency,
+                prefixText: ref.watch(currencyProvider),
                 prefixStyle: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w600),
                 filled: true,
                 fillColor: Theme.of(context).colorScheme.surface,

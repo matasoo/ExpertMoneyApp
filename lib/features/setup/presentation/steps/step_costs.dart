@@ -150,7 +150,7 @@ class StepCosts extends ConsumerWidget {
                         children: [
                           Text(cost.name, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
                           if (cost.amount == 0)
-                            Text('Tap to set \$', style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold))
+                            Text('Tap to set ${ref.watch(currencyProvider)}', style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold))
                           else
                             Text('${ref.watch(currencyProvider)}${cost.amount.toInt()}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                         ],
