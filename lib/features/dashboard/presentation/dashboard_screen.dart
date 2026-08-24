@@ -448,17 +448,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               final wholePart = amountParts[0];
               final decimalPart = amountParts[1];
 
-              // Colors list for icons
-              final colors = [
-                Color(0xFFFC5C65), // Red
-                Color(0xFF4B7BEC), // Blue
-                Color(0xFFFEB139), // Orange
-                Color(0xFF26DE81), // Green
-                Color(0xFFA55EEA), // Purple
-              ];
               final name = payment['name'] as String;
               final icon = payment['icon'] as String;
-              final color = colors[name.hashCode.abs() % colors.length];
 
               return Column(
                 children: [
@@ -470,11 +461,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         width: 44,
                         height: 44,
                         decoration: BoxDecoration(
-                          color: color,
+                          color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(14),
                         ),
                         alignment: Alignment.center,
-                        child: Icon(IconUtils.getIconData(icon), color: Colors.white, size: 20),
+                        child: Icon(IconUtils.getIconData(icon), color: Theme.of(context).primaryColor, size: 20),
                       ),
                       SizedBox(width: 14),
                       Expanded(
