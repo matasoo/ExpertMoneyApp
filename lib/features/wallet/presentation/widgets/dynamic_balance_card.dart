@@ -99,6 +99,10 @@ class _DynamicBalanceCardState extends ConsumerState<DynamicBalanceCard> with Si
                       final currency = ref.watch(currencyProvider);
                       final displayBalance = isPrivacyOn ? '****' : widget.totalBalance.toStringAsFixed(2);
                       final displayNetWorth = isPrivacyOn ? '****' : widget.netWorth.toStringAsFixed(2);
+                      final netWorthColor = widget.netWorth >= 0 
+                          ? Theme.of(context).primaryColor 
+                          : Theme.of(context).colorScheme.error;
+                      
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -109,7 +113,7 @@ class _DynamicBalanceCardState extends ConsumerState<DynamicBalanceCard> with Si
                           SizedBox(height: 4),
                           Text(
                             'Net Worth: $currency $displayNetWorth',
-                            style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8), fontSize: 14, fontWeight: FontWeight.w600),
+                            style: GoogleFonts.manrope(color: netWorthColor, fontSize: 14, fontWeight: FontWeight.w700),
                           ),
                         ],
                       );
