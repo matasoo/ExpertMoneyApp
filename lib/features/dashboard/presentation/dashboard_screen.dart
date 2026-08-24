@@ -22,7 +22,7 @@ import '../../wallet/providers/recurring_payments_provider.dart';
 import '../../wallet/domain/models/recurring_payment.dart';
 import '../../wallet/providers/credits_provider.dart';
 import '../../wallet/domain/models/credit_model.dart';
-import 'package:go_router/go_router.dart';
+import '../../../../core/utils/icon_utils.dart';
 import '../../../core/widgets/animated_background.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
@@ -36,8 +36,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   int _currentIndex = 0;
   @override
   Widget build(BuildContext context) {
-    final currency = ref.watch(currencyProvider);
-    final setupState = ref.watch(setupProvider);
     final isPremium = ref.watch(premiumProvider);
     final transactions = ref.watch(transactionsProvider);
     final recurringPayments = ref.watch(recurringPaymentsProvider);
@@ -475,7 +473,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           borderRadius: BorderRadius.circular(14),
                         ),
                         alignment: Alignment.center,
-                        child: Text(icon, style: TextStyle(fontSize: 20)),
+                        child: Icon(IconUtils.getIconData(icon), color: Colors.white, size: 20),
                       ),
                       SizedBox(width: 14),
                       Expanded(
