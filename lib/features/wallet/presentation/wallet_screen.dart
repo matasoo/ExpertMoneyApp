@@ -388,11 +388,9 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
           }
         },
         child: Container(
-          padding: EdgeInsets.all(24),
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: _isManaging ? Theme.of(context).primaryColor.withValues(alpha: 0.3) : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
+            border: Border(bottom: BorderSide(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05))),
           ),
           child: Row(
             children: [
@@ -534,11 +532,9 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
           }
         },
         child: Container(
-          padding: EdgeInsets.all(24),
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: _isManaging ? Theme.of(context).primaryColor.withValues(alpha: 0.3) : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
+            border: Border(bottom: BorderSide(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05))),
           ),
           child: Row(
             children: [
