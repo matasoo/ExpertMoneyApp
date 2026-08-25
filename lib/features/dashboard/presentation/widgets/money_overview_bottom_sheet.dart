@@ -18,6 +18,7 @@ class MoneyOverviewBottomSheet extends ConsumerWidget {
     // 1. Calculate Income & Expenses for current month
     double totalIncome = 0;
     final Map<String, double> categoryExpenses = {};
+    final Map<String, int> categoryCounts = {};
 
     for (var t in transactions) {
       if (t.date.year == now.year && t.date.month == now.month) {
@@ -25,6 +26,7 @@ class MoneyOverviewBottomSheet extends ConsumerWidget {
           final catName = t.customCategoryName ?? t.category.name.toString().split('.').last;
           final displayCat = catName[0].toUpperCase() + catName.substring(1);
           categoryExpenses[displayCat] = (categoryExpenses[displayCat] ?? 0) + t.amount;
+          categoryCounts[displayCat] = (categoryCounts[displayCat] ?? 0) + 1;
         } else {
           totalIncome += t.amount;
         }
@@ -131,7 +133,38 @@ class MoneyOverviewBottomSheet extends ConsumerWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 24),
+            
+            // Smart Insight Box
+            if (sortedCategories.isNotEmpty)
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Theme.of(context).primaryColor.withValues(alpha: 0.2)),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.insights, color: Theme.of(context).primaryColor, size: 24),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Text(
+                        remaining > 0 
+                          ? 'Great job! You are saving ${(remaining / totalIncome * 100).toStringAsFixed(0)}% of your income this month.'
+                          : 'Your highest expense this month is ${sortedCategories.first.key} at $currency ${sortedCategories.first.value.toStringAsFixed(0)}.',
+                        style: GoogleFonts.manrope(
+                          color: Theme.of(context).colorScheme.onSurface,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ).animate().fadeIn(delay: 500.ms).slideY(begin: 0.1),
+              
+            const SizedBox(height: 24),
             
             // Legend / List
             Row(
@@ -151,6 +184,7 @@ class MoneyOverviewBottomSheet extends ConsumerWidget {
                   ...List.generate(sortedCategories.length, (i) {
                     final cat = sortedCategories[i];
                     final percentage = (cat.value / totalIncome) * 100;
+                    final count = categoryCounts[cat.key] ?? 0;
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 16.0),
                       child: Row(
@@ -165,9 +199,18 @@ class MoneyOverviewBottomSheet extends ConsumerWidget {
                           ),
                           const SizedBox(width: 12),
                           Expanded(
-                            child: Text(
-                              cat.key,
-                              style: GoogleFonts.manrope(fontSize: 15, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  cat.key,
+                                  style: GoogleFonts.manrope(fontSize: 15, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface),
+                                ),
+                                Text(
+                                  '$count transaction${count > 1 ? 's' : ''}',
+                                  style: GoogleFonts.manrope(fontSize: 12, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)),
+                                ),
+                              ],
                             ),
                           ),
                           Column(
