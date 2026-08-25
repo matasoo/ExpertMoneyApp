@@ -9,7 +9,6 @@ import '../../features/setup/presentation/setup_screen.dart';
 import '../../features/dashboard/presentation/dashboard_screen.dart';
 import '../../features/profile/presentation/profile_screen.dart';
 import '../../features/premium/presentation/premium_paywall_screen.dart';
-import '../../features/ai_chat/presentation/ai_chat_screen.dart';
 import '../providers/shared_prefs_provider.dart';
 import '../../features/auth/providers/auth_provider.dart';
 import '../services/firestore_service.dart';
@@ -162,11 +161,6 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/paywall',
         name: 'paywall',
         builder: (context, state) => const PremiumPaywallScreen(),
-      ),
-      GoRoute(
-        path: '/ai-chat',
-        name: 'ai-chat',
-        builder: (context, state) => const AiChatScreen(),
       ),
       GoRoute(
         path: '/',
