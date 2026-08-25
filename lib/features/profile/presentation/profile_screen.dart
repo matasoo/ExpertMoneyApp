@@ -163,13 +163,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
                         children: [
-                          _buildPlanRow('Monthly Income', '$currency${setupState.monthlyIncome.toStringAsFixed(0)}'),
+                          _buildPlanRow('Monthly Income', '$currency ${setupState.monthlyIncome.toStringAsFixed(0)}'),
                           const Divider(height: 24),
                           _buildPlanRow('Auto-save Target', '${(setupState.savingsRate * 100).toInt()}%'),
                           const Divider(height: 24),
-                          _buildPlanRow('Fixed Costs', '$currency${setupState.totalFixedCosts.toStringAsFixed(0)}'),
+                          _buildPlanRow('Fixed Costs', '$currency ${setupState.totalFixedCosts.toStringAsFixed(0)}'),
                           const Divider(height: 24),
-                          _buildPlanRow('Free to Budget', '$currency${setupState.freeToBudget.toStringAsFixed(0)}', isBold: true, color: Theme.of(context).primaryColor),
+                          _buildPlanRow('Free to Budget', '$currency ${setupState.freeToBudget.toStringAsFixed(0)}', isBold: true, color: Theme.of(context).primaryColor),
                         ],
                       ),
                     ),

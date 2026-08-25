@@ -136,7 +136,7 @@ class TransactionsHistoryScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    t.isExpense ? '- ${ref.watch(currencyProvider)}${t.amount.toStringAsFixed(2)}' : '+ ${ref.watch(currencyProvider)}${t.amount.toStringAsFixed(2)}',
+                    t.isExpense ? '- ${ref.watch(currencyProvider)} ${t.amount.toStringAsFixed(2)}' : '+ ${ref.watch(currencyProvider)} ${t.amount.toStringAsFixed(2)}',
                     style: GoogleFonts.manrope(color: t.isExpense ? Color(0xFFE74C3C) : Theme.of(context).primaryColor, fontSize: 16, fontWeight: FontWeight.w800),
                   ),
                   SizedBox(height: 4),

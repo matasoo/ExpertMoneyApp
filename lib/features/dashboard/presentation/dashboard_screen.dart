@@ -229,7 +229,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           Text(
                             dailyBudget == null 
                                 ? 'No Budget' 
-                                : '${ref.watch(currencyProvider)}${todayExpenses.toStringAsFixed(0)} / ${ref.watch(currencyProvider)}${dailyBudget.toStringAsFixed(0)}',
+                                : '${ref.watch(currencyProvider)}  ${todayExpenses.toStringAsFixed(0)} / ${ref.watch(currencyProvider)}  ${dailyBudget.toStringAsFixed(0)}',
                             style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w700),
                           ),
                           SizedBox(height: 4),
@@ -292,7 +292,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 24, fontWeight: FontWeight.w700),
             decoration: InputDecoration(
               hintText: '0.00',
-              prefixText: '${ref.watch(currencyProvider)} ',
+              prefixText: '${ref.watch(currencyProvider)}  ',
               hintStyle: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)),
             ),
           ),
@@ -397,7 +397,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ],
                 ),
                 SizedBox(height: 8),
-                Text('$currency${income.toStringAsFixed(0)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 20, fontWeight: FontWeight.w800, letterSpacing: -0.5)),
+                Text('$currency ${income.toStringAsFixed(0)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 20, fontWeight: FontWeight.w800, letterSpacing: -0.5)),
               ],
             ),
           ),
@@ -426,7 +426,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ],
                 ),
                 SizedBox(height: 8),
-                Text('$currency${expense.toStringAsFixed(0)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 20, fontWeight: FontWeight.w800, letterSpacing: -0.5)),
+                Text('$currency ${expense.toStringAsFixed(0)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 20, fontWeight: FontWeight.w800, letterSpacing: -0.5)),
               ],
             ),
           ),
@@ -509,7 +509,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 12, fontWeight: FontWeight.w500),
               children: [
                 TextSpan(
-                  text: '${ref.watch(currencyProvider)}${totalThisMonth.toStringAsFixed(2)}',
+                  text: '${ref.watch(currencyProvider)}  ${totalThisMonth.toStringAsFixed(2)}',
                   style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.w700),
                 ),
               ],
@@ -571,7 +571,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ),
                       RichText(
                         text: TextSpan(
-                          text: '${ref.watch(currencyProvider)}$wholePart',
+                          text: '${ref.watch(currencyProvider)} $wholePart',
                           style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w800),
                           children: [
                             TextSpan(
@@ -634,7 +634,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   }
 
   Widget _buildTransactionItem(TransactionModel t) {
-    final amount = t.isExpense ? '- ${ref.watch(currencyProvider)}${t.amount.toStringAsFixed(2)}' : '+ ${ref.watch(currencyProvider)}${t.amount.toStringAsFixed(2)}';
+    final amount = t.isExpense ? '- ${ref.watch(currencyProvider)}  ${t.amount.toStringAsFixed(2)}' : '+ ${ref.watch(currencyProvider)}  ${t.amount.toStringAsFixed(2)}';
     final time = '${t.date.hour.toString().padLeft(2, '0')}:${t.date.minute.toString().padLeft(2, '0')}';
     
     return Padding(

@@ -211,7 +211,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('${ref.watch(currencyProvider)}${(6000 * value).toInt()}', style: Theme.of(context).textTheme.headlineSmall),
+                  Text('${ref.watch(currencyProvider)} ${(6000 * value).toInt()}', style: Theme.of(context).textTheme.headlineSmall),
                   Text('of ${ref.watch(currencyProvider)}6,000 · Vacation', style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
                 ],
               ),

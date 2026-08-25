@@ -152,7 +152,7 @@ class StepCosts extends ConsumerWidget {
                           if (cost.amount == 0)
                             Text('Tap to set ${ref.watch(currencyProvider)}', style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold))
                           else
-                            Text('${ref.watch(currencyProvider)}${cost.amount.toInt()}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                            Text('${ref.watch(currencyProvider)} ${cost.amount.toInt()}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                         ],
                       ),
                     ),
@@ -176,7 +176,7 @@ class StepCosts extends ConsumerWidget {
               children: [
                 Text('Total fixed', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.w600, fontSize: 16)),
                 Text(
-                  '${ref.watch(currencyProvider)}${setupState.totalFixedCosts.toInt()}',
+                  '${ref.watch(currencyProvider)} ${setupState.totalFixedCosts.toInt()}',
                   style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold, fontSize: 20),
                 ),
               ],

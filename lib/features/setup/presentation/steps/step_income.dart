@@ -171,7 +171,7 @@ class StepIncome extends ConsumerWidget {
           borderRadius: BorderRadius.circular(12),
         ),
         child: Text(
-          '${ref.watch(currencyProvider)}${amount.toInt()}',
+          '${ref.watch(currencyProvider)} ${amount.toInt()}',
           style: TextStyle(
             color: isSelected ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.onSurface,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,

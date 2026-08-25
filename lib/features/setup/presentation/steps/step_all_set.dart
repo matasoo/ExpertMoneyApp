@@ -60,13 +60,13 @@ class StepAllSet extends ConsumerWidget {
             ),
             child: Column(
               children: [
-                _buildSummaryRow(context, 'Monthly income', '$currency${state.monthlyIncome.toInt()}', Theme.of(context).colorScheme.onSurface),
+                _buildSummaryRow(context, 'Monthly income', '$currency ${state.monthlyIncome.toInt()}', Theme.of(context).colorScheme.onSurface),
                 Padding(padding: EdgeInsets.symmetric(vertical: 16), child: Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.15), height: 1)),
-                _buildSummaryRow(context, 'Auto-save (${(state.savingsRate * 100).toInt()}%)', '$currency${state.autoSaveAmount.toInt()}', Theme.of(context).primaryColor),
+                _buildSummaryRow(context, 'Auto-save (${(state.savingsRate * 100).toInt()}%)', '$currency ${state.autoSaveAmount.toInt()}', Theme.of(context).primaryColor),
                 Padding(padding: EdgeInsets.symmetric(vertical: 16), child: Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.15), height: 1)),
-                _buildSummaryRow(context, 'Fixed costs', '$currency${state.totalFixedCosts.toInt()}', Theme.of(context).colorScheme.onSurface),
+                _buildSummaryRow(context, 'Fixed costs', '$currency ${state.totalFixedCosts.toInt()}', Theme.of(context).colorScheme.onSurface),
                 Padding(padding: EdgeInsets.symmetric(vertical: 16), child: Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.15), height: 1)),
-                _buildSummaryRow(context, 'Free to budget', '$currency${state.freeToBudget.toInt()}', Theme.of(context).primaryColor, isBold: true),
+                _buildSummaryRow(context, 'Free to budget', '$currency ${state.freeToBudget.toInt()}', Theme.of(context).primaryColor, isBold: true),
               ],
             ),
           ).animate().fadeIn(delay: 600.ms).slideY(begin: 0.1, end: 0),

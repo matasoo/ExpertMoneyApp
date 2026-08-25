@@ -129,7 +129,7 @@ class _DynamicBalanceCardState extends ConsumerState<DynamicBalanceCard> with Si
                       ),
                       SizedBox(width: 4),
                       Text(
-                        '${widget.monthlyChange >= 0 ? '+' : '-'} ${ref.watch(currencyProvider)}${widget.monthlyChange.abs().toStringAsFixed(2)} in ${widget.currentMonthName}',
+                        '${widget.monthlyChange >= 0 ? '+' : '-'} ${ref.watch(currencyProvider)} ${widget.monthlyChange.abs().toStringAsFixed(2)} in ${widget.currentMonthName}',
                         style: GoogleFonts.manrope(
                           color: widget.monthlyChange >= 0 ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.error, 
                           fontSize: 13, 

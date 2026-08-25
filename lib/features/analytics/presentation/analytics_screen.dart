@@ -617,7 +617,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             ),
             alignment: Alignment.center,
             child: Text(
-              'AVG Daily Spend: ${ref.watch(currencyProvider)}${(totalExpenses / divisor).toStringAsFixed(0)}',
+              'AVG Daily Spend: ${ref.watch(currencyProvider)} ${(totalExpenses / divisor).toStringAsFixed(0)}',
               style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 14, fontWeight: FontWeight.w700),
             ),
           ),
@@ -698,8 +698,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                       RichText(
                         text: TextSpan(
                           children: [
-                            TextSpan(text: '${ref.watch(currencyProvider)}${current.toStringAsFixed(0)} ', style: GoogleFonts.manrope(color: isOverBudget ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.onSurface, fontSize: 12, fontWeight: FontWeight.w800)),
-                            TextSpan(text: '/ ${ref.watch(currencyProvider)}${target.toStringAsFixed(0)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 12, fontWeight: FontWeight.w600)),
+                            TextSpan(text: '${ref.watch(currencyProvider)} ${current.toStringAsFixed(0)} ', style: GoogleFonts.manrope(color: isOverBudget ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.onSurface, fontSize: 12, fontWeight: FontWeight.w800)),
+                            TextSpan(text: '/ ${ref.watch(currencyProvider)} ${target.toStringAsFixed(0)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 12, fontWeight: FontWeight.w600)),
                           ],
                         ),
                       ),
@@ -826,7 +826,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             children: [
               Text('Total Paid on Subscriptions', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 14, fontWeight: FontWeight.w600)),
               SizedBox(height: 8),
-              Text('${ref.watch(currencyProvider)}${totalLifetime.toStringAsFixed(2)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 32, fontWeight: FontWeight.w800, letterSpacing: -1)),
+              Text('${ref.watch(currencyProvider)} ${totalLifetime.toStringAsFixed(2)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 32, fontWeight: FontWeight.w800, letterSpacing: -1)),
             ],
           ),
         ),
@@ -874,7 +874,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text('${ref.watch(currencyProvider)}${sub.totalPaidSoFar.toStringAsFixed(0)}', style: GoogleFonts.manrope(color: Theme.of(context).primaryColor, fontSize: 16, fontWeight: FontWeight.w800)),
+                      Text('${ref.watch(currencyProvider)} ${sub.totalPaidSoFar.toStringAsFixed(0)}', style: GoogleFonts.manrope(color: Theme.of(context).primaryColor, fontSize: 16, fontWeight: FontWeight.w800)),
                       SizedBox(height: 4),
                       Text('total paid', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 12)),
                     ],
@@ -910,7 +910,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   children: [
                     Text('Total Debt', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 14, fontWeight: FontWeight.w600)),
                     SizedBox(height: 8),
-                    Text('${ref.watch(currencyProvider)}${totalRemaining.toStringAsFixed(0)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 24, fontWeight: FontWeight.w800, letterSpacing: -1)),
+                    Text('${ref.watch(currencyProvider)} ${totalRemaining.toStringAsFixed(0)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 24, fontWeight: FontWeight.w800, letterSpacing: -1)),
                   ],
                 ),
               ),
@@ -921,7 +921,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   children: [
                     Text('Total Paid', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 14, fontWeight: FontWeight.w600)),
                     SizedBox(height: 8),
-                    Text('${ref.watch(currencyProvider)}${totalPaid.toStringAsFixed(0)}', style: GoogleFonts.manrope(color: Theme.of(context).primaryColor, fontSize: 24, fontWeight: FontWeight.w800, letterSpacing: -1)),
+                    Text('${ref.watch(currencyProvider)} ${totalPaid.toStringAsFixed(0)}', style: GoogleFonts.manrope(color: Theme.of(context).primaryColor, fontSize: 24, fontWeight: FontWeight.w800, letterSpacing: -1)),
                   ],
                 ),
               ),
@@ -983,8 +983,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('${ref.watch(currencyProvider)}${credit.paidAmount.toStringAsFixed(0)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 14, fontWeight: FontWeight.w700)),
-                      Text('${ref.watch(currencyProvider)}${credit.totalAmount.toStringAsFixed(0)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 14, fontWeight: FontWeight.w600)),
+                      Text('${ref.watch(currencyProvider)} ${credit.paidAmount.toStringAsFixed(0)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 14, fontWeight: FontWeight.w700)),
+                      Text('${ref.watch(currencyProvider)} ${credit.totalAmount.toStringAsFixed(0)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 14, fontWeight: FontWeight.w600)),
                     ],
                   ),
                   SizedBox(height: 8),
@@ -1002,7 +1002,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('Monthly Rate:', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 13)),
-                      Text('${ref.watch(currencyProvider)}${credit.monthlyContribution.toStringAsFixed(2)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 13, fontWeight: FontWeight.w700)),
+                      Text('${ref.watch(currencyProvider)} ${credit.monthlyContribution.toStringAsFixed(2)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 13, fontWeight: FontWeight.w700)),
                     ],
                   ),
                   if (monthsLeft > 0) ...[

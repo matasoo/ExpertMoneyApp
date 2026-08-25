@@ -103,7 +103,7 @@ class ProCategoriesChart extends StatelessWidget {
                         Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text('$currency${totalExpense.toStringAsFixed(0)}', style: GoogleFonts.manrope(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w800)),
+                            Text('$currency ${totalExpense.toStringAsFixed(0)}', style: GoogleFonts.manrope(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w800)),
                             Text('this period', style: GoogleFonts.manrope(color: Colors.grey[500], fontSize: 11)),
                           ],
                         ),
@@ -256,9 +256,9 @@ class ProIncomeExpensesChart extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildSummaryItem('Income', '$currency${currentIncome.toStringAsFixed(0)}', Colors.white),
-              _buildSummaryItem('Expenses', '$currency${currentExpense.toStringAsFixed(0)}', Colors.white),
-              _buildSummaryItem('Saved', '${saved >= 0 ? '+' : '-'}$currency${saved.abs().toStringAsFixed(0)}', saved >= 0 ? const Color(0xFF4ADE80) : Colors.redAccent),
+              _buildSummaryItem('Income', '$currency ${currentIncome.toStringAsFixed(0)}', Colors.white),
+              _buildSummaryItem('Expenses', '$currency ${currentExpense.toStringAsFixed(0)}', Colors.white),
+              _buildSummaryItem('Saved', '${saved >= 0 ? '+' : '-'}$currency ${saved.abs().toStringAsFixed(0)}', saved >= 0 ? const Color(0xFF4ADE80) : Colors.redAccent),
             ],
           ),
         ],
@@ -334,7 +334,7 @@ class ProTopMerchantsChart extends StatelessWidget {
           else
             ...topMerchants.map((m) {
               final percentage = (m.value / maxAmount).clamp(0.0, 1.0);
-              return _buildMerchantItem(m.key, '$currency${m.value.toStringAsFixed(2)}', percentage);
+              return _buildMerchantItem(m.key, '$currency ${m.value.toStringAsFixed(2)}', percentage);
             }),
         ],
       ),

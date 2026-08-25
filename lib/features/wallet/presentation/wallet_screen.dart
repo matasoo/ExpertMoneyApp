@@ -801,7 +801,7 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                     Row(
                       children: [
                         Text(
-                          '${ref.watch(currencyProvider)}${credit.paidAmount.toStringAsFixed(0)} paid',
+                          '${ref.watch(currencyProvider)} ${credit.paidAmount.toStringAsFixed(0)} paid',
                           style: GoogleFonts.manrope(color: Theme.of(context).primaryColor, fontSize: 12, fontWeight: FontWeight.w600),
                         ),
                         SizedBox(width: 8),
@@ -819,7 +819,7 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
                       ],
                     ),
                     Text(
-                      '${ref.watch(currencyProvider)}${credit.totalAmount.toStringAsFixed(0)} total',
+                      '${ref.watch(currencyProvider)} ${credit.totalAmount.toStringAsFixed(0)} total',
                       style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 12, fontWeight: FontWeight.w600),
                     ),
                   ],

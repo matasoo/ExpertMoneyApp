@@ -95,7 +95,7 @@ class StepSavings extends ConsumerWidget {
                             style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            '$currency${(setupState.monthlyIncome * value).toInt()} / mo',
+                            '$currency ${(setupState.monthlyIncome * value).toInt()} / mo',
                             style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 14),
                           ),
                         ],
