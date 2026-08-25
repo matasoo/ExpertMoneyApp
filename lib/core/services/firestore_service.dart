@@ -101,6 +101,47 @@ class FirestoreService {
       return null;
     }
   }
+
+  // Delete all user data (Firestore subcollections, main document, and Storage files)
+  Future<void> deleteUserAccountData() async {
+    final uid = currentUserId;
+    if (uid == null) throw Exception('User not logged in');
+
+    final userDoc = _db.collection('users').doc(uid);
+    final subcollections = [
+      'transactions',
+      'accounts',
+      'goals',
+      'budgets',
+      'recurring_payments',
+      'credits',
+    ];
+
+    try {
+      // 1. Delete all subcollections
+      for (final subPath in subcollections) {
+        final querySnapshot = await userDoc.collection(subPath).get();
+        final batch = _db.batch();
+        for (final doc in querySnapshot.docs) {
+          batch.delete(doc.reference);
+        }
+        await batch.commit();
+      }
+
+      // 2. Delete main user document
+      await userDoc.delete();
+
+      // 3. Try to delete profile image from storage
+      try {
+        await _storage.ref().child('users/$uid/profile_image.jpg').delete();
+      } catch (e) {
+        // Ignored: Image might not exist
+      }
+    } catch (e) {
+      debugPrint('Error deleting user account data: $e');
+      rethrow;
+    }
+  }
 }
 
 // Global instance for easy access

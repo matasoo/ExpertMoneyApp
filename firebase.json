@@ -1,1 +1,39 @@
-{"firestore":{"rules":"firestore.rules"},"flutter":{"platforms":{"android":{"default":{"projectId":"expertmoney-3f96c","appId":"1:882159044456:android:2ee267cb9a81e8fc8f38dd","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"expertmoney-3f96c","configurations":{"android":"1:882159044456:android:2ee267cb9a81e8fc8f38dd","ios":"1:882159044456:ios:da7c98aef4be2dd78f38dd","macos":"1:882159044456:ios:da7c98aef4be2dd78f38dd","web":"1:882159044456:web:42f5635cf55a58bf8f38dd","windows":"1:882159044456:web:db1367bb71ca25768f38dd"}}}}}}
+{
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "expertmoney-3f96c",
+          "appId": "1:882159044456:android:132b0098bf8832a88f38dd",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "expertmoney-3f96c",
+          "configurations": {
+            "android": "1:882159044456:android:132b0098bf8832a88f38dd",
+            "ios": "1:882159044456:ios:0ec866a8434baf7e8f38dd",
+            "macos": "1:882159044456:ios:0ec866a8434baf7e8f38dd",
+            "web": "1:882159044456:web:42f5635cf55a58bf8f38dd",
+            "windows": "1:882159044456:web:db1367bb71ca25768f38dd"
+          }
+        }
+      }
+    }
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "hosting": {
+    "public": "site-web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

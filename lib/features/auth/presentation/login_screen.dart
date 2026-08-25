@@ -39,6 +39,40 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
+  void _forgotPassword() async {
+    final email = _emailController.text.trim();
+    if (email.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please enter your email address first.'),
+          backgroundColor: Theme.of(context).colorScheme.primary,
+        ),
+      );
+      return;
+    }
+
+    try {
+      await ref.read(authControllerProvider.notifier).resetPassword(email);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Password reset link sent to $email'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString()),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,7 +134,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: _forgotPassword,
                   child: Text('Forgot password?', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
                 ),
               ),

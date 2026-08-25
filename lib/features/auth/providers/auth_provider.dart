@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../core/services/firestore_service.dart';
 
 final authStateProvider = StreamProvider<User?>((ref) {
   return FirebaseAuth.instance.authStateChanges();
@@ -30,6 +31,7 @@ class AuthController extends AsyncNotifier<void> {
         password: password,
       );
       await cred.user?.updateDisplayName(name);
+      await cred.user?.sendEmailVerification();
     });
   }
 
@@ -40,11 +42,22 @@ class AuthController extends AsyncNotifier<void> {
     });
   }
 
+  Future<void> resetPassword(String email) async {
+    state = const AsyncLoading();
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email.trim());
+      state = const AsyncData(null);
+    } catch (e, st) {
+      state = AsyncError(e, st);
+      rethrow;
+    }
+  }
+
   Future<void> deleteAccount() async {
     state = const AsyncLoading();
     try {
-      // Note: A robust system would also delete Firestore data via Cloud Functions 
-      // or batched writes here before deleting the Auth record.
+      // Delete all associated Firestore data before deleting the Auth record
+      await firestoreService.deleteUserAccountData();
       await FirebaseAuth.instance.currentUser?.delete();
       state = const AsyncData(null);
     } catch (e, st) {

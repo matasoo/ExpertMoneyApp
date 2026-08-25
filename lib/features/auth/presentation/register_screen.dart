@@ -1,6 +1,8 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../providers/auth_provider.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
@@ -124,9 +126,46 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     checkColor: Colors.black,
                   ),
                   Expanded(
-                    child: Text(
-                      'I agree to the Terms and Privacy Policy.',
-                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 13),
+                    child: RichText(
+                      text: TextSpan(
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), 
+                          fontSize: 13,
+                        ),
+                        children: [
+                          TextSpan(text: 'I agree to the '),
+                          TextSpan(
+                            text: 'Terms',
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () async {
+                                final url = Uri.parse('https://expert-money.com/terms.html');
+                                if (await canLaunchUrl(url)) {
+                                  await launchUrl(url);
+                                }
+                              },
+                          ),
+                          TextSpan(text: ' and '),
+                          TextSpan(
+                            text: 'Privacy Policy',
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () async {
+                                final url = Uri.parse('https://expert-money.com/privacy.html');
+                                if (await canLaunchUrl(url)) {
+                                  await launchUrl(url);
+                                }
+                              },
+                          ),
+                          TextSpan(text: '.'),
+                        ],
+                      ),
                     ),
                   ),
                 ],

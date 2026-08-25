@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ExpertMoney — Plan. Save. Grow.</title>
+<meta name="description" content="ExpertMoney is the personal finance app that turns your income into goals you actually reach. Budgets, savings goals, accounts and clear reports in one place.">
+<meta name="theme-color" content="#202022">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="ExpertMoney — Plan. Save. Grow.">
+<meta property="og:description" content="The financial planner that turns your income into goals you actually reach.">
+<meta property="og:image" content="https://expert-money.com/assets/og-image.png">
+<meta property="og:url" content="https://expert-money.com/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="canonical" href="https://expert-money.com/">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="assets/logo-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="assets/logo-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<div class="ambient" aria-hidden="true">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="grid-lines"></div>
+</div>
+
+<!-- ============ NAV ============ -->
+<header class="nav" id="nav">
+  <div class="container nav-inner">
+    <a class="brand" href="index.html" aria-label="ExpertMoney home">
+      <span>Expert<strong>Money</strong></span>
+    </a>
+
+    <nav class="nav-links" id="navLinks" aria-label="Main">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#showcase">Inside the app</a>
+      <a href="#security">Security</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+
+    <div class="nav-actions">
+      <a class="btn btn-primary btn-sm" href="#download">Get the app</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="container hero-grid">
+
+    <div class="hero-copy">
+      <div class="pill reveal">
+        <span class="dot"></span> Coming soon to iPhone and Android
+      </div>
+
+      <h1 class="reveal" data-delay="1">
+        Plan.<br>Save.<br><em>Grow.</em>
+      </h1>
+
+      <p class="lede reveal" data-delay="2">
+        The financial planner that turns your income into goals you actually reach —
+        budgets that nudge you before you overspend, savings you can watch grow, and a
+        clear picture of where the money actually went.
+      </p>
+
+      <div class="hero-cta reveal" data-delay="3">
+        <a class="btn btn-primary btn-lg" href="#showcase">See how it works</a>
+        <a class="btn btn-ghost btn-lg" href="#features">Explore features</a>
+      </div>
+
+      <ul class="hero-points reveal" data-delay="4">
+        <li><svg class="ic" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> No bank login</li>
+        <li><svg class="ic" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> No ads, ever</li>
+        <li><svg class="ic" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Face ID lock</li>
+      </ul>
+    </div>
+
+    <!-- Phone mockup -->
+    <div class="hero-visual reveal" data-delay="2">
+      <div class="phone-glow"></div>
+
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+
+          <!-- Screen 1: Dashboard -->
+          <div class="scr is-active" data-scr="0">
+            <div class="scr-top">
+              <div>
+                <p class="scr-hi">Good evening</p>
+                <p class="scr-name">Alex</p>
+              </div>
+              <div class="scr-avatar">A</div>
+            </div>
+
+            <div class="balance-card">
+              <p class="bc-label">Safe to spend today</p>
+              <p class="bc-value">$<span class="count" data-to="42">0</span>.60</p>
+              <div class="bc-meta">
+                <span class="tag tag-up">+ $2,400 in</span>
+                <span class="tag tag-down">− $1,860 out</span>
+              </div>
+            </div>
+
+            <p class="scr-section">Recent</p>
+            <div class="tx">
+              <div class="tx-ic tx-ic-food">
+                <svg viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h1v11M8 2v9M6 2v9M17 2c-1.7 0-3 2.7-3 6 0 2.2.9 3 2 3v11"/></svg>
+              </div>
+              <div class="tx-body"><p>Groceries</p><span>Supermarket · Today</span></div>
+              <p class="tx-amt">−$34.20</p>
+            </div>
+            <div class="tx">
+              <div class="tx-ic tx-ic-in">
+                <svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+              </div>
+              <div class="tx-body"><p>Salary</p><span>Payroll · Mon</span></div>
+              <p class="tx-amt tx-in">+$2,400</p>
+            </div>
+            <div class="tx">
+              <div class="tx-ic tx-ic-fuel">
+                <svg viewBox="0 0 24 24"><path d="M14 21V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v16M3 21h13M14 10h3a2 2 0 0 1 2 2v4a1.5 1.5 0 0 0 3 0V9l-3-3"/></svg>
+              </div>
+              <div class="tx-body"><p>Fuel</p><span>Station · Sun</span></div>
+              <p class="tx-amt">−$62.00</p>
+            </div>
+          </div>
+
+          <!-- Screen 2: Budgets -->
+          <div class="scr" data-scr="1">
+            <div class="scr-top">
+              <div><p class="scr-hi">This month</p><p class="scr-name">Budgets</p></div>
+            </div>
+            <div class="bud">
+              <div class="bud-row"><span>Food</span><span class="bud-num">$120 / $180</span></div>
+              <div class="bar"><i style="--w:66%"></i></div>
+            </div>
+            <div class="bud">
+              <div class="bud-row"><span>Fuel</span><span class="bud-num warn">$170 / $200</span></div>
+              <div class="bar"><i class="warn" style="--w:85%"></i></div>
+            </div>
+            <div class="bud">
+              <div class="bud-row"><span>Fun</span><span class="bud-num">$20 / $150</span></div>
+              <div class="bar"><i style="--w:13%"></i></div>
+            </div>
+            <div class="bud">
+              <div class="bud-row"><span>Subscriptions</span><span class="bud-num">$44 / $60</span></div>
+              <div class="bar"><i style="--w:73%"></i></div>
+            </div>
+            <div class="nudge">
+              <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+              <p>You are close to your <strong>Fuel</strong> limit — $30 left for 9 days.</p>
+            </div>
+          </div>
+
+          <!-- Screen 3: Goals -->
+          <div class="scr" data-scr="2">
+            <div class="scr-top">
+              <div><p class="scr-hi">Saving for</p><p class="scr-name">Goals</p></div>
+            </div>
+
+            <div class="balance-card">
+              <p class="bc-label">Saved this month</p>
+              <p class="bc-value">$<span class="count" data-to="540">0</span></p>
+              <div class="bc-meta">
+                <span class="tag tag-up">3 goals on track</span>
+              </div>
+            </div>
+
+            <div class="bud">
+              <div class="bud-row"><span>Emergency fund</span><span class="bud-num">$3,600 / $5,000</span></div>
+              <div class="bar"><i style="--w:72%"></i></div>
+            </div>
+            <div class="bud">
+              <div class="bud-row"><span>Japan trip</span><span class="bud-num">$1,230 / $3,000</span></div>
+              <div class="bar"><i style="--w:41%"></i></div>
+            </div>
+            <div class="bud">
+              <div class="bud-row"><span>New laptop</span><span class="bud-num">$320 / $1,800</span></div>
+              <div class="bar"><i style="--w:18%"></i></div>
+            </div>
+
+            <div class="pace">
+              <svg viewBox="0 0 24 24"><path d="M12 3l1.9 4.6 4.6 1.9-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9L12 3z"/></svg>
+              <p>Keep $85 a week and the <strong>emergency fund</strong> is done by October.</p>
+            </div>
+          </div>
+
+        </div>
+        <div class="phone-home"></div>
+      </div>
+
+      <div class="scr-dots" role="tablist" aria-label="App screens">
+        <button class="is-active" data-go="0" role="tab" aria-label="Dashboard"></button>
+        <button data-go="1" role="tab" aria-label="Budgets"></button>
+        <button data-go="2" role="tab" aria-label="Goals"></button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ TRUST STRIP ============ -->
+<section class="strip">
+  <div class="container strip-inner">
+    <div class="strip-item reveal"><strong>Bank-grade</strong><span>encryption in transit</span></div>
+    <div class="strip-item reveal" data-delay="1"><strong>Face ID</strong><span>app lock built in</span></div>
+    <div class="strip-item reveal" data-delay="2"><strong>Zero</strong><span>ads or trackers</span></div>
+    <div class="strip-item reveal" data-delay="3"><strong>Your data</strong><span>stays yours</span></div>
+  </div>
+</section>
+
+<!-- ============ FEATURES ============ -->
+<section class="section" id="features">
+  <div class="container">
+    <div class="head reveal">
+      <p class="eyebrow">Everything in one place</p>
+      <h2>Money management that<br>actually fits your month</h2>
+      <p class="sub">No spreadsheets. No guessing. Just a clear picture of what you have,
+      what is coming, and what you are saving for.</p>
+    </div>
+
+    <div class="cards">
+      <article class="card reveal">
+        <div class="card-ic">
+          <svg viewBox="0 0 24 24"><path d="M3 3v18h18M7 15l4-5 3 3 5-7"/></svg>
+        </div>
+        <h3>Smart dashboard</h3>
+        <p>See your real balance, what is safe to spend today, and where the month is
+        heading — the moment you open the app.</p>
+      </article>
+
+      <article class="card reveal" data-delay="1">
+        <div class="card-ic">
+          <svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+        </div>
+        <h3>Budgets that nudge</h3>
+        <p>Set limits for food, fuel and fun. ExpertMoney warns you before you overspend —
+        not after the damage is done.</p>
+      </article>
+
+      <article class="card reveal" data-delay="2">
+        <div class="card-ic">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        </div>
+        <h3>Savings goals</h3>
+        <p>From an emergency fund to a dream trip — set a target, get a weekly pace,
+        and watch the progress bar fill.</p>
+      </article>
+
+      <article class="card reveal" data-delay="3">
+        <div class="card-ic">
+          <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg>
+        </div>
+        <h3>All your accounts</h3>
+        <p>Cards, cash, savings and credits in one wallet. Add recurring payments once
+        and never be surprised by a direct debit again.</p>
+      </article>
+
+      <article class="card reveal" data-delay="4">
+        <div class="card-ic">
+          <svg viewBox="0 0 24 24"><path d="M21 15V6a1 1 0 0 0-1-1h-5l-2-2H4a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h5"/><path d="M12 14l3 3 6-6"/></svg>
+        </div>
+        <h3>Reports that make sense</h3>
+        <p>Month-by-month charts and category breakdowns that show exactly where the money
+        went — no accounting degree required.</p>
+      </article>
+
+      <article class="card reveal" data-delay="5">
+        <div class="card-ic">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+        </div>
+        <h3>Private by design</h3>
+        <p>Lock the app behind Face ID, blur your balances in public with Privacy Mode,
+        and delete everything whenever you want.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section class="section section-alt" id="how">
+  <div class="container">
+    <div class="head reveal">
+      <p class="eyebrow">Three minutes to set up</p>
+      <h2>From install to a plan<br>that runs itself</h2>
+    </div>
+
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-n">01</div>
+        <h3>Tell us your income</h3>
+        <p>Salary, freelance work, anything that comes in. One screen, no bank login required.</p>
+      </div>
+      <div class="step reveal" data-delay="1">
+        <div class="step-n">02</div>
+        <h3>Add your fixed costs</h3>
+        <p>Rent, subscriptions, credits. ExpertMoney works out what is genuinely left over each month.</p>
+      </div>
+      <div class="step reveal" data-delay="2">
+        <div class="step-n">03</div>
+        <h3>Pick a goal</h3>
+        <p>Emergency fund, a trip, a car. We split it into a weekly pace you can actually keep.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SHOWCASE ============ -->
+<section class="section" id="showcase">
+  <div class="container">
+
+    <div class="show reveal">
+      <div class="show-copy">
+        <p class="eyebrow">Budgets</p>
+        <h2>Know you are fine<br>before you spend</h2>
+        <p class="sub">Most apps tell you what you already lost. ExpertMoney does the maths
+        forward: it takes your fixed costs and goals off the top, then tells you what is
+        genuinely safe to spend today.</p>
+        <ul class="ticks">
+          <li>Category limits for food, fuel, fun and more</li>
+          <li>Early warnings when a category is running hot</li>
+          <li>A daily safe-to-spend figure that updates as you go</li>
+        </ul>
+      </div>
+      <div class="show-visual">
+        <div class="panel">
+          <div class="panel-head"><span>March budget</span><span class="panel-tag">78% used</span></div>
+          <div class="bud"><div class="bud-row"><span>Food</span><span class="bud-num">$120 / $180</span></div><div class="bar"><i style="--w:66%"></i></div></div>
+          <div class="bud"><div class="bud-row"><span>Fuel</span><span class="bud-num warn">$170 / $200</span></div><div class="bar"><i class="warn" style="--w:85%"></i></div></div>
+          <div class="bud"><div class="bud-row"><span>Fun</span><span class="bud-num">$20 / $150</span></div><div class="bar"><i style="--w:13%"></i></div></div>
+          <div class="bud"><div class="bud-row"><span>Transport</span><span class="bud-num">$38 / $90</span></div><div class="bar"><i style="--w:42%"></i></div></div>
+          <div class="nudge">
+            <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+            <p>Slow down on <strong>Fuel</strong> — $30 left for 9 days.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="show show-rev reveal">
+      <div class="show-copy">
+        <p class="eyebrow">Goals</p>
+        <h2>Every goal gets<br>a weekly pace</h2>
+        <p class="sub">A target with no plan is a wish. Give ExpertMoney the amount and the
+        deadline and it works backwards into a number you can hit every week — then keeps
+        score for you.</p>
+        <ul class="ticks">
+          <li>Emergency fund, holidays, a deposit — as many as you like</li>
+          <li>Progress that updates automatically from your accounts</li>
+          <li>See the finish date move when you save extra</li>
+        </ul>
+      </div>
+      <div class="show-visual">
+        <div class="panel">
+          <div class="panel-head"><span>Your goals</span><span class="panel-tag">3 active</span></div>
+
+          <div class="goal">
+            <div class="ring" data-pct="72">
+              <svg viewBox="0 0 120 120"><circle class="ring-bg" cx="60" cy="60" r="52"/><circle class="ring-fg" cx="60" cy="60" r="52"/></svg>
+              <span class="ring-val">72<i>%</i></span>
+            </div>
+            <div class="goal-body">
+              <p>Emergency fund</p>
+              <span>$3,600 of $5,000</span>
+              <span class="goal-pace">$85 / week · done by Oct</span>
+            </div>
+          </div>
+
+          <div class="goal">
+            <div class="ring" data-pct="41">
+              <svg viewBox="0 0 120 120"><circle class="ring-bg" cx="60" cy="60" r="52"/><circle class="ring-fg" cx="60" cy="60" r="52"/></svg>
+              <span class="ring-val">41<i>%</i></span>
+            </div>
+            <div class="goal-body">
+              <p>Japan trip</p>
+              <span>$1,230 of $3,000</span>
+              <span class="goal-pace">$60 / week · done by Jun</span>
+            </div>
+          </div>
+
+          <div class="goal">
+            <div class="ring" data-pct="18">
+              <svg viewBox="0 0 120 120"><circle class="ring-bg" cx="60" cy="60" r="52"/><circle class="ring-fg" cx="60" cy="60" r="52"/></svg>
+              <span class="ring-val">18<i>%</i></span>
+            </div>
+            <div class="goal-body">
+              <p>New laptop</p>
+              <span>$320 of $1,800</span>
+              <span class="goal-pace">$40 / week · done by Dec</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="show reveal">
+      <div class="show-copy">
+        <p class="eyebrow">Reports</p>
+        <h2>See exactly where<br>the month went</h2>
+        <p class="sub">Every transaction rolls up into charts you can actually read. Compare
+        months side by side, spot the category that quietly grew, and catch a bad habit while
+        it is still small.</p>
+        <ul class="ticks">
+          <li>Income against spending, month by month</li>
+          <li>Category breakdown with the share of your total</li>
+          <li>History you can filter and search at any time</li>
+        </ul>
+      </div>
+      <div class="show-visual">
+        <div class="panel">
+          <div class="panel-head"><span>Last 6 months</span><span class="panel-tag">Spending</span></div>
+
+          <div class="chart">
+            <div class="chart-col"><div class="chart-bar" style="--h:52%"></div><span>Oct</span></div>
+            <div class="chart-col"><div class="chart-bar" style="--h:68%"></div><span>Nov</span></div>
+            <div class="chart-col"><div class="chart-bar" style="--h:45%"></div><span>Dec</span></div>
+            <div class="chart-col"><div class="chart-bar" style="--h:82%"></div><span>Jan</span></div>
+            <div class="chart-col"><div class="chart-bar" style="--h:61%"></div><span>Feb</span></div>
+            <div class="chart-col"><div class="chart-bar is-now" style="--h:74%"></div><span>Mar</span></div>
+          </div>
+
+          <div class="legend">
+            <div class="legend-row">
+              <span class="swatch swatch-1"></span>
+              <span class="legend-name">Food &amp; groceries</span>
+              <span class="legend-val">34%</span>
+            </div>
+            <div class="legend-row">
+              <span class="swatch swatch-2"></span>
+              <span class="legend-name">Transport &amp; fuel</span>
+              <span class="legend-val">23%</span>
+            </div>
+            <div class="legend-row">
+              <span class="swatch swatch-3"></span>
+              <span class="legend-name">Home &amp; bills</span>
+              <span class="legend-val">28%</span>
+            </div>
+            <div class="legend-row">
+              <span class="swatch swatch-4"></span>
+              <span class="legend-name">Everything else</span>
+              <span class="legend-val">15%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ SECURITY ============ -->
+<section class="section section-alt" id="security">
+  <div class="container">
+    <div class="head reveal">
+      <p class="eyebrow">Security</p>
+      <h2>Your finances,<br>nobody else's business</h2>
+      <p class="sub">Financial data is the most sensitive thing on your phone. We treat it that way.</p>
+    </div>
+
+    <div class="sec-grid">
+      <div class="sec reveal">
+        <svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+        <h3>Face ID / Touch ID lock</h3>
+        <p>The app locks itself the moment you switch away. Nobody opens it but you.</p>
+      </div>
+      <div class="sec reveal" data-delay="1">
+        <svg viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><path d="M4 4l16 16"/></svg>
+        <h3>Privacy Mode</h3>
+        <p>One tap blurs every balance on screen — for the bus, the office, or a nosy friend.</p>
+      </div>
+      <div class="sec reveal" data-delay="2">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <h3>Isolated by account</h3>
+        <p>Server rules make your records readable only by you. Not by other users. Not by us.</p>
+      </div>
+      <div class="sec reveal" data-delay="3">
+        <svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+        <h3>Delete everything</h3>
+        <p>Erase your account and every record it holds from inside the app, whenever you want.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="section" id="faq">
+  <div class="container container-narrow">
+    <div class="head reveal">
+      <p class="eyebrow">FAQ</p>
+      <h2>Questions, answered</h2>
+    </div>
+
+    <div class="faq">
+      <div class="q reveal">
+        <button class="q-btn" aria-expanded="false">
+          Do I have to connect my bank account?
+          <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="q-body"><p>No. ExpertMoney works entirely from what you enter — income, costs and transactions. There is no bank login, no screen-scraping, and no third party sitting between you and your money.</p></div>
+      </div>
+
+      <div class="q reveal" data-delay="1">
+        <button class="q-btn" aria-expanded="false">
+          Is my financial data safe?
+          <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="q-body"><p>Your records are stored against your account and server-side rules make them readable only by you. The app itself can be locked behind Face ID, and Privacy Mode hides your balances on screen. You can delete your account and all of its data from inside the app.</p></div>
+      </div>
+
+      <div class="q reveal" data-delay="2">
+        <button class="q-btn" aria-expanded="false">
+          Can I use it in my own currency?
+          <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="q-body"><p>Yes. You pick your currency during setup and every screen follows it.</p></div>
+      </div>
+
+      <div class="q reveal" data-delay="3">
+        <button class="q-btn" aria-expanded="false">
+          Does it work on both iPhone and Android?
+          <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="q-body"><p>Yes. ExpertMoney is built from a single codebase for both platforms, so the features and your data are identical wherever you sign in.</p></div>
+      </div>
+
+      <div class="q reveal" data-delay="4">
+        <button class="q-btn" aria-expanded="false">
+          What happens to my data if I stop using the app?
+          <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="q-body"><p>It stays in your account until you decide otherwise. Whenever you want it gone, Delete Account in the Profile screen removes your account and the records attached to it permanently.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="cta" id="download">
+  <div class="container">
+    <div class="cta-box reveal">
+      <h2>Your money already has<br>a plan. Make it yours.</h2>
+      <p>Set up in three minutes. No bank login, no ads, no spreadsheets.</p>
+      <div class="store-row">
+        <span class="store-btn is-soon">
+          <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><path d="M16.4 12.7c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9s-1.8-.9-3-.8c-1.5 0-2.9.9-3.7 2.3-1.6 2.7-.4 6.8 1.1 9 .8 1.1 1.6 2.3 2.8 2.2 1.1 0 1.6-.7 2.9-.7s1.7.7 2.9.7 2-1.1 2.7-2.2c.9-1.2 1.2-2.4 1.3-2.5-.1 0-2.4-.9-2.4-3.6zM14.2 5.9c.6-.8 1-1.8.9-2.9-.9 0-2 .6-2.6 1.4-.6.7-1.1 1.7-.9 2.8 1 0 2-.5 2.6-1.3z"/></svg>
+          <span><i>Coming soon to</i>App Store</span>
+        </span>
+        <span class="store-btn is-soon">
+          <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><path d="M3.6 2.3c-.3.3-.5.8-.5 1.4v16.6c0 .6.2 1.1.5 1.4l.1.1 9.3-9.3v-.2L3.7 2.2l-.1.1zm12.5 6.2L13.4 11l2.7 2.7 3.4-1.9c1-.6 1-1.5 0-2.1l-3.4-1.9v.7zM12.7 12.5 3.9 21.3c.3.3.9.4 1.5 0l10.1-5.7-2.8-3.1zM5.4 2.4c-.6-.3-1.2-.3-1.5 0l8.8 8.8 2.8-2.8L5.4 2.4z"/></svg>
+          <span><i>Coming soon to</i>Google Play</span>
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <a class="brand" href="index.html">
+        <img src="assets/logo-192.png" alt="" width="30" height="30">
+        <span>Expert<strong>Money</strong></span>
+      </a>
+      <p>The financial planner that turns your income into goals you actually reach.</p>
+    </div>
+
+    <nav class="footer-col" aria-label="Product">
+      <p class="footer-h">Product</p>
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#showcase">Inside the app</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+
+    <nav class="footer-col" aria-label="Legal">
+      <p class="footer-h">Legal</p>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Service</a>
+    </nav>
+
+    <nav class="footer-col" aria-label="Support">
+      <p class="footer-h">Support</p>
+      <a href="mailto:support@expert-money.com">support@expert-money.com</a>
+    </nav>
+  </div>
+
+  <div class="container footer-bottom">
+    <p>&copy; <span id="year">2026</span> Voinea David Adrian. All rights reserved.</p>
+    <p class="footer-dis">ExpertMoney provides budgeting tools. It is not a bank and does not provide regulated financial advice.</p>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

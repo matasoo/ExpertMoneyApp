@@ -52,7 +52,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCCU3juBuh258dLXQBHYYcf--0enZZOOXU',
-    appId: '1:882159044456:android:2ee267cb9a81e8fc8f38dd',
+    appId: '1:882159044456:android:132b0098bf8832a88f38dd',
     messagingSenderId: '882159044456',
     projectId: 'expertmoney-3f96c',
     storageBucket: 'expertmoney-3f96c.firebasestorage.app',
@@ -60,20 +60,20 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAdHFAD_EnT_zBTxnvXtzKAnawFyn1m-8g',
-    appId: '1:882159044456:ios:da7c98aef4be2dd78f38dd',
+    appId: '1:882159044456:ios:0ec866a8434baf7e8f38dd',
     messagingSenderId: '882159044456',
     projectId: 'expertmoney-3f96c',
     storageBucket: 'expertmoney-3f96c.firebasestorage.app',
-    iosBundleId: 'com.example.expertMoneyFlutter',
+    iosBundleId: 'com.expertmoney.app',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyAdHFAD_EnT_zBTxnvXtzKAnawFyn1m-8g',
-    appId: '1:882159044456:ios:da7c98aef4be2dd78f38dd',
+    appId: '1:882159044456:ios:0ec866a8434baf7e8f38dd',
     messagingSenderId: '882159044456',
     projectId: 'expertmoney-3f96c',
     storageBucket: 'expertmoney-3f96c.firebasestorage.app',
-    iosBundleId: 'com.example.expertMoneyFlutter',
+    iosBundleId: 'com.expertmoney.app',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/providers/currency_provider.dart';
 import '../../../../core/widgets/expert_money_logo.dart';
-import '../../../core/providers/premium_provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,7 +9,6 @@ import '../../../core/services/firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../../core/utils/icon_utils.dart';
 import '../../wallet/providers/accounts_provider.dart';
-import '../../../core/providers/premium_provider.dart';
 import '../domain/models/transaction.dart';
 import '../providers/transactions_provider.dart';
 import '../providers/daily_budget_provider.dart';
@@ -37,7 +35,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   int _currentIndex = 0;
   @override
   Widget build(BuildContext context) {
-    final isPremium = ref.watch(premiumProvider);
     final transactions = ref.watch(transactionsProvider);
     final recurringPayments = ref.watch(recurringPaymentsProvider);
     final credits = ref.watch(creditsProvider);
@@ -73,7 +70,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
               );
             },
-            child: _getCurrentTab(percentage, dailyBudget, todayExpenses, transactions, recurringPayments, credits, isPremium),
+            child: _getCurrentTab(percentage, dailyBudget, todayExpenses, transactions, recurringPayments, credits),
           ),
         ),
         bottomNavigationBar: _buildBottomNavBar(),
@@ -81,7 +78,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  Widget _getCurrentTab(double percentage, double? dailyBudget, double todayExpenses, List<TransactionModel> transactions, List<RecurringPaymentModel> recurringPayments, List<CreditModel> credits, bool isPremium) {
+  Widget _getCurrentTab(double percentage, double? dailyBudget, double todayExpenses, List<TransactionModel> transactions, List<RecurringPaymentModel> recurringPayments, List<CreditModel> credits) {
     switch (_currentIndex) {
       case 0:
         return KeyedSubtree(
@@ -90,7 +87,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             stream: firestoreService.userProfileStream(),
             builder: (context, snapshot) {
               final userProfile = snapshot.data;
-              return _buildHomeTab(percentage, dailyBudget, todayExpenses, transactions, recurringPayments, credits, userProfile, isPremium);
+              return _buildHomeTab(percentage, dailyBudget, todayExpenses, transactions, recurringPayments, credits, userProfile);
             }
           ),
         );
@@ -114,7 +111,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     }
   }
 
-  Widget _buildHomeTab(double percentage, double? dailyBudget, double todayExpenses, List<TransactionModel> transactions, List<RecurringPaymentModel> recurringPayments, List<CreditModel> credits, Map<String, dynamic>? userProfile, bool isPremium) {
+  Widget _buildHomeTab(double percentage, double? dailyBudget, double todayExpenses, List<TransactionModel> transactions, List<RecurringPaymentModel> recurringPayments, List<CreditModel> credits, Map<String, dynamic>? userProfile) {
     return ScrollConfiguration(
       behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
       child: SingleChildScrollView(
@@ -124,7 +121,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildTopBar(userProfile, isPremium),
+              _buildTopBar(userProfile),
               SizedBox(height: 24),
               _buildGreeting(userProfile),
               SizedBox(height: 32),
@@ -153,7 +150,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  Widget _buildTopBar(Map<String, dynamic>? userProfile, bool isPremium) {
+  Widget _buildTopBar(Map<String, dynamic>? userProfile) {
     final avatarUrl = userProfile?['avatarUrl'];
     
     return Row(

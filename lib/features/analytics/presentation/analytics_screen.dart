@@ -2,7 +2,6 @@ import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'widgets/pro_advanced_charts.dart';
@@ -14,12 +13,10 @@ import '../../dashboard/domain/models/transaction.dart';
 import '../../dashboard/providers/transactions_provider.dart';
 import '../../goals/providers/budgets_provider.dart';
 import '../../goals/domain/models/budget.dart';
-import '../../wallet/providers/accounts_provider.dart';
 import '../../wallet/providers/credits_provider.dart';
 import '../../../../core/utils/icon_utils.dart';
 import '../../wallet/providers/recurring_payments_provider.dart';
 
-import '../../../../core/providers/premium_provider.dart';
 import '../../../../core/providers/shared_prefs_provider.dart';
 import '../../../../core/widgets/tutorial_slider.dart';
 
@@ -341,7 +338,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   Widget build(BuildContext context) {
     final allTransactions = ref.watch(transactionsProvider);
     final budgets = ref.watch(budgetsProvider);
-    final isPremium = ref.watch(premiumProvider);
     final currency = ref.watch(currencyProvider);
     
     final currentTransactions = _getFilteredTransactions(allTransactions);
@@ -357,15 +353,17 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
       percentChange = 100; // Infinity in reality, but display 100%
     }
 
-    final categoryTotals = _calculateCategoryTotals(currentTransactions);
     final weeklyData = _calculateLast7Days(allTransactions); // Always last 7 days from selected date
     final lineChartSpots = _calculateLineChartData(currentTransactions);
     
     int divisor = 30;
     if (_selectedPeriodIndex == 0) {
       divisor = 7;
-    } else if (_selectedPeriodIndex == 1) divisor = DateTime(_selectedDate.year, _selectedDate.month + 1, 0).day;
-    else divisor = 365;
+    } else if (_selectedPeriodIndex == 1) {
+      divisor = DateTime(_selectedDate.year, _selectedDate.month + 1, 0).day;
+    } else {
+      divisor = 365;
+    }
 
     Widget activeTab;
     if (_mainTabIndex == 0) {
@@ -418,7 +416,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
           _buildWeeklyBarChart(weeklyData).animate().fadeIn(delay: 350.ms, duration: 400.ms).slideY(begin: 0.1, end: 0),
           
           SizedBox(height: 32),
-          _buildPremiumProjections(isPremium, currentTransactions, allTransactions, currency)
+          _buildAdvancedProjections(currentTransactions, allTransactions, currency)
               .animate().fadeIn(delay: 450.ms, duration: 400.ms).slideY(begin: 0.1, end: 0),
         ],
       );
@@ -1023,61 +1021,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     );
   }
 
-  Widget _buildPremiumChartWrapper(Widget child, bool isPremium, BuildContext context) {
-    if (isPremium) return child;
-
-    return Stack(
-      children: [
-        ImageFiltered(
-          imageFilter: ImageFilter.blur(sigmaX: 8.0, sigmaY: 8.0),
-          child: child,
-        ),
-        Positioned.fill(
-          child: Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.4),
-              borderRadius: BorderRadius.circular(24),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.lock_outline, color: Theme.of(context).colorScheme.onSurface, size: 32),
-                    const SizedBox(height: 8),
-                    Text(
-                      'PRO Feature',
-                      style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w800),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Upgrade to unlock',
-                      style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 12),
-                    ),
-                    const SizedBox(height: 12),
-                    ElevatedButton(
-                      onPressed: () => context.push('/paywall'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).primaryColor,
-                        foregroundColor: Theme.of(context).colorScheme.surface,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        minimumSize: const Size(0, 36),
-                      ),
-                      child: Text('Upgrade to PRO', style: GoogleFonts.manrope(fontWeight: FontWeight.bold, fontSize: 12)),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPremiumProjections(bool isPremium, List<TransactionModel> currentTransactions, List<TransactionModel> allTransactions, String currency) {
+  Widget _buildAdvancedProjections(List<TransactionModel> currentTransactions, List<TransactionModel> allTransactions, String currency) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1086,23 +1030,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
           style: GoogleFonts.manrope(fontSize: 16, fontWeight: FontWeight.w800, color: Theme.of(context).colorScheme.onSurface),
         ),
         SizedBox(height: 16),
-        _buildPremiumChartWrapper(
-          ProCategoriesChart(transactions: currentTransactions, currency: currency),
-          isPremium,
-          context,
-        ),
+        ProCategoriesChart(transactions: currentTransactions, currency: currency),
         const SizedBox(height: 16),
-        _buildPremiumChartWrapper(
-          ProIncomeExpensesChart(allTransactions: allTransactions, currency: currency),
-          isPremium,
-          context,
-        ),
+        ProIncomeExpensesChart(allTransactions: allTransactions, currency: currency),
         const SizedBox(height: 16),
-        _buildPremiumChartWrapper(
-          ProTopMerchantsChart(transactions: currentTransactions, currency: currency),
-          isPremium,
-          context,
-        ),
+        ProTopMerchantsChart(transactions: currentTransactions, currency: currency),
       ],
     );
   }

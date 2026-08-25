@@ -4,11 +4,11 @@ import 'package:go_router/go_router.dart';
 import '../../features/onboarding/presentation/onboarding_screen.dart';
 import '../../features/auth/presentation/login_screen.dart';
 import '../../features/auth/presentation/register_screen.dart';
+import '../../features/auth/presentation/verify_email_screen.dart';
 import 'dart:async';
 import '../../features/setup/presentation/setup_screen.dart';
 import '../../features/dashboard/presentation/dashboard_screen.dart';
 import '../../features/profile/presentation/profile_screen.dart';
-import '../../features/premium/presentation/premium_paywall_screen.dart';
 import '../providers/shared_prefs_provider.dart';
 import '../../features/auth/providers/auth_provider.dart';
 import '../services/firestore_service.dart';
@@ -80,10 +80,20 @@ final routerProvider = Provider<GoRouter>((ref) {
       final isGoingToOnboarding = state.uri.toString() == '/onboarding';
       final isGoingToSetup = state.uri.toString() == '/setup';
       final isGoingToAppLock = state.uri.toString() == '/app-lock';
+      final isGoingToVerifyEmail = state.uri.toString() == '/verify-email';
+      final isEmailVerified = authState.value?.emailVerified ?? false;
+
+      // 0. If user is logged in but HAS NOT verified email
+      if (isUserLoggedIn && !isEmailVerified) {
+        if (!isGoingToVerifyEmail) {
+          return '/verify-email';
+        }
+        return null; // Let them stay on /verify-email
+      }
 
       // 1. If user is logged in and HAS completed setup
       if (isUserLoggedIn && hasCompletedSetup) {
-        if (isGoingToLogin || isGoingToRegister || isGoingToOnboarding || isGoingToSetup || (!isAppLocked && isGoingToAppLock)) {
+        if (isGoingToLogin || isGoingToRegister || isGoingToOnboarding || isGoingToSetup || isGoingToVerifyEmail || (!isAppLocked && isGoingToAppLock)) {
           return '/'; // Go to Dashboard
         }
         if (isAppLocked && !isGoingToAppLock) {
@@ -131,6 +141,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const RegisterScreen(),
       ),
       GoRoute(
+        path: '/verify-email',
+        builder: (context, state) => const VerifyEmailScreen(),
+      ),
+      GoRoute(
         path: '/setup',
         builder: (context, state) => const SetupScreen(),
       ),
@@ -156,11 +170,6 @@ final routerProvider = Provider<GoRouter>((ref) {
             );
           },
         ),
-      ),
-      GoRoute(
-        path: '/paywall',
-        name: 'paywall',
-        builder: (context, state) => const PremiumPaywallScreen(),
       ),
       GoRoute(
         path: '/',

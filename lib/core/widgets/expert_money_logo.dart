@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../providers/premium_provider.dart';
 
 class ExpertMoneyLogo extends ConsumerWidget {
   const ExpertMoneyLogo({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isPremium = ref.watch(premiumProvider);
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
