@@ -5,15 +5,17 @@ import '../../../../core/widgets/expert_money_logo.dart';
 import '../../../core/providers/premium_provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import '../../ai_chat/presentation/ai_chat_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/services/firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../setup/providers/setup_provider.dart';
+import '../../../core/utils/icon_utils.dart';
+import '../../wallet/providers/accounts_provider.dart';
+import '../../../core/providers/premium_provider.dart';
+import '../domain/models/transaction.dart';
 import '../providers/transactions_provider.dart';
 import '../providers/daily_budget_provider.dart';
-import '../domain/models/transaction.dart';
 import 'widgets/transaction_bottom_sheet.dart';
+import 'widgets/money_overview_bottom_sheet.dart';
 import 'transactions_history_screen.dart';
 import '../../analytics/presentation/analytics_screen.dart';
 import '../../goals/presentation/goals_screen.dart';
@@ -22,7 +24,6 @@ import '../../wallet/providers/recurring_payments_provider.dart';
 import '../../wallet/domain/models/recurring_payment.dart';
 import '../../wallet/providers/credits_provider.dart';
 import '../../wallet/domain/models/credit_model.dart';
-import '../../../../core/utils/icon_utils.dart';
 import '../../../core/widgets/animated_background.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
@@ -80,7 +81,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  Widget _getCurrentTab(double percentage, double? dailyBudget, double todayExpenses, List<dynamic> transactions, List<RecurringPaymentModel> recurringPayments, List<CreditModel> credits, bool isPremium) {
+  Widget _getCurrentTab(double percentage, double? dailyBudget, double todayExpenses, List<TransactionModel> transactions, List<RecurringPaymentModel> recurringPayments, List<CreditModel> credits, bool isPremium) {
     switch (_currentIndex) {
       case 0:
         return KeyedSubtree(
@@ -113,7 +114,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     }
   }
 
-  Widget _buildHomeTab(double percentage, double? dailyBudget, double todayExpenses, List<dynamic> transactions, List<RecurringPaymentModel> recurringPayments, List<CreditModel> credits, Map<String, dynamic>? userProfile, bool isPremium) {
+  Widget _buildHomeTab(double percentage, double? dailyBudget, double todayExpenses, List<TransactionModel> transactions, List<RecurringPaymentModel> recurringPayments, List<CreditModel> credits, Map<String, dynamic>? userProfile, bool isPremium) {
     return ScrollConfiguration(
       behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
       child: SingleChildScrollView(
@@ -139,7 +140,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               SizedBox(height: 16),
               _buildTransactionsList(transactions),
               SizedBox(height: 24),
-              _buildAIBanner(),
+              if (ref.watch(accountsProvider).isNotEmpty) ...[
+                const SizedBox(height: 16),
+                _buildMoneyOverviewBanner(transactions),
+                const SizedBox(height: 16),
+              ],
               SizedBox(height: 120), // Extra space to scroll past the floating nav bar
             ],
           ),
@@ -352,7 +357,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     ).animate().fadeIn(delay: 500.ms);
   }
 
-  Widget _buildMonthlySummary(List<dynamic> transactions) {
+  Widget _buildMonthlySummary(List<TransactionModel> transactions) {
     final now = DateTime.now();
     double income = 0;
     double expense = 0;
@@ -604,7 +609,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     ).animate().fadeIn(delay: 450.ms).slideY(begin: 0.1);
   }
 
-  Widget _buildTransactionsList(List<dynamic> transactions) {
+  Widget _buildTransactionsList(List<TransactionModel> transactions) {
     if (transactions.isEmpty) {
       return Container(
         padding: EdgeInsets.all(24),
@@ -688,31 +693,26 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  Widget _buildAIBanner() {
+  Widget _buildMoneyOverviewBanner(List<TransactionModel> transactions) {
     return GestureDetector(
       onTap: () {
-        final isPremium = ref.read(premiumProvider);
-        if (isPremium) {
-          showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            backgroundColor: Colors.transparent,
-            builder: (context) => Padding(
-              padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.85,
-                child: const AiChatScreen(),
-              ),
+        showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          builder: (context) => Padding(
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.75,
+              child: MoneyOverviewBottomSheet(transactions: transactions),
             ),
-          );
-        } else {
-          context.push('/paywall');
-        }
+          ),
+        );
       },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor.withValues(alpha: 0.15), // Dark greenish background
+          color: Theme.of(context).primaryColor.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(20),
         ),
       child: Row(
@@ -723,7 +723,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               color: Theme.of(context).primaryColor.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(Icons.lightbulb_outline, color: Theme.of(context).primaryColor, size: 20),
+            child: Icon(Icons.pie_chart_outline, color: Theme.of(context).primaryColor, size: 20),
           ),
           SizedBox(width: 16),
           Expanded(
@@ -732,16 +732,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               children: [
                 RichText(
                   text: TextSpan(
-                    text: 'Expert',
+                    text: 'Your Expert ',
                     style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w800),
                     children: [
                       TextSpan(text: 'Money', style: GoogleFonts.manrope(color: Theme.of(context).primaryColor)),
-                      TextSpan(text: ' AI', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface)),
+                      TextSpan(text: ' Overview', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface)),
                     ],
                   ),
                 ),
                 SizedBox(height: 4),
-                Text('Tip of the day', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 13, fontWeight: FontWeight.w600)),
+                Text('Tap to see your income breakdown', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 13, fontWeight: FontWeight.w600)),
               ],
             ),
           ),

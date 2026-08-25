@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/providers/premium_provider.dart';
-import '../../ai_chat/presentation/ai_chat_screen.dart';
 
 class PremiumPaywallScreen extends ConsumerStatefulWidget {
   const PremiumPaywallScreen({super.key});
@@ -69,7 +68,7 @@ class _PremiumPaywallScreenState extends ConsumerState<PremiumPaywallScreen> {
                   ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.2),
                   const SizedBox(height: 8),
                   Text(
-                    'ExpertMoney AI is now unlocked.',
+                    'All advanced features are now unlocked.',
                     textAlign: TextAlign.center,
                     style: GoogleFonts.manrope(
                       color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), 
@@ -92,20 +91,6 @@ class _PremiumPaywallScreenState extends ConsumerState<PremiumPaywallScreen> {
         
         // Close the paywall
         context.pop(); 
-        
-        // Open AI Chat as Bottom Sheet
-        showModalBottomSheet(
-          context: context,
-          isScrollControlled: true,
-          backgroundColor: Colors.transparent,
-          builder: (context) => Padding(
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height * 0.85,
-              child: const AiChatScreen(),
-            ),
-          ),
-        );
       }
     }
   }
@@ -169,7 +154,7 @@ class _PremiumPaywallScreenState extends ConsumerState<PremiumPaywallScreen> {
                   const SizedBox(height: 16),
                   
                   Text(
-                    'Get 24/7 access to your personal AI financial advisor and take full control of your wealth.',
+                    'Get access to advanced analytics and take full control of your wealth.',
                     style: GoogleFonts.manrope(
                       color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                       fontSize: 16,
@@ -183,9 +168,9 @@ class _PremiumPaywallScreenState extends ConsumerState<PremiumPaywallScreen> {
                   Expanded(
                     child: ListView(
                       children: [
-                        _buildFeatureRow(Icons.chat_bubble_outline, 'Unlimited AI Chat', 'Ask questions about your budget anytime.'),
+                        _buildFeatureRow(Icons.pie_chart_outline, 'Advanced Charts', 'Unlock all premium visual analytics.'),
                         const SizedBox(height: 24),
-                        _buildFeatureRow(Icons.insights, 'Smart Insights', 'Get AI-driven tips based on your spending habits.'),
+                        _buildFeatureRow(Icons.insights, 'Smart Insights', 'Get custom tips based on your spending habits.'),
                         const SizedBox(height: 24),
                         _buildFeatureRow(Icons.auto_graph, 'Predictive Analytics', 'See where your money is going before it happens.'),
                       ],
