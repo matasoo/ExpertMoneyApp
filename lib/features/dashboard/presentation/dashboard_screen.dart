@@ -536,35 +536,47 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               final name = payment['name'] as String;
               final icon = payment['icon'] as String;
 
+              final bool isUrgent = daysLeft <= 2;
+
               return Column(
                 children: [
-                  if (index > 0)
-                    Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05), height: 24, thickness: 1),
+                  if (index > 0) SizedBox(height: 20),
                   Row(
                     children: [
                       Container(
-                        width: 44,
-                        height: 44,
+                        width: 48,
+                        height: 48,
                         decoration: BoxDecoration(
                           color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: BorderRadius.circular(16),
                         ),
                         alignment: Alignment.center,
-                        child: Icon(IconUtils.getIconData(icon), color: Theme.of(context).primaryColor, size: 20),
+                        child: Icon(IconUtils.getIconData(icon), color: Theme.of(context).primaryColor, size: 22),
                       ),
-                      SizedBox(width: 14),
+                      SizedBox(width: 16),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               name,
-                              style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 15, fontWeight: FontWeight.w700),
+                              style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w700),
                             ),
-                            SizedBox(height: 2),
-                            Text(
-                              timeLeft,
-                              style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 12, fontWeight: FontWeight.w500),
+                            SizedBox(height: 6),
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: isUrgent ? Theme.of(context).primaryColor.withValues(alpha: 0.1) : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Text(
+                                timeLeft,
+                                style: GoogleFonts.manrope(
+                                  color: isUrgent ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -572,11 +584,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       RichText(
                         text: TextSpan(
                           text: '${ref.watch(currencyProvider)} $wholePart',
-                          style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w800),
+                          style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 18, fontWeight: FontWeight.w800),
                           children: [
                             TextSpan(
                               text: '.$decimalPart',
-                              style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 12),
+                              style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 13, fontWeight: FontWeight.w700),
                             ),
                           ],
                         ),
