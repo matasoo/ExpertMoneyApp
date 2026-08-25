@@ -23,6 +23,7 @@ class _TransactionBottomSheetState extends ConsumerState<TransactionBottomSheet>
   TransactionCategory _selectedCategory = TransactionCategory.other;
   String? _selectedBudgetId;
   String? _selectedAccountId;
+  DateTime _selectedDate = DateTime.now();
 
   final List<TransactionCategory> _expenseCategories = [
     TransactionCategory.food,
@@ -65,7 +66,7 @@ class _TransactionBottomSheetState extends ConsumerState<TransactionBottomSheet>
           ? _customCategoryController.text.trim().toUpperCase() 
           : _selectedCategory.name.toUpperCase(),
       amount: amount,
-      date: DateTime.now(),
+      date: _selectedDate,
       category: _selectedCategory,
       customCategoryName: _selectedCategory == TransactionCategory.other && _customCategoryController.text.isNotEmpty 
           ? _customCategoryController.text.trim() 
@@ -102,6 +103,11 @@ class _TransactionBottomSheetState extends ConsumerState<TransactionBottomSheet>
   String _getCategoryName(TransactionCategory cat) {
     final name = cat.name;
     return name[0].toUpperCase() + name.substring(1);
+  }
+
+  String _formatDate(DateTime date) {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return '${date.day.toString().padLeft(2, '0')} ${months[date.month - 1]} ${date.year}';
   }
 
   @override
@@ -217,6 +223,37 @@ class _TransactionBottomSheetState extends ConsumerState<TransactionBottomSheet>
                 fillColor: Theme.of(context).colorScheme.surface,
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              ),
+            ),
+            const SizedBox(height: 16),
+            GestureDetector(
+              onTap: () async {
+                final picked = await showDatePicker(
+                  context: context,
+                  initialDate: _selectedDate,
+                  firstDate: DateTime(2020),
+                  lastDate: DateTime.now(),
+                );
+                if (picked != null) {
+                  setState(() => _selectedDate = picked);
+                }
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.calendar_today, size: 20, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)),
+                    const SizedBox(width: 12),
+                    Text(
+                      _formatDate(_selectedDate),
+                      style: GoogleFonts.manrope(fontSize: 16, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface),
+                    ),
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 24),

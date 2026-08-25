@@ -18,6 +18,8 @@ class SetupState {
   final double savingsRate;
   final List<FixedCost> fixedCosts;
   final String mainGoal;
+  final int? salaryDayOfMonth;
+  final bool autoDepositSalary;
 
   SetupState({
     this.monthlyIncome = 3200,
@@ -25,6 +27,8 @@ class SetupState {
     this.savingsRate = 0.2,
     this.fixedCosts = const [],
     this.mainGoal = 'None',
+    this.salaryDayOfMonth,
+    this.autoDepositSalary = false,
   });
 
   SetupState copyWith({
@@ -33,6 +37,8 @@ class SetupState {
     double? savingsRate,
     List<FixedCost>? fixedCosts,
     String? mainGoal,
+    int? salaryDayOfMonth,
+    bool? autoDepositSalary,
   }) {
     return SetupState(
       monthlyIncome: monthlyIncome ?? this.monthlyIncome,
@@ -40,6 +46,8 @@ class SetupState {
       savingsRate: savingsRate ?? this.savingsRate,
       fixedCosts: fixedCosts ?? this.fixedCosts,
       mainGoal: mainGoal ?? this.mainGoal,
+      salaryDayOfMonth: salaryDayOfMonth ?? this.salaryDayOfMonth,
+      autoDepositSalary: autoDepositSalary ?? this.autoDepositSalary,
     );
   }
 
@@ -50,6 +58,8 @@ class SetupState {
       'savingsRate': savingsRate,
       'fixedCosts': fixedCosts.map((c) => c.toMap()).toList(),
       'mainGoal': mainGoal,
+      'salaryDayOfMonth': salaryDayOfMonth,
+      'autoDepositSalary': autoDepositSalary,
     };
   }
 
@@ -60,6 +70,8 @@ class SetupState {
       savingsRate: map['savingsRate']?.toDouble() ?? 0.2,
       fixedCosts: (map['fixedCosts'] as List<dynamic>?)?.map((e) => FixedCost.fromMap(e)).toList() ?? [],
       mainGoal: map['mainGoal'] ?? 'None',
+      salaryDayOfMonth: map['salaryDayOfMonth'],
+      autoDepositSalary: map['autoDepositSalary'] ?? false,
     );
   }
 
@@ -110,6 +122,7 @@ class SetupNotifier extends Notifier<SetupState> {
 
   void setIncome(double income) { state = state.copyWith(monthlyIncome: income, isVariableIncome: false); _saveToFirestore(); }
   void setVariableIncome(bool value) { state = state.copyWith(isVariableIncome: value); _saveToFirestore(); }
+  void setSalaryDetails(int? day, bool autoDeposit) { state = state.copyWith(salaryDayOfMonth: day, autoDepositSalary: autoDeposit); _saveToFirestore(); }
   void setSavingsRate(double rate) { state = state.copyWith(savingsRate: rate); _saveToFirestore(); }
   void addFixedCost(FixedCost cost) { state = state.copyWith(fixedCosts: [...state.fixedCosts, cost]); _saveToFirestore(); }
   void removeFixedCost(FixedCost cost) { state = state.copyWith(fixedCosts: state.fixedCosts.where((c) => c != cost).toList()); _saveToFirestore(); }

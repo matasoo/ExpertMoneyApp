@@ -54,8 +54,14 @@ class StepIncome extends ConsumerWidget {
     return Padding(
       padding: EdgeInsets.all(24.0),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          Expanded(
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
           Text(
             "What's your monthly\nnet income?",
             style: Theme.of(context).textTheme.displayMedium?.copyWith(height: 1.2),
@@ -66,7 +72,7 @@ class StepIncome extends ConsumerWidget {
             style: Theme.of(context).textTheme.bodyMedium,
           ).animate().fadeIn().slideY(begin: 0.1, end: 0),
           
-          Spacer(),
+          SizedBox(height: 32),
           
           Center(
             child: isVariable
@@ -147,8 +153,56 @@ class StepIncome extends ConsumerWidget {
             ],
           ).animate().fadeIn(delay: 500.ms),
           
-          Spacer(),
-          
+          if (!isVariable) ...[
+            SizedBox(height: 32),
+            Container(
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                children: [
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text('Salary Date', style: Theme.of(context).textTheme.bodyMedium),
+                    subtitle: Text(setupState.salaryDayOfMonth != null ? 'Day ${setupState.salaryDayOfMonth} of the month' : 'Not set', style: TextStyle(color: Theme.of(context).primaryColor)),
+                    trailing: Icon(Icons.calendar_today, size: 20),
+                    onTap: () async {
+                      final now = DateTime.now();
+                      final selectedDate = await showDatePicker(
+                        context: context,
+                        initialDate: now,
+                        firstDate: DateTime(now.year, now.month, 1),
+                        lastDate: DateTime(now.year, now.month + 1, 0),
+                        helpText: 'Select Salary Day',
+                      );
+                      if (selectedDate != null) {
+                        ref.read(setupProvider.notifier).setSalaryDetails(selectedDate.day, setupState.autoDepositSalary);
+                      }
+                    },
+                  ),
+                  Divider(height: 1),
+                  SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text('Auto-deposit salary', style: Theme.of(context).textTheme.bodyMedium),
+                    subtitle: Text('Automatically add income on this date', style: Theme.of(context).textTheme.bodySmall),
+                    value: setupState.autoDepositSalary,
+                    activeColor: Theme.of(context).primaryColor,
+                    onChanged: (val) {
+                      ref.read(setupProvider.notifier).setSalaryDetails(setupState.salaryDayOfMonth, val);
+                    },
+                  ),
+                ],
+              ),
+            ).animate().fadeIn(delay: 600.ms),
+          ],
+          SizedBox(height: 32),
+        ],
+      ),
+    ),
+  ),
+  
           ElevatedButton(
             onPressed: (income > 0 || isVariable) ? onNext : null,
             child: Text('Continue'),
