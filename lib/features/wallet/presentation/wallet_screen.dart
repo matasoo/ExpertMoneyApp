@@ -393,7 +393,9 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           decoration: BoxDecoration(
-            border: Border(bottom: BorderSide(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05))),
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
           ),
           child: Row(
             children: [
@@ -402,29 +404,19 @@ class _WalletScreenState extends ConsumerState<WalletScreen> {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                borderRadius: BorderRadius.circular(14),
+                color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(16),
               ),
               alignment: Alignment.center,
               child: Icon(IconUtils.getIconData(account.icon ?? ''), color: Theme.of(context).primaryColor, size: 24),
             ),
             SizedBox(width: 16),
             
-            // Name and Subtitle
+            // Name
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    account.name,
-                    style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w700),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    'Manual · · · ·', // Placeholder for subtitle as requested
-                    style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 12, fontWeight: FontWeight.w500),
-                  ),
-                ],
+              child: Text(
+                account.name,
+                style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w700),
               ),
             ),
             
