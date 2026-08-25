@@ -128,6 +128,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               _buildGreeting(userProfile),
               SizedBox(height: 32),
               _buildDonutChart(percentage, dailyBudget, todayExpenses),
+              SizedBox(height: 32),
+              _buildMonthlySummary(transactions),
               if (recurringPayments.isNotEmpty || credits.isNotEmpty) ...[
                 SizedBox(height: 40),
                 _buildUpcomingPayments(recurringPayments, credits),
@@ -348,6 +350,89 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         ),
       ],
     ).animate().fadeIn(delay: 500.ms);
+  }
+
+  Widget _buildMonthlySummary(List<dynamic> transactions) {
+    final now = DateTime.now();
+    double income = 0;
+    double expense = 0;
+
+    for (var t in transactions) {
+      if (t.date.year == now.year && t.date.month == now.month) {
+        if (t.isExpense) {
+          expense += t.amount;
+        } else {
+          income += t.amount;
+        }
+      }
+    }
+
+    final currency = ref.watch(currencyProvider);
+
+    return Container(
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05)),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: Color(0xFF10b981).withValues(alpha: 0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(Icons.arrow_downward, color: Color(0xFF10b981), size: 14),
+                    ),
+                    SizedBox(width: 8),
+                    Text('Income', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 13, fontWeight: FontWeight.w600)),
+                  ],
+                ),
+                SizedBox(height: 8),
+                Text('$currency${income.toStringAsFixed(0)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 20, fontWeight: FontWeight.w800, letterSpacing: -0.5)),
+              ],
+            ),
+          ),
+          Container(
+            width: 1,
+            height: 40,
+            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+          ),
+          SizedBox(width: 20),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.error.withValues(alpha: 0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(Icons.arrow_upward, color: Theme.of(context).colorScheme.error, size: 14),
+                    ),
+                    SizedBox(width: 8),
+                    Text('Expenses', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 13, fontWeight: FontWeight.w600)),
+                  ],
+                ),
+                SizedBox(height: 8),
+                Text('$currency${expense.toStringAsFixed(0)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 20, fontWeight: FontWeight.w800, letterSpacing: -0.5)),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ).animate().fadeIn(delay: 450.ms).slideY(begin: 0.1);
   }
 
   Widget _buildUpcomingPayments(List<RecurringPaymentModel> recurringPayments, List<CreditModel> credits) {
