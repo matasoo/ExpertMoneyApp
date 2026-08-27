@@ -280,13 +280,27 @@ jobs:
             fi
 
             if [ "$USE_SIGNING" = "true" ]; then
-              # Keep the Flutter tool out of signing entirely: it only recognises
-              # *development* certificates and insists on a DEVELOPMENT_TEAM in the
-              # project, neither of which applies to a distribution-only CI keychain.
-              # --config-only just writes Generated.xcconfig; the Dart AOT build then
-              # happens inside the Xcode build phase during `archive`, which is also
-              # where signing is applied with the manual App Store profile.
-              flutter build ios --$FLUTTER_CONF --config-only
+              # Keep the Flutter tool out of signing entirely. Both flags are needed:
+              #   --no-codesign  skips the certificate lookup, which only ever matches
+              #                  *development* certs and so fails on a distribution keychain
+              #   --config-only  skips the build, and with it the post-build check that
+              #                  demands DEVELOPMENT_TEAM be set inside project.pbxproj
+              # The Dart AOT compile then happens in the Xcode build phase during
+              # `archive`, which is also where the App Store profile is applied.
+              # Flutter's exit code is not what matters here — the generated xcconfig is.
+              set +e
+              flutter build ios --$FLUTTER_CONF --config-only --no-codesign
+              set -e
+
+              XCCONFIG="$GITHUB_WORKSPACE/ios/Flutter/Generated.xcconfig"
+              if ! grep -q "FLUTTER_BUILD_MODE=$FLUTTER_CONF" "$XCCONFIG" 2>/dev/null; then
+                echo "::error::$XCCONFIG is missing FLUTTER_BUILD_MODE=$FLUTTER_CONF"
+                echo "--- Generated.xcconfig ---"
+                cat "$XCCONFIG" 2>/dev/null || echo "(file not found)"
+                exit 1
+              fi
+              echo "Generated.xcconfig OK (FLUTTER_BUILD_MODE=$FLUTTER_CONF)"
+
               cd "$GITHUB_WORKSPACE/ios"
               if [ -d "Runner.xcworkspace" ]; then TARGET_ARGS="-workspace 'Runner.xcworkspace'"; else TARGET_ARGS="-project 'Runner.xcodeproj'"; fi
               ARCHIVE_CMD="xcodebuild $TARGET_ARGS -scheme '${SCHEME:-Runner}' -configuration '$CONFIGURATION' -destination 'generic/platform=iOS' -derivedDataPath '$DERIVED_DATA_PATH' IPHONEOS_DEPLOYMENT_TARGET=15.0 COMPILER_INDEX_STORE_ENABLE=NO DEVELOPMENT_TEAM='$DEVELOPMENT_TEAM' CODE_SIGN_STYLE=Manual PROVISIONING_PROFILE_SPECIFIER='$PROVISIONING_PROFILE_NAME' -quiet -archivePath '$GITHUB_WORKSPACE/build/App.xcarchive' archive"
