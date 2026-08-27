@@ -60,20 +60,20 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAdHFAD_EnT_zBTxnvXtzKAnawFyn1m-8g',
-    appId: '1:882159044456:ios:0ec866a8434baf7e8f38dd',
+    appId: '1:882159044456:ios:cf907d4b61db88158f38dd',
     messagingSenderId: '882159044456',
     projectId: 'expertmoney-3f96c',
     storageBucket: 'expertmoney-3f96c.firebasestorage.app',
-    iosBundleId: 'com.expertmoney.app',
+    iosBundleId: 'com.expert-money.app',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyAdHFAD_EnT_zBTxnvXtzKAnawFyn1m-8g',
-    appId: '1:882159044456:ios:0ec866a8434baf7e8f38dd',
+    appId: '1:882159044456:ios:cf907d4b61db88158f38dd',
     messagingSenderId: '882159044456',
     projectId: 'expertmoney-3f96c',
     storageBucket: 'expertmoney-3f96c.firebasestorage.app',
-    iosBundleId: 'com.expertmoney.app',
+    iosBundleId: 'com.expert-money.app',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(

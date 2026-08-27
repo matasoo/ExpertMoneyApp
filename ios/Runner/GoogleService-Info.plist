@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.expertmoney.app</string>
+	<string>com.expert-money.app</string>
 	<key>PROJECT_ID</key>
 	<string>expertmoney-3f96c</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:882159044456:ios:0ec866a8434baf7e8f38dd</string>
+	<string>1:882159044456:ios:cf907d4b61db88158f38dd</string>
 </dict>
 </plist>

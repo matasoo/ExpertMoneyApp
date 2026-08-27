@@ -28,6 +28,11 @@ on:
         required: false
         type: boolean
         default: false
+      release_to_appstore:
+        description: 'Sign with the distribution certificate and upload the build to App Store Connect (implies signing + Release)'
+        required: false
+        type: boolean
+        default: false
       configuration:
         description: 'Build configuration (use Release for sideloading — Debug builds need a debugger attached and crash at launch on device)'
         required: false
@@ -160,13 +165,33 @@ jobs:
             pods-${{ runner.os }}-
 
       - name: Install certificate and provisioning profile
-        if: inputs.use_signing
+        if: inputs.use_signing || inputs.release_to_appstore
         env:
+          RELEASE_TO_APPSTORE: ${{ inputs.release_to_appstore }}
           IOS_CERTIFICATE: ${{ secrets.IOS_CERTIFICATE }}
           IOS_CERTIFICATE_PASSWORD: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
           IOS_PROVISIONING_PROFILE: ${{ secrets.IOS_PROVISIONING_PROFILE }}
+          IOS_DISTRIBUTION_CERTIFICATE: ${{ secrets.IOS_DISTRIBUTION_CERTIFICATE }}
+          IOS_DISTRIBUTION_CERT_PASSWORD: ${{ secrets.IOS_DISTRIBUTION_CERT_PASSWORD }}
+          IOS_APPSTORE_PROVISIONING_PROFILE: ${{ secrets.IOS_APPSTORE_PROVISIONING_PROFILE }}
         run: |
           set -e
+
+          # App Store releases use the distribution certificate + App Store profile;
+          # everything else uses the development pair.
+          if [ "$RELEASE_TO_APPSTORE" = "true" ]; then
+            echo "Using DISTRIBUTION signing assets"
+            IOS_CERTIFICATE="$IOS_DISTRIBUTION_CERTIFICATE"
+            IOS_CERTIFICATE_PASSWORD="$IOS_DISTRIBUTION_CERT_PASSWORD"
+            IOS_PROVISIONING_PROFILE="$IOS_APPSTORE_PROVISIONING_PROFILE"
+          else
+            echo "Using DEVELOPMENT signing assets"
+          fi
+
+          if [ -z "$IOS_CERTIFICATE" ] || [ -z "$IOS_PROVISIONING_PROFILE" ]; then
+            echo "::error::Signing secrets are missing. Check the repository secrets."
+            exit 1
+          fi
 
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
           KEYCHAIN_PASSWORD=$(openssl rand -base64 32)
@@ -208,8 +233,20 @@ jobs:
           PROJECT_TYPE: ${{ steps.detect.outputs.type }}
           USE_SIGNING: ${{ inputs.use_signing }}
           CONFIGURATION: ${{ inputs.configuration }}
+          RELEASE_TO_APPSTORE: ${{ inputs.release_to_appstore }}
         run: |
           set -e
+
+          # An App Store release is always a signed Release build.
+          if [ "$RELEASE_TO_APPSTORE" = "true" ]; then
+            USE_SIGNING=true
+            CONFIGURATION=Release
+            EXPORT_METHOD=app-store
+          else
+            EXPORT_METHOD=development
+          fi
+          echo "Signing=$USE_SIGNING  Configuration=$CONFIGURATION  Export=$EXPORT_METHOD"
+
           cd "$IOS_PATH"
           WORKSPACE=$(find . -maxdepth 1 -name "*.xcworkspace" | head -1)
           PROJECT=$(find . -maxdepth 1 -name "*.xcodeproj" | head -1)
@@ -309,7 +346,7 @@ jobs:
               '<plist version="1.0">' \
               '<dict>' \
               '    <key>method</key>' \
-              '    <string>development</string>' \
+              "    <string>${EXPORT_METHOD}</string>" \
               '    <key>signingStyle</key>' \
               '    <string>manual</string>' \
               '    <key>teamID</key>' \
@@ -357,6 +394,41 @@ jobs:
             exit 1
           fi
           echo "AOT build confirmed — no kernel_blob.bin."
+
+      - name: Upload build to App Store Connect
+        if: inputs.release_to_appstore
+        env:
+          BUILD_ID: ${{ inputs.build_id }}
+          ASC_API_KEY_ID: ${{ secrets.ASC_API_KEY_ID }}
+          ASC_API_ISSUER_ID: ${{ secrets.ASC_API_ISSUER_ID }}
+          ASC_API_PRIVATE_KEY: ${{ secrets.ASC_API_PRIVATE_KEY }}
+        run: |
+          set -e
+          cd "$GITHUB_WORKSPACE"
+
+          if [ -z "$ASC_API_KEY_ID" ] || [ -z "$ASC_API_ISSUER_ID" ] || [ -z "$ASC_API_PRIVATE_KEY" ]; then
+            echo "::error::App Store Connect API secrets are missing."
+            exit 1
+          fi
+
+          # altool looks the key up by ID in this directory
+          mkdir -p ~/.appstoreconnect/private_keys
+          printf '%s\n' "$ASC_API_PRIVATE_KEY" > ~/.appstoreconnect/private_keys/AuthKey_${ASC_API_KEY_ID}.p8
+
+          IPA="build/$BUILD_ID.ipa"
+
+          echo "=== Validating package ==="
+          xcrun altool --validate-app -f "$IPA" -t ios \
+            --apiKey "$ASC_API_KEY_ID" --apiIssuer "$ASC_API_ISSUER_ID"
+
+          echo "=== Uploading to App Store Connect ==="
+          xcrun altool --upload-app -f "$IPA" -t ios \
+            --apiKey "$ASC_API_KEY_ID" --apiIssuer "$ASC_API_ISSUER_ID"
+
+          rm -f ~/.appstoreconnect/private_keys/AuthKey_${ASC_API_KEY_ID}.p8
+
+          echo "Uploaded. Apple needs 5-30 minutes to process the build before it"
+          echo "appears in TestFlight and becomes selectable in the version's Build section."
 
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v4

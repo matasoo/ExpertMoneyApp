@@ -16,8 +16,8 @@
           "projectId": "expertmoney-3f96c",
           "configurations": {
             "android": "1:882159044456:android:132b0098bf8832a88f38dd",
-            "ios": "1:882159044456:ios:0ec866a8434baf7e8f38dd",
-            "macos": "1:882159044456:ios:0ec866a8434baf7e8f38dd",
+            "ios": "1:882159044456:ios:cf907d4b61db88158f38dd",
+            "macos": "1:882159044456:ios:cf907d4b61db88158f38dd",
             "web": "1:882159044456:web:42f5635cf55a58bf8f38dd",
             "windows": "1:882159044456:web:db1367bb71ca25768f38dd"
           }
