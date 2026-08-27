@@ -329,7 +329,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          'Today Transactions',
+          'Recent Transactions',
           style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 20, fontWeight: FontWeight.w800, letterSpacing: -0.5),
         ),
         TextButton(

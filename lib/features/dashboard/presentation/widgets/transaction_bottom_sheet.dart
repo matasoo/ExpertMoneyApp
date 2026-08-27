@@ -235,7 +235,16 @@ class _TransactionBottomSheetState extends ConsumerState<TransactionBottomSheet>
                   lastDate: DateTime.now(),
                 );
                 if (picked != null) {
-                  setState(() => _selectedDate = picked);
+                  setState(() {
+                    _selectedDate = DateTime(
+                      picked.year,
+                      picked.month,
+                      picked.day,
+                      _selectedDate.hour,
+                      _selectedDate.minute,
+                      _selectedDate.second,
+                    );
+                  });
                 }
               },
               child: Container(
