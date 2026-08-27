@@ -292,14 +292,17 @@ jobs:
               flutter build ios --$FLUTTER_CONF --config-only --no-codesign
               set -e
 
+              # Assert the config was actually written. Note there is no
+              # FLUTTER_BUILD_MODE key to check — modern Flutter derives the build
+              # mode from Xcode's $CONFIGURATION, which `archive` gets below.
               XCCONFIG="$GITHUB_WORKSPACE/ios/Flutter/Generated.xcconfig"
-              if ! grep -q "FLUTTER_BUILD_MODE=$FLUTTER_CONF" "$XCCONFIG" 2>/dev/null; then
-                echo "::error::$XCCONFIG is missing FLUTTER_BUILD_MODE=$FLUTTER_CONF"
+              if ! grep -q "^FLUTTER_ROOT=" "$XCCONFIG" 2>/dev/null; then
+                echo "::error::$XCCONFIG was not generated"
                 echo "--- Generated.xcconfig ---"
                 cat "$XCCONFIG" 2>/dev/null || echo "(file not found)"
                 exit 1
               fi
-              echo "Generated.xcconfig OK (FLUTTER_BUILD_MODE=$FLUTTER_CONF)"
+              echo "Generated.xcconfig OK (build mode comes from -configuration $CONFIGURATION)"
 
               cd "$GITHUB_WORKSPACE/ios"
               if [ -d "Runner.xcworkspace" ]; then TARGET_ARGS="-workspace 'Runner.xcworkspace'"; else TARGET_ARGS="-project 'Runner.xcodeproj'"; fi
