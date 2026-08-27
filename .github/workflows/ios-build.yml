@@ -289,7 +289,7 @@ jobs:
               # `archive`, which is also where the App Store profile is applied.
               # Flutter's exit code is not what matters here — the generated xcconfig is.
               set +e
-              flutter build ios --$FLUTTER_CONF --config-only --no-codesign
+              flutter build ios --$FLUTTER_CONF --config-only --no-codesign --no-tree-shake-icons
               set -e
 
               # Assert the config was actually written. Note there is no
@@ -315,7 +315,7 @@ jobs:
               eval $ARCHIVE_CMD
             else
               echo "=== Forcing Flutter to setup project WITHOUT compiling ==="
-              flutter build ios --$FLUTTER_CONF --config-only || true
+              flutter build ios --$FLUTTER_CONF --config-only --no-tree-shake-icons || true
               
               echo "=== Switching to ios folder ==="
               cd "$GITHUB_WORKSPACE/ios"
