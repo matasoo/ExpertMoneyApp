@@ -583,6 +583,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				CODE_SIGN_IDENTITY = "Apple Distribution";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = WU593R9N72;
+				PROVISIONING_PROFILE_SPECIFIER = "ExpertMoney App Store v2";
 				PRODUCT_BUNDLE_IDENTIFIER = com.expert-money.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
