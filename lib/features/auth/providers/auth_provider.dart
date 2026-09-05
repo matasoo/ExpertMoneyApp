@@ -34,6 +34,8 @@ class AuthController extends AsyncNotifier<void> {
       await cred.user?.updateDisplayName(name);
       
       try {
+        // Force token refresh to ensure Cloud Functions SDK picks it up immediately
+        await cred.user?.getIdToken(true);
         await FirebaseFunctions.instance.httpsCallable('sendVerificationCode').call();
       } catch (e) {
         print('Error calling sendVerificationCode: $e');

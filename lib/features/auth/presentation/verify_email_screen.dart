@@ -62,6 +62,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
   Future<void> _resendEmail() async {
     setState(() => _isLoading = true);
     try {
+      await FirebaseAuth.instance.currentUser?.getIdToken(true);
       await FirebaseFunctions.instance.httpsCallable('sendVerificationCode').call();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
