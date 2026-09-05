@@ -56,11 +56,8 @@ exports.sendVerificationCode = functions.https.onCall(async (data, context) => {
       email: email, // Store email for auditing
     });
 
-    // 5. Send the email via Resend
-    // Important: Use a verified domain if you have one, otherwise use 'onboarding@resend.dev' for testing
-    // with the exact email address you verified on Resend.com
-    await resend.emails.send({
-      from: 'ExpertMoney <onboarding@resend.dev>',
+    const response = await resend.emails.send({
+      from: 'ExpertMoney <no-reply@expert-money.com>',
       to: email,
       subject: 'Your ExpertMoney Verification Code',
       html: `
@@ -76,6 +73,11 @@ exports.sendVerificationCode = functions.https.onCall(async (data, context) => {
         </div>
       `,
     });
+
+    if (response.error) {
+      console.error('Resend API Error:', response.error);
+      throw new functions.https.HttpsError('internal', 'Failed to send email: ' + response.error.message);
+    }
 
     return { success: true, message: 'Verification code sent successfully.' };
 
