@@ -311,7 +311,7 @@ jobs:
               # command line applies them to *every* target in the build graph,
               # including the Firebase and Flutter plugin Swift packages, which reject
               # provisioning profiles and fail the archive.
-              ARCHIVE_CMD="xcodebuild $TARGET_ARGS -scheme '${SCHEME:-Runner}' -configuration '$CONFIGURATION' -destination 'generic/platform=iOS' -derivedDataPath '$DERIVED_DATA_PATH' IPHONEOS_DEPLOYMENT_TARGET=15.0 COMPILER_INDEX_STORE_ENABLE=NO -quiet -archivePath '$GITHUB_WORKSPACE/build/App.xcarchive' archive"
+              ARCHIVE_CMD="xcodebuild $TARGET_ARGS -scheme '${SCHEME:-Runner}' -configuration '$CONFIGURATION' -destination 'generic/platform=iOS' -derivedDataPath '$DERIVED_DATA_PATH' IPHONEOS_DEPLOYMENT_TARGET=15.5 COMPILER_INDEX_STORE_ENABLE=NO -quiet -archivePath '$GITHUB_WORKSPACE/build/App.xcarchive' archive"
               eval $ARCHIVE_CMD
             else
               echo "=== Forcing Flutter to setup project WITHOUT compiling ==="
@@ -323,9 +323,9 @@ jobs:
               echo "=== Removing signing from Xcode project ==="
               sed -i '' 's/ProvisioningStyle = Automatic;/ProvisioningStyle = Manual;/g' Runner.xcodeproj/project.pbxproj 2>/dev/null || true
               
-              echo "=== Native Xcode Build (Strictly Unsigned & Forced iOS 15.0) ==="
+              echo "=== Native Xcode Build (Strictly Unsigned & Forced iOS 15.5) ==="
               if [ -d "Runner.xcworkspace" ]; then TARGET_ARGS="-workspace 'Runner.xcworkspace'"; else TARGET_ARGS="-project 'Runner.xcodeproj'"; fi
-              BUILD_CMD="xcodebuild build $TARGET_ARGS -scheme '${SCHEME:-Runner}' -configuration '$CONFIGURATION' -destination 'generic/platform=iOS' -derivedDataPath '$DERIVED_DATA_PATH' IPHONEOS_DEPLOYMENT_TARGET=15.0 CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY='' EXPANDED_CODE_SIGN_IDENTITY='' COMPILER_INDEX_STORE_ENABLE=NO ENABLE_DEBUG_DYLIB=NO -quiet"
+              BUILD_CMD="xcodebuild build $TARGET_ARGS -scheme '${SCHEME:-Runner}' -configuration '$CONFIGURATION' -destination 'generic/platform=iOS' -derivedDataPath '$DERIVED_DATA_PATH' IPHONEOS_DEPLOYMENT_TARGET=15.5 CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY='' EXPANDED_CODE_SIGN_IDENTITY='' COMPILER_INDEX_STORE_ENABLE=NO ENABLE_DEBUG_DYLIB=NO -quiet"
               eval $BUILD_CMD
             fi
 
@@ -341,7 +341,7 @@ jobs:
             elif [ -n "$PROJECT" ]; then
               SCHEME=$(basename "$PROJECT" .xcodeproj)
             fi
-            BUILD_CMD="$BUILD_CMD -scheme '$SCHEME' -configuration '$CONFIGURATION' -destination 'generic/platform=iOS' -derivedDataPath '$DERIVED_DATA_PATH' IPHONEOS_DEPLOYMENT_TARGET=15.0 COMPILER_INDEX_STORE_ENABLE=NO -quiet"
+            BUILD_CMD="$BUILD_CMD -scheme '$SCHEME' -configuration '$CONFIGURATION' -destination 'generic/platform=iOS' -derivedDataPath '$DERIVED_DATA_PATH' IPHONEOS_DEPLOYMENT_TARGET=15.5 COMPILER_INDEX_STORE_ENABLE=NO -quiet"
             if [ "$USE_SIGNING" = "true" ]; then
               BUILD_CMD="$BUILD_CMD DEVELOPMENT_TEAM='$DEVELOPMENT_TEAM' CODE_SIGN_STYLE=Manual PROVISIONING_PROFILE_SPECIFIER='$PROVISIONING_PROFILE_NAME' -archivePath '$GITHUB_WORKSPACE/build/App.xcarchive' archive"
             else
@@ -355,7 +355,7 @@ jobs:
             elif [ -n "$PROJECT" ]; then
               BUILD_CMD="$BUILD_CMD -project $PROJECT"
             fi
-            BUILD_CMD="$BUILD_CMD -scheme '$SCHEME' -configuration '$CONFIGURATION' -destination 'generic/platform=iOS' -derivedDataPath '$DERIVED_DATA_PATH' IPHONEOS_DEPLOYMENT_TARGET=15.0 COMPILER_INDEX_STORE_ENABLE=NO DEBUG_INFORMATION_FORMAT=dwarf ONLY_ACTIVE_ARCH=YES -quiet SWIFT_ENABLE_COMPILE_CACHE=YES CLANG_ENABLE_COMPILE_CACHE=YES"
+            BUILD_CMD="$BUILD_CMD -scheme '$SCHEME' -configuration '$CONFIGURATION' -destination 'generic/platform=iOS' -derivedDataPath '$DERIVED_DATA_PATH' IPHONEOS_DEPLOYMENT_TARGET=15.5 COMPILER_INDEX_STORE_ENABLE=NO DEBUG_INFORMATION_FORMAT=dwarf ONLY_ACTIVE_ARCH=YES -quiet SWIFT_ENABLE_COMPILE_CACHE=YES CLANG_ENABLE_COMPILE_CACHE=YES"
             if [ "$USE_SIGNING" = "true" ]; then
               BUILD_CMD="$BUILD_CMD DEVELOPMENT_TEAM='$DEVELOPMENT_TEAM' CODE_SIGN_STYLE=Manual PROVISIONING_PROFILE_SPECIFIER='$PROVISIONING_PROFILE_NAME' -archivePath '$GITHUB_WORKSPACE/build/App.xcarchive' archive"
             else
