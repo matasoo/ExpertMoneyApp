@@ -1,0 +1,17 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 1080, "h": 1080, "title": "Instagram / Facebook post — 1080×1080" },
+    { "file": "Story.dc.html", "x": 1200, "y": 0, "w": 1080, "h": 1920, "title": "Instagram / Facebook story — 1080×1920" },
+    { "file": "Card.dc.html", "x": 2400, "y": 0, "w": 1600, "h": 900, "title": "X / LinkedIn card — 1600×900" }
+  ],
+  "annotations": [
+    {
+      "id": "launch-toggle",
+      "x": 0,
+      "y": -190,
+      "w": 620,
+      "text": "Each artboard has a Launch tweak: \"soon\" shows \"Coming soon to the App Store\", \"live\" switches every badge to \"Now on the App Store\" for after release."
+    }
+  ],
+  "launch": { "view": "canvas" }
+}

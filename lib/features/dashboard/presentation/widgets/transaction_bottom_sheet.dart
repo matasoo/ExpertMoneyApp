@@ -7,6 +7,10 @@ import '../../domain/models/transaction.dart';
 import '../../providers/transactions_provider.dart';
 import '../../../goals/providers/budgets_provider.dart';
 import '../../../wallet/providers/accounts_provider.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'package:flutter/foundation.dart'; // For kIsWeb
+import 'dart:io';
 
 class TransactionBottomSheet extends ConsumerStatefulWidget {
   const TransactionBottomSheet({super.key});
@@ -110,6 +114,67 @@ class _TransactionBottomSheetState extends ConsumerState<TransactionBottomSheet>
     return '${date.day.toString().padLeft(2, '0')} ${months[date.month - 1]} ${date.year}';
   }
 
+  Future<void> _scanReceipt() async {
+    if (kIsWeb) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Receipt scanning is only available on iOS & Android.')),
+      );
+      return;
+    }
+    
+    try {
+      final ImagePicker picker = ImagePicker();
+      final XFile? image = await picker.pickImage(source: ImageSource.camera);
+      if (image == null) return;
+
+      final inputImage = InputImage.fromFilePath(image.path);
+      final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
+      final RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
+      await textRecognizer.close();
+
+      String extractedTitle = '';
+      double maxAmount = 0.0;
+
+      if (recognizedText.blocks.isNotEmpty) {
+        extractedTitle = recognizedText.blocks.first.text.replaceAll('\n', ' ').trim();
+        // Limit title length to prevent giant text dumps
+        if (extractedTitle.length > 30) {
+          extractedTitle = extractedTitle.substring(0, 30);
+        }
+      }
+
+      final RegExp priceRegex = RegExp(r'\d+[\.,]\d{2}');
+      for (TextBlock block in recognizedText.blocks) {
+        for (TextLine line in block.lines) {
+          final matches = priceRegex.allMatches(line.text);
+          for (final match in matches) {
+            final matchStr = match.group(0)!.replaceAll(',', '.');
+            final val = double.tryParse(matchStr);
+            if (val != null && val > maxAmount) {
+              maxAmount = val;
+            }
+          }
+        }
+      }
+
+      setState(() {
+        if (extractedTitle.isNotEmpty && _titleController.text.isEmpty) {
+          _titleController.text = extractedTitle;
+        }
+        if (maxAmount > 0) {
+          _amountController.text = maxAmount.toStringAsFixed(2);
+        }
+      });
+      
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to scan receipt: $e')),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final currency = ref.watch(currencyProvider);
@@ -210,6 +275,11 @@ class _TransactionBottomSheetState extends ConsumerState<TransactionBottomSheet>
                 enabledBorder: InputBorder.none,
                 filled: false,
                 contentPadding: EdgeInsets.zero,
+                suffixIcon: IconButton(
+                  onPressed: _scanReceipt,
+                  icon: Icon(Icons.document_scanner, color: Theme.of(context).primaryColor),
+                  tooltip: 'Scan Receipt',
+                ),
               ),
             ),
             const SizedBox(height: 16),

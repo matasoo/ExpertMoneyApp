@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+  <style>
+    body { margin: 0; }
+    a { color: #2ECC71; }
+    a:hover { color: #7ef0ae; }
+  </style>
+</helmet>
+
+<div style="position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #141416; font-family: Manrope, 'Segoe UI', system-ui, sans-serif;">
+
+  <div style="position: absolute; top: -300px; left: 50%; margin-left: -520px; width: 1040px; height: 1040px; border-radius: 50%; background: radial-gradient(circle, rgba(46,204,113,0.26), rgba(46,204,113,0) 68%); filter: blur(110px);"></div>
+
+  <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; padding: 300px 80px 260px;">
+
+    <div style="display: flex; align-items: center; gap: 18px;">
+      <img src="logo.jpg" alt="" style="width: 58px; height: 58px; border-radius: 15px; display: block;">
+      <span style="font-size: 39px; font-weight: 600; letter-spacing: -0.02em; color: #ffffff;">Expert<span style="font-weight: 800; color: #2ECC71;">Money</span></span>
+    </div>
+
+    <h1 style="margin: 56px 0 0; font-size: 116px; font-weight: 800; line-height: 0.96; letter-spacing: -0.05em; color: #ffffff; text-align: center;">Plan. Save.<br><span style="color: #2ECC71;">Grow.</span></h1>
+
+    <p style="margin: 34px 0 0; max-width: 700px; font-size: 34px; font-weight: 500; line-height: 1.4; color: #A0A0A0; text-align: center; text-wrap: pretty;">Budgets that nudge you before you overspend. Savings you can watch grow.</p>
+
+    <div style="margin-top: 74px; width: 520px; border-radius: 52px; overflow: hidden; border: 3px solid rgba(255,255,255,0.14); box-shadow: 0 60px 130px rgba(0,0,0,0.7);">
+      <img src="goals.jpg" alt="ExpertMoney savings goals" style="display: block; width: 100%;">
+    </div>
+
+  </div>
+
+  <div style="position: absolute; left: 0; right: 0; bottom: 132px; display: flex; justify-content: center;">
+    <div style="display: inline-flex; align-items: center; gap: 16px; padding: 22px 40px; border-radius: 100px; background: rgba(46,204,113,0.10); border: 2px solid rgba(46,204,113,0.30);">
+      <svg viewBox="0 0 24 24" width="34" height="34" fill="#2ECC71" aria-hidden="true"><path d="M16.4 12.7c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9s-1.8-.9-3-.8c-1.5 0-2.9.9-3.7 2.3-1.6 2.7-.4 6.8 1.1 9 .8 1.1 1.6 2.3 2.8 2.2 1.1 0 1.6-.7 2.9-.7s1.7.7 2.9.7 2-1.1 2.7-2.2c.9-1.2 1.2-2.4 1.3-2.5-.1 0-2.4-.9-2.4-3.6zM14.2 5.9c.6-.8 1-1.8.9-2.9-.9 0-2 .6-2.6 1.4-.6.7-1.1 1.7-.9 2.8 1 0 2-.5 2.6-1.3z"/></svg>
+      <span style="font-size: 30px; font-weight: 700; letter-spacing: -0.01em; color: #8ce8b3;">{{badge}}</span>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"status":{"editor":"enum","options":["soon","live"],"default":"soon","section":"Launch"},"$preview":{"width":1080,"height":1920}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const status = this.props.status ?? 'soon';
+    return {
+      badge: status === 'live' ? 'Now on the App Store' : 'Coming soon to the App Store'
+    };
+  }
+}
+</script>
+</body>
+</html>

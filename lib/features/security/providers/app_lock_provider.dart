@@ -3,6 +3,22 @@ import 'package:local_auth/local_auth.dart';
 import 'package:flutter/services.dart';
 import '../../../core/providers/shared_prefs_provider.dart';
 
+final appLockFeatureEnabledProvider = NotifierProvider<AppLockFeatureEnabledNotifier, bool>(() {
+  return AppLockFeatureEnabledNotifier();
+});
+
+class AppLockFeatureEnabledNotifier extends Notifier<bool> {
+  @override
+  bool build() {
+    final prefs = ref.watch(sharedPreferencesProvider);
+    return prefs.getBool(AppLockNotifier._appLockEnabledKey) ?? false;
+  }
+
+  void setEnabled(bool value) {
+    state = value;
+  }
+}
+
 final appLockProvider = NotifierProvider<AppLockNotifier, bool>(() {
   return AppLockNotifier();
 });
@@ -29,14 +45,17 @@ class AppLockNotifier extends Notifier<bool> {
       final authenticated = await authenticate();
       if (authenticated) {
         await prefs.setBool(_appLockEnabledKey, true);
-        // We don't set state to true here because they just authenticated to enable it
+        ref.read(appLockFeatureEnabledProvider.notifier).setEnabled(true);
       }
     } else {
-      await prefs.setBool(_appLockEnabledKey, false);
-      state = false;
+      // Authenticate before disabling for security
+      final authenticated = await authenticate();
+      if (authenticated) {
+        await prefs.setBool(_appLockEnabledKey, false);
+        ref.read(appLockFeatureEnabledProvider.notifier).setEnabled(false);
+        state = false;
+      }
     }
-    // Invalidate so UI updates
-    ref.invalidateSelf();
   }
 
   bool isAppLockEnabled() {

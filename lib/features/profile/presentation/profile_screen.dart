@@ -200,7 +200,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     const Divider(height: 1),
                     Consumer(
                       builder: (context, ref, child) {
-                        final isAppLockEnabled = ref.watch(appLockProvider.notifier).isAppLockEnabled();
+                        final isAppLockEnabled = ref.watch(appLockFeatureEnabledProvider);
                         return SwitchListTile(
                           title: Text('App Lock (Biometrics)', style: GoogleFonts.manrope(fontWeight: FontWeight.w600)),
                           secondary: const Icon(Icons.fingerprint),

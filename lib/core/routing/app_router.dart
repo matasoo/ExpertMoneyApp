@@ -93,7 +93,7 @@ final routerProvider = Provider<GoRouter>((ref) {
 
       // 1. If user is logged in and HAS completed setup
       if (isUserLoggedIn && hasCompletedSetup) {
-        if (isGoingToLogin || isGoingToRegister || isGoingToOnboarding || isGoingToSetup || isGoingToVerifyEmail || (!isAppLocked && isGoingToAppLock)) {
+        if (isGoingToLogin || isGoingToRegister || isGoingToOnboarding || isGoingToVerifyEmail || (!isAppLocked && isGoingToAppLock)) {
           return '/'; // Go to Dashboard
         }
         if (isAppLocked && !isGoingToAppLock) {
