@@ -70,6 +70,12 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
         );
         _pinController.clear();
       }
+    } on FirebaseFunctionsException catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.message ?? 'Error sending code.')),
+        );
+      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

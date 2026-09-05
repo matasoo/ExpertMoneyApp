@@ -47,15 +47,57 @@ exports.sendVerificationCode = onCall(async (request) => {
        return { success: true, message: 'Email is already verified.' };
     }
 
+    // --- Rate Limiting Logic ---
+    const docRef = getFirestore().collection('verificationCodes').doc(uid);
+    const doc = await docRef.get();
+    let attempts = 1;
+
+    if (doc.exists) {
+      const data = doc.data();
+      
+      // Check if user is currently blocked
+      if (data.blockedUntil && data.blockedUntil.toDate() > new Date()) {
+        const waitMinutes = Math.ceil((data.blockedUntil.toDate() - new Date()) / 60000);
+        throw new HttpsError(
+          'resource-exhausted',
+          `Ai atins limita de încercări. Te rugăm să aștepți ${waitMinutes} minute.`
+        );
+      }
+
+      // If they were blocked in the past, reset attempts. Otherwise, increment.
+      if (data.blockedUntil && data.blockedUntil.toDate() <= new Date()) {
+         attempts = 1;
+      } else {
+         attempts = (data.attempts || 0) + 1;
+      }
+
+      // Allow 1 initial + 3 resends = 4 attempts total.
+      if (attempts > 4) {
+        const blockedUntil = Timestamp.fromDate(new Date(Date.now() + 30 * 60 * 1000));
+        await docRef.set({
+          blockedUntil: blockedUntil,
+          attempts: attempts
+        }, { merge: true });
+        
+        throw new HttpsError(
+          'resource-exhausted',
+          'Ai atins limita de încercări. Te rugăm să aștepți 30 de minute.'
+        );
+      }
+    }
+    // ---------------------------
+
     // 3. Generate a 6-digit code and expiration (15 minutes from now)
     const code = generateVerificationCode();
     const expiresAt = Timestamp.fromDate(new Date(Date.now() + 15 * 60 * 1000));
 
-    // 4. Save the code securely in a private collection (e.g., 'verificationCodes')
-    await getFirestore().collection('verificationCodes').doc(uid).set({
+    // 4. Save the code securely in a private collection
+    await docRef.set({
       code: code,
       expiresAt: expiresAt,
       email: email, // Store email for auditing
+      attempts: attempts,
+      blockedUntil: null // Clear any past block
     });
 
     const response = await resend.emails.send({
