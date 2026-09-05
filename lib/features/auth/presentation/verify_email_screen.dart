@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pinput/pinput.dart';
 import '../providers/auth_provider.dart';
 
 class VerifyEmailScreen extends ConsumerStatefulWidget {
@@ -12,22 +14,37 @@ class VerifyEmailScreen extends ConsumerStatefulWidget {
 
 class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
   bool _isLoading = false;
+  final TextEditingController _pinController = TextEditingController();
 
-  Future<void> _checkVerification() async {
+  @override
+  void dispose() {
+    _pinController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _verifyCode(String code) async {
+    if (code.length != 6) return;
+    
     setState(() => _isLoading = true);
     try {
-      final user = FirebaseAuth.instance.currentUser;
-      await user?.reload();
-      if (user != null && user.emailVerified) {
-        // State will update automatically via authStateProvider?
-        // Let's force a refresh or rely on router.
+      final result = await FirebaseFunctions.instance.httpsCallable('verifyCode').call({'code': code});
+      
+      if (result.data['success'] == true) {
+        final user = FirebaseAuth.instance.currentUser;
+        await user?.reload();
         ref.invalidate(authStateProvider);
       } else {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Email not verified yet. Please check your inbox.')),
+            SnackBar(content: Text(result.data['message'] ?? 'Verification failed.')),
           );
         }
+      }
+    } on FirebaseFunctionsException catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.message ?? 'Error validating code.')),
+        );
       }
     } catch (e) {
       if (mounted) {
@@ -45,11 +62,12 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
   Future<void> _resendEmail() async {
     setState(() => _isLoading = true);
     try {
-      await FirebaseAuth.instance.currentUser?.sendEmailVerification();
+      await FirebaseFunctions.instance.httpsCallable('sendVerificationCode').call();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Verification email sent!')),
+          const SnackBar(content: Text('Verification code sent!')),
         );
+        _pinController.clear();
       }
     } catch (e) {
       if (mounted) {
@@ -66,48 +84,70 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final defaultPinTheme = PinTheme(
+      width: 56,
+      height: 60,
+      textStyle: const TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.transparent),
+      ),
+    );
+
+    final focusedPinTheme = defaultPinTheme.copyWith(
+      decoration: defaultPinTheme.decoration?.copyWith(
+        border: Border.all(color: Theme.of(context).primaryColor, width: 2),
+      ),
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Verify Email'),
         centerTitle: true,
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            const SizedBox(height: 32),
             Icon(Icons.mark_email_unread_outlined, size: 80, color: Theme.of(context).primaryColor),
             const SizedBox(height: 24),
             Text(
-              'A verification email has been sent to your email address.',
+              'Enter Verification Code',
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.titleLarge,
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             Text(
-              'Please check your inbox and click the link to verify your account. If you don\'t see it, check your spam folder.',
+              'We sent a 6-digit code to your email address. Please enter it below.',
               textAlign: TextAlign.center,
               style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7)),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 48),
+            
+            Pinput(
+              controller: _pinController,
+              length: 6,
+              defaultPinTheme: defaultPinTheme,
+              focusedPinTheme: focusedPinTheme,
+              onCompleted: _verifyCode,
+              enabled: !_isLoading,
+              autofocus: true,
+            ),
+            
+            const SizedBox(height: 48),
             if (_isLoading)
               const Center(child: CircularProgressIndicator())
             else ...[
-              ElevatedButton(
-                onPressed: _checkVerification,
-                child: const Text('I have verified my email'),
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 56),
-                ),
-              ),
-              const SizedBox(height: 16),
               OutlinedButton(
                 onPressed: _resendEmail,
-                child: const Text('Resend Email'),
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 56),
                 ),
+                child: const Text('Resend Code'),
               ),
               const SizedBox(height: 16),
               TextButton(

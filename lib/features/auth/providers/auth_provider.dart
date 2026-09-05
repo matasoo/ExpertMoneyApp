@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/services/firestore_service.dart';
 
@@ -31,7 +32,13 @@ class AuthController extends AsyncNotifier<void> {
         password: password,
       );
       await cred.user?.updateDisplayName(name);
-      await cred.user?.sendEmailVerification();
+      
+      try {
+        await FirebaseFunctions.instance.httpsCallable('sendVerificationCode').call();
+      } catch (e) {
+        print('Error calling sendVerificationCode: $e');
+        // We shouldn't fail registration if email sending fails, but we could handle it better
+      }
     });
   }
 
