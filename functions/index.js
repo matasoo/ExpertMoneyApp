@@ -1,5 +1,7 @@
 const { onCall, HttpsError } = require('firebase-functions/v2/https');
 const admin = require('firebase-admin');
+const { getAuth } = require('firebase-admin/auth');
+const { getFirestore, Timestamp } = require('firebase-admin/firestore');
 const { Resend } = require('resend');
 
 admin.initializeApp();
@@ -31,7 +33,7 @@ exports.sendVerificationCode = onCall(async (request) => {
 
   try {
     // 2. Fetch the user's email from Firebase Auth
-    const userRecord = await admin.auth().getUser(uid);
+    const userRecord = await getAuth().getUser(uid);
     const email = userRecord.email;
 
     if (!email) {
@@ -47,10 +49,10 @@ exports.sendVerificationCode = onCall(async (request) => {
 
     // 3. Generate a 6-digit code and expiration (15 minutes from now)
     const code = generateVerificationCode();
-    const expiresAt = admin.firestore.Timestamp.fromDate(new Date(Date.now() + 15 * 60 * 1000));
+    const expiresAt = Timestamp.fromDate(new Date(Date.now() + 15 * 60 * 1000));
 
     // 4. Save the code securely in a private collection (e.g., 'verificationCodes')
-    await admin.firestore().collection('verificationCodes').doc(uid).set({
+    await getFirestore().collection('verificationCodes').doc(uid).set({
       code: code,
       expiresAt: expiresAt,
       email: email, // Store email for auditing
@@ -111,7 +113,7 @@ exports.verifyCode = onCall(async (request) => {
   }
 
   try {
-    const docRef = admin.firestore().collection('verificationCodes').doc(uid);
+    const docRef = getFirestore().collection('verificationCodes').doc(uid);
     const doc = await docRef.get();
 
     if (!doc.exists) {
@@ -131,7 +133,7 @@ exports.verifyCode = onCall(async (request) => {
     }
 
     // 4. Code is valid! Update the user's emailVerified status
-    await admin.auth().updateUser(uid, {
+    await getAuth().updateUser(uid, {
       emailVerified: true
     });
 
