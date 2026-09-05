@@ -1,4 +1,4 @@
-const functions = require('firebase-functions');
+const { onCall, HttpsError } = require('firebase-functions/v2/https');
 const admin = require('firebase-admin');
 const { Resend } = require('resend');
 
@@ -18,16 +18,16 @@ function generateVerificationCode() {
 /**
  * Callable function to send a verification code to the authenticated user.
  */
-exports.sendVerificationCode = functions.https.onCall(async (data, context) => {
+exports.sendVerificationCode = onCall(async (request) => {
   // 1. Ensure the user is authenticated
-  if (!context.auth) {
-    throw new functions.https.HttpsError(
+  if (!request.auth) {
+    throw new HttpsError(
       'unauthenticated',
       'The function must be called while authenticated.'
     );
   }
 
-  const uid = context.auth.uid;
+  const uid = request.auth.uid;
 
   try {
     // 2. Fetch the user's email from Firebase Auth
@@ -35,7 +35,7 @@ exports.sendVerificationCode = functions.https.onCall(async (data, context) => {
     const email = userRecord.email;
 
     if (!email) {
-      throw new functions.https.HttpsError(
+      throw new HttpsError(
         'failed-precondition',
         'User does not have an email address.'
       );
@@ -76,14 +76,14 @@ exports.sendVerificationCode = functions.https.onCall(async (data, context) => {
 
     if (response.error) {
       console.error('Resend API Error:', response.error);
-      throw new functions.https.HttpsError('internal', 'Failed to send email: ' + response.error.message);
+      throw new HttpsError('internal', 'Failed to send email: ' + response.error.message);
     }
 
     return { success: true, message: 'Verification code sent successfully.' };
 
   } catch (error) {
     console.error('Error in sendVerificationCode:', error);
-    throw new functions.https.HttpsError('internal', 'An error occurred while sending the email.', error.message);
+    throw new HttpsError('internal', 'An error occurred while sending the email.', error.message);
   }
 });
 
@@ -91,20 +91,20 @@ exports.sendVerificationCode = functions.https.onCall(async (data, context) => {
 /**
  * Callable function to verify the 6-digit code provided by the user.
  */
-exports.verifyCode = functions.https.onCall(async (data, context) => {
-  // 1. Ensure the user is authenticated
-  if (!context.auth) {
-    throw new functions.https.HttpsError(
+exports.verifyCode = onCall(async (request) => {
+  // 1. Ensure authenticated
+  if (!request.auth) {
+    throw new HttpsError(
       'unauthenticated',
       'The function must be called while authenticated.'
     );
   }
 
-  const uid = context.auth.uid;
-  const userCode = data.code;
+  const uid = request.auth.uid;
+  const userCode = request.data.code;
 
   if (!userCode || typeof userCode !== 'string' || userCode.length !== 6) {
-    throw new functions.https.HttpsError(
+    throw new HttpsError(
       'invalid-argument',
       'A valid 6-digit code is required.'
     );
@@ -115,19 +115,19 @@ exports.verifyCode = functions.https.onCall(async (data, context) => {
     const doc = await docRef.get();
 
     if (!doc.exists) {
-      throw new functions.https.HttpsError('not-found', 'No verification code found. Please request a new one.');
+      throw new HttpsError('not-found', 'No verification code found. Please request a new one.');
     }
 
     const verificationData = doc.data();
 
     // 2. Check if the code has expired
     if (verificationData.expiresAt.toDate() < new Date()) {
-      throw new functions.https.HttpsError('failed-precondition', 'The verification code has expired. Please request a new one.');
+      throw new HttpsError('failed-precondition', 'The verification code has expired. Please request a new one.');
     }
 
     // 3. Check if the code matches
     if (verificationData.code !== userCode) {
-      throw new functions.https.HttpsError('invalid-argument', 'The verification code is incorrect.');
+      throw new HttpsError('invalid-argument', 'The verification code is incorrect.');
     }
 
     // 4. Code is valid! Update the user's emailVerified status
@@ -142,9 +142,9 @@ exports.verifyCode = functions.https.onCall(async (data, context) => {
 
   } catch (error) {
     console.error('Error in verifyCode:', error);
-    if (error instanceof functions.https.HttpsError) {
+    if (error instanceof HttpsError) {
       throw error;
     }
-    throw new functions.https.HttpsError('internal', 'An error occurred while verifying the code.', error.message);
+    throw new HttpsError('internal', 'An error occurred while verifying the code.', error.message);
   }
 });
