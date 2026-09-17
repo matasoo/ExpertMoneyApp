@@ -233,9 +233,20 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 width: double.infinity,
                 height: 56,
                 child: OutlinedButton(
-                  onPressed: (_agreeToTerms && !ref.watch(authControllerProvider).isLoading)
-                      ? () => ref.read(authControllerProvider.notifier).signInWithGoogle()
-                      : null,
+                  onPressed: ref.watch(authControllerProvider).isLoading
+                      ? null
+                      : () {
+                          if (!_agreeToTerms) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Please agree to the Terms and Privacy Policy first.'),
+                                backgroundColor: Theme.of(context).colorScheme.primary,
+                              ),
+                            );
+                            return;
+                          }
+                          ref.read(authControllerProvider.notifier).signInWithGoogle();
+                        },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -251,9 +262,20 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 width: double.infinity,
                 height: 56,
                 child: OutlinedButton(
-                  onPressed: (_agreeToTerms && !ref.watch(authControllerProvider).isLoading)
-                      ? () => ref.read(authControllerProvider.notifier).signInWithApple()
-                      : null,
+                  onPressed: ref.watch(authControllerProvider).isLoading
+                      ? null
+                      : () {
+                          if (!_agreeToTerms) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Please agree to the Terms and Privacy Policy first.'),
+                                backgroundColor: Theme.of(context).colorScheme.primary,
+                              ),
+                            );
+                            return;
+                          }
+                          ref.read(authControllerProvider.notifier).signInWithApple();
+                        },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
