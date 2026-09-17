@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_functions/cloud_functions.dart';
@@ -43,20 +44,24 @@ class AuthController extends AsyncNotifier<void> {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       try {
-        final GoogleSignInAccount googleUser = await GoogleSignIn.instance.authenticate();
-        final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-        
-        // In google_sign_in v7+, we request auth scopes separately for the access token if needed, 
-        // but FirebaseAuth only strictly requires the idToken for Google sign in.
-        final AuthCredential credential = GoogleAuthProvider.credential(
-          idToken: googleAuth.idToken,
-          accessToken: null,
-        );
-        await FirebaseAuth.instance.signInWithCredential(credential);
+        if (kIsWeb) {
+          final googleProvider = GoogleAuthProvider();
+          googleProvider.addScope('email');
+          await FirebaseAuth.instance.signInWithPopup(googleProvider);
+        } else {
+          final GoogleSignInAccount googleUser = await GoogleSignIn.instance.authenticate();
+          final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+          
+          final AuthCredential credential = GoogleAuthProvider.credential(
+            idToken: googleAuth.idToken,
+            accessToken: null,
+          );
+          await FirebaseAuth.instance.signInWithCredential(credential);
+        }
       } on FirebaseAuthException catch (e) {
         throw 'Google login error: ${e.message}';
       } on Exception catch (e) {
-        if (e.toString().contains('canceled')) rethrow; // or simply return
+        if (e.toString().contains('canceled')) rethrow;
         throw 'An unexpected error occurred with Google Sign In.';
       }
     });
@@ -69,7 +74,11 @@ class AuthController extends AsyncNotifier<void> {
         final appleProvider = AppleAuthProvider();
         appleProvider.addScope('email');
         appleProvider.addScope('name');
-        await FirebaseAuth.instance.signInWithProvider(appleProvider);
+        if (kIsWeb) {
+          await FirebaseAuth.instance.signInWithPopup(appleProvider);
+        } else {
+          await FirebaseAuth.instance.signInWithProvider(appleProvider);
+        }
       } on FirebaseAuthException catch (e) {
         throw 'Apple login error: ${e.message}';
       } catch (e) {
