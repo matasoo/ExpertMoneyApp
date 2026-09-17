@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/services/firestore_service.dart';
@@ -34,6 +35,45 @@ class AuthController extends AsyncNotifier<void> {
         }
       } catch (e) {
         throw 'An unexpected error occurred.';
+      }
+    });
+  }
+
+  Future<void> signInWithGoogle() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      try {
+        final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+        if (googleUser == null) {
+          throw 'Canceled by user.'; // Will be caught as error but handled by UI
+        }
+        final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+        final AuthCredential credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+        await FirebaseAuth.instance.signInWithCredential(credential);
+      } on FirebaseAuthException catch (e) {
+        throw 'Google login error: ${e.message}';
+      } catch (e) {
+        if (e.toString() == 'Canceled by user.') rethrow;
+        throw 'An unexpected error occurred with Google Sign In.';
+      }
+    });
+  }
+
+  Future<void> signInWithApple() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      try {
+        final appleProvider = AppleAuthProvider();
+        appleProvider.addScope('email');
+        appleProvider.addScope('name');
+        await FirebaseAuth.instance.signInWithProvider(appleProvider);
+      } on FirebaseAuthException catch (e) {
+        throw 'Apple login error: ${e.message}';
+      } catch (e) {
+        throw 'An unexpected error occurred with Apple Sign In.';
       }
     });
   }

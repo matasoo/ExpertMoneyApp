@@ -149,13 +149,60 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       : Text('Sign in'),
                 ),
               ),
+              SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(child: Divider(color: Theme.of(context).dividerColor.withValues(alpha: 0.5))),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text('or', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5))),
+                  ),
+                  Expanded(child: Divider(color: Theme.of(context).dividerColor.withValues(alpha: 0.5))),
+                ],
+              ),
+              SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: OutlinedButton(
+                  onPressed: ref.watch(authControllerProvider).isLoading 
+                      ? null 
+                      : () => ref.read(authControllerProvider.notifier).signInWithGoogle(),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('G', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                      SizedBox(width: 12),
+                      Text('Continue with Google'),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                height: 56,
+                child: OutlinedButton(
+                  onPressed: ref.watch(authControllerProvider).isLoading 
+                      ? null 
+                      : () => ref.read(authControllerProvider.notifier).signInWithApple(),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.apple, size: 24),
+                      SizedBox(width: 12),
+                      Text('Continue with Apple'),
+                    ],
+                  ),
+                ),
+              ),
               SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text('New here?', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
                   TextButton(
-                    onPressed: () => context.push('/register'),
+                    onPressed: () => context.go('/register'),
                     child: Text('Create account'),
                   ),
                 ],

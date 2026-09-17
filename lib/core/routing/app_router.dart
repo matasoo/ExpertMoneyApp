@@ -116,7 +116,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           if (!isGoingToOnboarding) return '/onboarding';
           return null;
         } else {
-          if (!isGoingToLogin && !isGoingToRegister) return '/login';
+          if (!isGoingToLogin && !isGoingToRegister) return '/register';
           return null;
         }
       }
