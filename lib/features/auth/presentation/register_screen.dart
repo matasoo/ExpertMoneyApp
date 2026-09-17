@@ -235,18 +235,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 child: OutlinedButton(
                   onPressed: ref.watch(authControllerProvider).isLoading
                       ? null
-                      : () {
-                          if (!_agreeToTerms) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Please agree to the Terms and Privacy Policy first.'),
-                                backgroundColor: Theme.of(context).colorScheme.primary,
-                              ),
-                            );
-                            return;
-                          }
-                          ref.read(authControllerProvider.notifier).signInWithGoogle();
-                        },
+                      : () => ref.read(authControllerProvider.notifier).signInWithGoogle(),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -264,18 +253,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 child: OutlinedButton(
                   onPressed: ref.watch(authControllerProvider).isLoading
                       ? null
-                      : () {
-                          if (!_agreeToTerms) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Please agree to the Terms and Privacy Policy first.'),
-                                backgroundColor: Theme.of(context).colorScheme.primary,
-                              ),
-                            );
-                            return;
-                          }
-                          ref.read(authControllerProvider.notifier).signInWithApple();
-                        },
+                      : () => ref.read(authControllerProvider.notifier).signInWithApple(),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -284,6 +262,15 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       Text('Continue with Apple'),
                     ],
                   ),
+                ),
+              ),
+              SizedBox(height: 16),
+              Text(
+                'By continuing with Google or Apple, you agree to our Terms and Privacy Policy.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                  fontSize: 12,
                 ),
               ),
               SizedBox(height: 16),
