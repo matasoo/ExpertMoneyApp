@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/theme/app_theme.dart';
@@ -23,6 +25,16 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  
+  if (!kIsWeb) {
+    try {
+      await GoogleSignIn.instance.initialize(
+        clientId: '882159044456-dabn2ii793464siuj7e1tiljtsi42ag8.apps.googleusercontent.com',
+      );
+    } catch (e) {
+      debugPrint("Failed to initialize GoogleSignIn: $e");
+    }
+  }
 
   final prefs = await SharedPreferences.getInstance();
 

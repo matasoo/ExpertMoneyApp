@@ -62,6 +62,20 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<AsyncValue<void>>(
+      authControllerProvider,
+      (_, state) {
+        if (!state.isLoading && state.hasError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.error.toString()),
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+          );
+        }
+      },
+    );
+    
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
