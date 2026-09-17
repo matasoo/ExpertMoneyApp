@@ -43,20 +43,20 @@ class AuthController extends AsyncNotifier<void> {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       try {
-        final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-        if (googleUser == null) {
-          throw 'Canceled by user.'; // Will be caught as error but handled by UI
-        }
+        final GoogleSignInAccount googleUser = await GoogleSignIn.instance.authenticate();
         final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+        
+        // In google_sign_in v7+, we request auth scopes separately for the access token if needed, 
+        // but FirebaseAuth only strictly requires the idToken for Google sign in.
         final AuthCredential credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,
+          accessToken: null,
         );
         await FirebaseAuth.instance.signInWithCredential(credential);
       } on FirebaseAuthException catch (e) {
         throw 'Google login error: ${e.message}';
-      } catch (e) {
-        if (e.toString() == 'Canceled by user.') rethrow;
+      } on Exception catch (e) {
+        if (e.toString().contains('canceled')) rethrow; // or simply return
         throw 'An unexpected error occurred with Google Sign In.';
       }
     });
