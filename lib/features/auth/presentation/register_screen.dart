@@ -16,7 +16,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
   bool _agreeToTerms = false;
 
   @override
@@ -24,6 +26,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -32,8 +35,19 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final name = _nameController.text;
     final email = _emailController.text;
     final password = _passwordController.text;
+    final confirmPassword = _confirmPasswordController.text;
     
-    if (name.isEmpty || email.isEmpty || password.isEmpty) return;
+    if (name.isEmpty || email.isEmpty || password.isEmpty || confirmPassword.isEmpty) return;
+
+    if (password != confirmPassword) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Passwords do not match.'),
+          backgroundColor: Theme.of(context).colorScheme.error,
+        ),
+      );
+      return;
+    }
 
     await ref.read(authControllerProvider.notifier).registerWithEmail(email, password, name);
     if (!mounted) return;
@@ -109,6 +123,24 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       });
                     },
                     child: Text(_obscurePassword ? 'Show' : 'Hide'),
+                  ),
+                ),
+              ),
+              SizedBox(height: 24),
+              Text('Confirm Password', style: TextStyle(fontWeight: FontWeight.w600)),
+              SizedBox(height: 8),
+              TextFormField(
+                controller: _confirmPasswordController,
+                obscureText: _obscureConfirmPassword,
+                decoration: InputDecoration(
+                  hintText: '••••••••',
+                  suffixIcon: TextButton(
+                    onPressed: () {
+                      setState(() {
+                        _obscureConfirmPassword = !_obscureConfirmPassword;
+                      });
+                    },
+                    child: Text(_obscureConfirmPassword ? 'Show' : 'Hide'),
                   ),
                 ),
               ),
@@ -191,7 +223,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 children: [
                   Text('Already have an account?', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
                   TextButton(
-                    onPressed: () => context.pop(),
+                    onPressed: () => context.go('/login'),
                     child: Text('Sign in'),
                   ),
                 ],
