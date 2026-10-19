@@ -19,6 +19,7 @@ import '../../wallet/providers/recurring_payments_provider.dart';
 
 import '../../../../core/providers/shared_prefs_provider.dart';
 import '../../../../core/widgets/tutorial_slider.dart';
+import '../../../core/utils/currency_formatter.dart';
 
 class AnalyticsScreen extends ConsumerStatefulWidget {
   const AnalyticsScreen({super.key});
@@ -35,44 +36,97 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final hasSeen = ref.read(hasSeenAnalyticsTutorialProvider);
-      if (!hasSeen) {
-        _showTutorial();
-      }
-    });
   }
 
-  void _showTutorial() {
+
+
+  void _showChartSettings() {
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => TutorialSlider(
-        slides: [
-          TutorialSlide(
-            title: 'Expense Breakdown',
-            description: 'See exactly where your money goes with clear categories and visual charts.',
-            icon: Icons.pie_chart_outline,
+      builder: (context) {
+        return Container(
+          padding: EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
           ),
-          TutorialSlide(
-            title: 'Cashflow Analysis',
-            description: 'Track your income vs expenses over time to ensure you stay positive.',
-            icon: Icons.auto_graph,
-            color: Colors.green,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              SizedBox(height: 24),
+              Text(
+                'Visible Charts',
+                style: GoogleFonts.manrope(fontSize: 20, fontWeight: FontWeight.w800, color: Theme.of(context).colorScheme.onSurface),
+              ),
+              SizedBox(height: 16),
+              Consumer(
+                builder: (context, ref, child) {
+                  final showSpending = ref.watch(showSpendingOverviewProvider);
+                  final showWeekly = ref.watch(showWeeklyBreakdownProvider);
+                  final showBudgets = ref.watch(showBudgetsCardProvider);
+                  final showCategories = ref.watch(showCategoriesChartProvider);
+                  final showIncomeExpenses = ref.watch(showIncomeExpensesChartProvider);
+                  final showTopMerchants = ref.watch(showTopMerchantsChartProvider);
+
+                  return Column(
+                    children: [
+                      SwitchListTile(
+                        title: Text('Spending Overview', style: GoogleFonts.manrope(fontWeight: FontWeight.w600)),
+                        value: showSpending,
+                        activeColor: Theme.of(context).primaryColor,
+                        onChanged: (val) => ref.read(showSpendingOverviewProvider.notifier).set(val),
+                      ),
+                      SwitchListTile(
+                        title: Text('Budgets Card', style: GoogleFonts.manrope(fontWeight: FontWeight.w600)),
+                        value: showBudgets,
+                        activeColor: Theme.of(context).primaryColor,
+                        onChanged: (val) => ref.read(showBudgetsCardProvider.notifier).set(val),
+                      ),
+                      SwitchListTile(
+                        title: Text('7-Day Breakdown', style: GoogleFonts.manrope(fontWeight: FontWeight.w600)),
+                        value: showWeekly,
+                        activeColor: Theme.of(context).primaryColor,
+                        onChanged: (val) => ref.read(showWeeklyBreakdownProvider.notifier).set(val),
+                      ),
+                      SwitchListTile(
+                        title: Text('Categories Chart', style: GoogleFonts.manrope(fontWeight: FontWeight.w600)),
+                        value: showCategories,
+                        activeColor: Theme.of(context).primaryColor,
+                        onChanged: (val) => ref.read(showCategoriesChartProvider.notifier).set(val),
+                      ),
+                      SwitchListTile(
+                        title: Text('Income/Expense Trends', style: GoogleFonts.manrope(fontWeight: FontWeight.w600)),
+                        value: showIncomeExpenses,
+                        activeColor: Theme.of(context).primaryColor,
+                        onChanged: (val) => ref.read(showIncomeExpensesChartProvider.notifier).set(val),
+                      ),
+                      SwitchListTile(
+                        title: Text('Top Merchants', style: GoogleFonts.manrope(fontWeight: FontWeight.w600)),
+                        value: showTopMerchants,
+                        activeColor: Theme.of(context).primaryColor,
+                        onChanged: (val) => ref.read(showTopMerchantsChartProvider.notifier).set(val),
+                      ),
+                    ],
+                  );
+                },
+              ),
+              SizedBox(height: 32),
+            ],
           ),
-          TutorialSlide(
-            title: 'Trend Tracking',
-            description: 'Compare current spending with past periods to identify habits and improve.',
-            icon: Icons.timeline,
-            color: Colors.purple,
-          ),
-        ],
-        onDismiss: () {
-          ref.read(hasSeenAnalyticsTutorialProvider.notifier).set(true);
-          Navigator.pop(context);
-        },
-      ),
+        );
+      },
     );
   }
 
@@ -300,6 +354,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
         builder: (context, child) {
           return Theme(
             data: ThemeData.dark().copyWith(
+            datePickerTheme: DatePickerThemeData(
+              cancelButtonStyle: TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.secondary),
+              confirmButtonStyle: TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.secondary),
+              todayForegroundColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.secondary),
+            ),
               colorScheme: ColorScheme.dark(
                 primary: Theme.of(context).primaryColor,
                 onPrimary: Theme.of(context).colorScheme.onSurface,
@@ -356,6 +415,16 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     final weeklyData = _calculateLast7Days(allTransactions); // Always last 7 days from selected date
     final lineChartSpots = _calculateLineChartData(currentTransactions);
     
+    final showSpending = ref.watch(showSpendingOverviewProvider);
+    final showBudgets = ref.watch(showBudgetsCardProvider);
+    final showWeekly = ref.watch(showWeeklyBreakdownProvider);
+    final showCategories = ref.watch(showCategoriesChartProvider);
+    final showIncomeExpenses = ref.watch(showIncomeExpensesChartProvider);
+    final showTopMerchants = ref.watch(showTopMerchantsChartProvider);
+
+    final showAnyAdvanced = showCategories || showIncomeExpenses || showTopMerchants;
+    final showNone = !showSpending && !showBudgets && !showWeekly && !showCategories && !showIncomeExpenses && !showTopMerchants;
+
     int divisor = 30;
     if (_selectedPeriodIndex == 0) {
       divisor = 7;
@@ -389,35 +458,61 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
           ).animate().fadeIn(duration: 300.ms).slideY(begin: 0.1, end: 0),
           SizedBox(height: 32),
 
-          // --- SPENDING OVERVIEW (LINE CHART) ---
-          _buildSpendingOverviewCard(currentTotal, percentChange, divisor, lineChartSpots)
-              .animate().fadeIn(delay: 100.ms, duration: 400.ms).slideY(begin: 0.1, end: 0),
-          SizedBox(height: 24),
-
-          // --- BUDGETS CARD ---
-          if (budgets.isNotEmpty)
-            _buildBudgetsCard(budgets).animate().fadeIn(delay: 200.ms, duration: 400.ms).slideY(begin: 0.1, end: 0)
-          else
+          if (showNone)
             Center(
               child: Padding(
-                padding: EdgeInsets.all(40.0),
-                child: Text('No budgets created yet.', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
+                padding: EdgeInsets.only(top: 40.0),
+                child: TextButton.icon(
+                  onPressed: _showChartSettings,
+                  icon: Icon(Icons.add_chart, color: Theme.of(context).colorScheme.secondary),
+                  label: Text(
+                    'Add Charts',
+                    style: GoogleFonts.manrope(fontSize: 16, fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.secondary),
+                  ),
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  ),
+                ),
               ),
-            ).animate().fadeIn(delay: 200.ms),
-            
-          SizedBox(height: 24),
+            ).animate().fadeIn(duration: 400.ms),
+
+          // --- SPENDING OVERVIEW (LINE CHART) ---
+          if (showSpending) ...[
+            _buildSpendingOverviewCard(currentTotal, percentChange, divisor, lineChartSpots)
+                .animate().fadeIn(delay: 100.ms, duration: 400.ms).slideY(begin: 0.1, end: 0),
+            SizedBox(height: 24),
+          ],
+
+          // --- BUDGETS CARD ---
+          if (showBudgets) ...[
+            if (budgets.isNotEmpty)
+              _buildBudgetsCard(budgets).animate().fadeIn(delay: 200.ms, duration: 400.ms).slideY(begin: 0.1, end: 0)
+            else
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.all(40.0),
+                  child: Text('No budgets created yet.', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7))),
+                ),
+              ).animate().fadeIn(delay: 200.ms),
+              
+            SizedBox(height: 24),
+          ],
 
           // --- LAST 7 DAYS (BAR CHART) ---
-          Text(
-            '7-Day Breakdown',
-            style: GoogleFonts.manrope(fontSize: 16, fontWeight: FontWeight.w800, color: Theme.of(context).colorScheme.onSurface),
-          ).animate().fadeIn(delay: 300.ms),
-          SizedBox(height: 16),
-          _buildWeeklyBarChart(weeklyData).animate().fadeIn(delay: 350.ms, duration: 400.ms).slideY(begin: 0.1, end: 0),
+          if (showWeekly) ...[
+            Text(
+              '7-Day Breakdown',
+              style: GoogleFonts.manrope(fontSize: 16, fontWeight: FontWeight.w800, color: Theme.of(context).colorScheme.onSurface),
+            ).animate().fadeIn(delay: 300.ms),
+            SizedBox(height: 16),
+            _buildWeeklyBarChart(weeklyData).animate().fadeIn(delay: 350.ms, duration: 400.ms).slideY(begin: 0.1, end: 0),
+            SizedBox(height: 32),
+          ],
           
-          SizedBox(height: 32),
-          _buildAdvancedProjections(currentTransactions, allTransactions, currency)
-              .animate().fadeIn(delay: 450.ms, duration: 400.ms).slideY(begin: 0.1, end: 0),
+          if (showAnyAdvanced)
+            _buildAdvancedProjections(currentTransactions, allTransactions, currency, showCategories, showIncomeExpenses, showTopMerchants)
+                .animate().fadeIn(delay: 450.ms, duration: 400.ms).slideY(begin: 0.1, end: 0),
         ],
       );
     } else if (_mainTabIndex == 1) {
@@ -454,9 +549,22 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                 ),
                 SizedBox(height: 32),
                 
-                Text(
-                  'Statistics',
-                  style: GoogleFonts.manrope(fontSize: 28, fontWeight: FontWeight.w800, color: Theme.of(context).colorScheme.onSurface, letterSpacing: -1.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Statistics',
+                      style: GoogleFonts.manrope(fontSize: 28, fontWeight: FontWeight.w800, color: Theme.of(context).colorScheme.onSurface, letterSpacing: -1.0),
+                    ),
+                    IconButton(
+                      onPressed: _showChartSettings,
+                      icon: Icon(Icons.tune, color: Theme.of(context).colorScheme.onSurface),
+                      style: IconButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.surface,
+                        padding: EdgeInsets.all(12),
+                      ),
+                    ),
+                  ],
                 ),
                 SizedBox(height: 24),
 
@@ -562,7 +670,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
           Text('Total Spent', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 13, fontWeight: FontWeight.w600)),
           SizedBox(height: 4),
           Text(
-            '${ref.watch(currencyProvider)} ${totalExpenses.toStringAsFixed(2)}',
+            '${ref.watch(currencyProvider)} ${CurrencyFormatter.format(totalExpenses)}',
             style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 28, fontWeight: FontWeight.w800, letterSpacing: -1.0),
           ),
           SizedBox(height: 4),
@@ -570,11 +678,11 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             children: [
               Icon(
                 isIncrease ? Icons.arrow_upward : Icons.arrow_downward, 
-                color: isIncrease ? Theme.of(context).colorScheme.error : Theme.of(context).primaryColor, 
+                color: isIncrease ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.secondary, 
                 size: 14
               ),
               SizedBox(width: 4),
-              Text('${percentChange.abs().toStringAsFixed(1)}% ', style: GoogleFonts.manrope(color: isIncrease ? Theme.of(context).colorScheme.error : Theme.of(context).primaryColor, fontSize: 13, fontWeight: FontWeight.w700)),
+              Text('${percentChange.abs().toStringAsFixed(1)}% ', style: GoogleFonts.manrope(color: isIncrease ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.secondary, fontSize: 13, fontWeight: FontWeight.w700)),
               Text(_getComparisonLabel(), style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 13, fontWeight: FontWeight.w600)),
             ],
           ),
@@ -592,7 +700,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   LineChartBarData(
                     spots: spots,
                     isCurved: true,
-                    color: Theme.of(context).primaryColor,
+                    color: Theme.of(context).colorScheme.secondary,
                     barWidth: 3,
                     isStrokeCapRound: true,
                     dotData: FlDotData(show: false),
@@ -615,7 +723,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             ),
             alignment: Alignment.center,
             child: Text(
-              'AVG Daily Spend: ${ref.watch(currencyProvider)} ${(totalExpenses / divisor).toStringAsFixed(0)}',
+              'AVG Daily Spend: ${ref.watch(currencyProvider)} ${CurrencyFormatter.format((totalExpenses / divisor))}',
               style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 14, fontWeight: FontWeight.w700),
             ),
           ),
@@ -645,7 +753,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             if (percentage > 1.0) percentage = 1.0;
             
             final isOverBudget = current > target;
-            final barColor = isOverBudget ? Theme.of(context).colorScheme.error : Theme.of(context).primaryColor;
+            final barColor = isOverBudget ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.secondary;
 
             return Padding(
               padding: EdgeInsets.only(bottom: 24.0),
@@ -655,7 +763,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   Row(
                     children: [
                       Center(
-                        child: Icon(IconUtils.getIconData(budget.icon), color: Theme.of(context).primaryColor, size: 20),
+                        child: Icon(IconUtils.getIconData(budget.icon), color: Theme.of(context).colorScheme.secondary, size: 20),
                       ),
                       SizedBox(width: 8),
                       Text(budget.category, style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 14, fontWeight: FontWeight.w700)),
@@ -696,8 +804,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                       RichText(
                         text: TextSpan(
                           children: [
-                            TextSpan(text: '${ref.watch(currencyProvider)} ${current.toStringAsFixed(0)} ', style: GoogleFonts.manrope(color: isOverBudget ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.onSurface, fontSize: 12, fontWeight: FontWeight.w800)),
-                            TextSpan(text: '/ ${ref.watch(currencyProvider)} ${target.toStringAsFixed(0)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 12, fontWeight: FontWeight.w600)),
+                            TextSpan(text: '${ref.watch(currencyProvider)} ${CurrencyFormatter.format(current)} ', style: GoogleFonts.manrope(color: isOverBudget ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.onSurface, fontSize: 12, fontWeight: FontWeight.w800)),
+                            TextSpan(text: '/ ${ref.watch(currencyProvider)} ${CurrencyFormatter.format(target)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 12, fontWeight: FontWeight.w600)),
                           ],
                         ),
                       ),
@@ -763,7 +871,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
               barRods: [
                 BarChartRodData(
                   toY: weeklyData[i],
-                  color: Theme.of(context).primaryColor,
+                  color: Theme.of(context).colorScheme.secondary,
                   width: 12,
                   borderRadius: BorderRadius.circular(4),
                   backDrawRodData: BackgroundBarChartRodData(
@@ -795,7 +903,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
           child: Text(
             title,
             style: GoogleFonts.manrope(
-              color: isActive ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+              color: isActive ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
               fontSize: 14,
               fontWeight: isActive ? FontWeight.w700 : FontWeight.w600,
             ),
@@ -824,7 +932,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             children: [
               Text('Total Paid on Subscriptions', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 14, fontWeight: FontWeight.w600)),
               SizedBox(height: 8),
-              Text('${ref.watch(currencyProvider)} ${totalLifetime.toStringAsFixed(2)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 32, fontWeight: FontWeight.w800, letterSpacing: -1)),
+              Text('${ref.watch(currencyProvider)} ${CurrencyFormatter.format(totalLifetime)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 32, fontWeight: FontWeight.w800, letterSpacing: -1)),
             ],
           ),
         ),
@@ -855,7 +963,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                     height: 48,
                     decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface, borderRadius: BorderRadius.circular(16)),
                     child: Center(
-                      child: Icon(IconUtils.getIconData(sub.icon), color: Theme.of(context).primaryColor, size: 24),
+                      child: Icon(IconUtils.getIconData(sub.icon), color: Theme.of(context).colorScheme.secondary, size: 24),
                     ),
                   ),
                   SizedBox(width: 16),
@@ -872,7 +980,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text('${ref.watch(currencyProvider)} ${sub.totalPaidSoFar.toStringAsFixed(0)}', style: GoogleFonts.manrope(color: Theme.of(context).primaryColor, fontSize: 16, fontWeight: FontWeight.w800)),
+                      Text('${ref.watch(currencyProvider)} ${CurrencyFormatter.format(sub.totalPaidSoFar)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.secondary, fontSize: 16, fontWeight: FontWeight.w800)),
                       SizedBox(height: 4),
                       Text('total paid', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 12)),
                     ],
@@ -908,7 +1016,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   children: [
                     Text('Total Debt', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 14, fontWeight: FontWeight.w600)),
                     SizedBox(height: 8),
-                    Text('${ref.watch(currencyProvider)} ${totalRemaining.toStringAsFixed(0)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 24, fontWeight: FontWeight.w800, letterSpacing: -1)),
+                    Text('${ref.watch(currencyProvider)} ${CurrencyFormatter.format(totalRemaining)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 24, fontWeight: FontWeight.w800, letterSpacing: -1)),
                   ],
                 ),
               ),
@@ -919,7 +1027,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   children: [
                     Text('Total Paid', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 14, fontWeight: FontWeight.w600)),
                     SizedBox(height: 8),
-                    Text('${ref.watch(currencyProvider)} ${totalPaid.toStringAsFixed(0)}', style: GoogleFonts.manrope(color: Theme.of(context).primaryColor, fontSize: 24, fontWeight: FontWeight.w800, letterSpacing: -1)),
+                    Text('${ref.watch(currencyProvider)} ${CurrencyFormatter.format(totalPaid)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.secondary, fontSize: 24, fontWeight: FontWeight.w800, letterSpacing: -1)),
                   ],
                 ),
               ),
@@ -972,7 +1080,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                         ),
                         child: Text(
                           monthsLeft > 0 ? '$monthsLeft months left' : 'Paid Off 🎉',
-                          style: GoogleFonts.manrope(color: Theme.of(context).primaryColor, fontSize: 12, fontWeight: FontWeight.w700),
+                          style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.secondary, fontSize: 12, fontWeight: FontWeight.w700),
                         ),
                       ),
                     ],
@@ -981,8 +1089,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('${ref.watch(currencyProvider)} ${credit.paidAmount.toStringAsFixed(0)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 14, fontWeight: FontWeight.w700)),
-                      Text('${ref.watch(currencyProvider)} ${credit.totalAmount.toStringAsFixed(0)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 14, fontWeight: FontWeight.w600)),
+                      Text('${ref.watch(currencyProvider)} ${CurrencyFormatter.format(credit.paidAmount)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 14, fontWeight: FontWeight.w700)),
+                      Text('${ref.watch(currencyProvider)} ${CurrencyFormatter.format(credit.totalAmount)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 14, fontWeight: FontWeight.w600)),
                     ],
                   ),
                   SizedBox(height: 8),
@@ -991,7 +1099,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                     child: LinearProgressIndicator(
                       value: credit.progress,
                       backgroundColor: Theme.of(context).colorScheme.surface,
-                      color: Theme.of(context).primaryColor,
+                      color: Theme.of(context).colorScheme.secondary,
                       minHeight: 8,
                     ),
                   ),
@@ -1000,7 +1108,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('Monthly Rate:', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 13)),
-                      Text('${ref.watch(currencyProvider)} ${credit.monthlyContribution.toStringAsFixed(2)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 13, fontWeight: FontWeight.w700)),
+                      Text('${ref.watch(currencyProvider)} ${CurrencyFormatter.format(credit.monthlyContribution)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 13, fontWeight: FontWeight.w700)),
                     ],
                   ),
                   if (monthsLeft > 0) ...[
@@ -1021,7 +1129,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     );
   }
 
-  Widget _buildAdvancedProjections(List<TransactionModel> currentTransactions, List<TransactionModel> allTransactions, String currency) {
+  Widget _buildAdvancedProjections(List<TransactionModel> currentTransactions, List<TransactionModel> allTransactions, String currency, bool showCategories, bool showIncomeExpenses, bool showTopMerchants) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1030,11 +1138,17 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
           style: GoogleFonts.manrope(fontSize: 16, fontWeight: FontWeight.w800, color: Theme.of(context).colorScheme.onSurface),
         ),
         SizedBox(height: 16),
-        ProCategoriesChart(transactions: currentTransactions, currency: currency),
-        const SizedBox(height: 16),
-        ProIncomeExpensesChart(allTransactions: allTransactions, currency: currency),
-        const SizedBox(height: 16),
-        ProTopMerchantsChart(transactions: currentTransactions, currency: currency),
+        if (showCategories) ...[
+          ProCategoriesChart(transactions: currentTransactions, currency: currency),
+          const SizedBox(height: 16),
+        ],
+        if (showIncomeExpenses) ...[
+          ProIncomeExpensesChart(allTransactions: allTransactions, currency: currency),
+          const SizedBox(height: 16),
+        ],
+        if (showTopMerchants) ...[
+          ProTopMerchantsChart(transactions: currentTransactions, currency: currency),
+        ],
       ],
     );
   }

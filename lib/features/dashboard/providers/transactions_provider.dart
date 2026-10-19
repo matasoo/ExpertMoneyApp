@@ -56,4 +56,11 @@ class TransactionsNotifier extends Notifier<List<TransactionModel>> {
         .where((t) => t.isExpense && t.date.day == now.day && t.date.month == now.month && t.date.year == now.year)
         .fold(0.0, (sum, t) => sum + t.amount);
   }
+
+  double getTotalIncomeForCurrentMonth() {
+    final now = DateTime.now();
+    return state
+        .where((t) => !t.isExpense && t.date.month == now.month && t.date.year == now.year)
+        .fold(0.0, (sum, t) => sum + t.amount);
+  }
 }

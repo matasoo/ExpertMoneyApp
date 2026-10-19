@@ -15,6 +15,7 @@ import '../../../core/routing/app_router.dart';
 import '../../../core/providers/currency_provider.dart';
 import '../../security/providers/app_lock_provider.dart';
 import '../../security/providers/privacy_provider.dart';
+import '../../../core/utils/currency_formatter.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -38,7 +39,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Imaginea este prea mare. Limita este de 5 MB (A ta are ${fileSizeInMB.toStringAsFixed(1)} MB).', style: GoogleFonts.manrope()),
+              content: Text('Imaginea este prea mare. Limita este de 5 MB (A ta are ${CurrencyFormatter.format(fileSizeInMB)} MB).', style: GoogleFonts.manrope()),
               backgroundColor: Theme.of(context).colorScheme.error,
             ),
           );
@@ -102,7 +103,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.2),
                         backgroundImage: avatarUrl != null ? NetworkImage(avatarUrl) : null,
                         child: avatarUrl == null 
-                          ? Icon(Icons.person, size: 60, color: Theme.of(context).primaryColor)
+                          ? Icon(Icons.person, size: 60, color: Theme.of(context).colorScheme.secondary)
                           : null,
                       ),
                       if (_isUploading)
@@ -163,13 +164,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
                         children: [
-                          _buildPlanRow('Monthly Income', '$currency ${setupState.monthlyIncome.toStringAsFixed(0)}'),
+                          _buildPlanRow('Monthly Income', '$currency ${CurrencyFormatter.format(setupState.monthlyIncome)}'),
                           const Divider(height: 24),
                           _buildPlanRow('Auto-save Target', '${(setupState.savingsRate * 100).toInt()}%'),
                           const Divider(height: 24),
-                          _buildPlanRow('Fixed Costs', '$currency ${setupState.totalFixedCosts.toStringAsFixed(0)}'),
+                          _buildPlanRow('Fixed Costs', '$currency ${CurrencyFormatter.format(setupState.totalFixedCosts)}'),
                           const Divider(height: 24),
-                          _buildPlanRow('Free to Budget', '$currency ${setupState.freeToBudget.toStringAsFixed(0)}', isBold: true, color: Theme.of(context).primaryColor),
+                          _buildPlanRow('Free to Budget', '$currency ${CurrencyFormatter.format(setupState.freeToBudget)}', isBold: true, color: Theme.of(context).colorScheme.secondary),
                         ],
                       ),
                     ),
@@ -247,7 +248,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       return DropdownButton<String>(
                         value: currentCurrency,
                         underline: const SizedBox(),
-                        icon: Icon(Icons.arrow_drop_down, color: Theme.of(context).primaryColor),
+                        icon: Icon(Icons.arrow_drop_down, color: Theme.of(context).colorScheme.secondary),
                         items: [
                           DropdownMenuItem(value: '\$', child: Text('USD (\$)', style: GoogleFonts.manrope())),
                           DropdownMenuItem(value: '€', child: Text('EURO (€)', style: GoogleFonts.manrope())),
@@ -278,7 +279,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 label: const Text('Log Out'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.surface,
-                  foregroundColor: Theme.of(context).primaryColor,
+                  foregroundColor: Theme.of(context).colorScheme.secondary,
                   elevation: 0,
                 ),
               ),

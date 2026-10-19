@@ -76,12 +76,12 @@ class StepIncome extends ConsumerWidget {
           
           Center(
             child: isVariable
-                ? Text('Variable', style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 48, fontWeight: FontWeight.bold))
+                ? Text('Variable', style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 48, fontWeight: FontWeight.bold))
                 : Row(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(ref.watch(currencyProvider), style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 24, fontWeight: FontWeight.bold)),
+                      Text(ref.watch(currencyProvider), style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 24, fontWeight: FontWeight.bold)),
                       Text(
                         income.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},'),
                         style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 64, fontWeight: FontWeight.bold, height: 1.0),
@@ -166,7 +166,7 @@ class StepIncome extends ConsumerWidget {
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     title: Text('Salary Date', style: Theme.of(context).textTheme.bodyMedium),
-                    subtitle: Text(setupState.salaryDayOfMonth != null ? 'Day ${setupState.salaryDayOfMonth} of the month' : 'Not set', style: TextStyle(color: Theme.of(context).primaryColor)),
+                    subtitle: Text(setupState.salaryDayOfMonth != null ? 'Day ${setupState.salaryDayOfMonth} of the month' : 'Not set', style: TextStyle(color: Theme.of(context).colorScheme.secondary)),
                     trailing: Icon(Icons.calendar_today, size: 20),
                     onTap: () async {
                       final now = DateTime.now();
@@ -221,13 +221,13 @@ class StepIncome extends ConsumerWidget {
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
           color: isSelected ? Colors.transparent : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05),
-          border: Border.all(color: isSelected ? Theme.of(context).primaryColor : Colors.transparent, width: 1.5),
+          border: Border.all(color: isSelected ? Theme.of(context).colorScheme.secondary : Colors.transparent, width: 1.5),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Text(
           '${ref.watch(currencyProvider)} ${amount.toInt()}',
           style: TextStyle(
-            color: isSelected ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.onSurface,
+            color: isSelected ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.onSurface,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
           ),
         ),

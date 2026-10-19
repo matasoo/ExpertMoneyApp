@@ -6,6 +6,7 @@ import 'package:uuid/uuid.dart';
 import '../../domain/models/budget.dart';
 import '../../providers/budgets_provider.dart';
 import '../../../../core/utils/icon_utils.dart';
+import '../../../../core/utils/currency_formatter.dart';
 
 class AddBudgetBottomSheet extends ConsumerStatefulWidget {
   final BudgetModel? budgetToEdit;
@@ -37,7 +38,7 @@ class _AddBudgetBottomSheetState extends ConsumerState<AddBudgetBottomSheet> {
     super.initState();
     if (widget.budgetToEdit != null) {
       final b = widget.budgetToEdit!;
-      _limitController.text = b.limitAmount.toStringAsFixed(0);
+      _limitController.text =CurrencyFormatter.format(b.limitAmount);
       _selectedReset = b.resetPeriod;
       
       final bool isStandard = _categories.any((c) => c['name'] == b.category && c['name'] != 'Custom');
@@ -150,17 +151,17 @@ class _AddBudgetBottomSheetState extends ConsumerState<AddBudgetBottomSheet> {
                     decoration: BoxDecoration(
                       color: isSelected ? Theme.of(context).primaryColor.withValues(alpha: 0.1) : Theme.of(context).colorScheme.surface,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: isSelected ? Theme.of(context).primaryColor : Colors.transparent),
+                      border: Border.all(color: isSelected ? Theme.of(context).colorScheme.secondary : Colors.transparent),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(cat['icon'] as IconData, size: 18, color: isSelected ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.onSurface),
+                        Icon(cat['icon'] as IconData, size: 18, color: isSelected ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.onSurface),
                         SizedBox(width: 8),
                         Text(
                           cat['name']!,
                           style: GoogleFonts.manrope(
-                            color: isSelected ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.onSurface,
+                            color: isSelected ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.onSurface,
                             fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
                           ),
                         ),
@@ -202,7 +203,7 @@ class _AddBudgetBottomSheetState extends ConsumerState<AddBudgetBottomSheet> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text('${ref.watch(currencyProvider)} ', style: GoogleFonts.manrope(color: Theme.of(context).primaryColor, fontSize: 32, fontWeight: FontWeight.w800)),
+                  Text('${ref.watch(currencyProvider)} ', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.secondary, fontSize: 32, fontWeight: FontWeight.w800)),
                   IntrinsicWidth(
                     child: TextFormField(
                       controller: _limitController,
@@ -236,10 +237,10 @@ class _AddBudgetBottomSheetState extends ConsumerState<AddBudgetBottomSheet> {
                       decoration: BoxDecoration(
                         color: _selectedReset == 'Monthly' ? Theme.of(context).primaryColor.withValues(alpha: 0.1) : Theme.of(context).colorScheme.surface,
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: _selectedReset == 'Monthly' ? Theme.of(context).primaryColor : Colors.transparent),
+                        border: Border.all(color: _selectedReset == 'Monthly' ? Theme.of(context).colorScheme.secondary : Colors.transparent),
                       ),
                       alignment: Alignment.center,
-                      child: Text('Monthly', style: GoogleFonts.manrope(color: _selectedReset == 'Monthly' ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.w600)),
+                      child: Text('Monthly', style: GoogleFonts.manrope(color: _selectedReset == 'Monthly' ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.w600)),
                     ),
                   ),
                 ),
@@ -252,10 +253,10 @@ class _AddBudgetBottomSheetState extends ConsumerState<AddBudgetBottomSheet> {
                       decoration: BoxDecoration(
                         color: _selectedReset == 'Weekly' ? Theme.of(context).primaryColor.withValues(alpha: 0.1) : Theme.of(context).colorScheme.surface,
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: _selectedReset == 'Weekly' ? Theme.of(context).primaryColor : Colors.transparent),
+                        border: Border.all(color: _selectedReset == 'Weekly' ? Theme.of(context).colorScheme.secondary : Colors.transparent),
                       ),
                       alignment: Alignment.center,
-                      child: Text('Weekly', style: GoogleFonts.manrope(color: _selectedReset == 'Weekly' ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.w600)),
+                      child: Text('Weekly', style: GoogleFonts.manrope(color: _selectedReset == 'Weekly' ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.w600)),
                     ),
                   ),
                 ),

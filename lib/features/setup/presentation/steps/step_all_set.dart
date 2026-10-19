@@ -31,7 +31,7 @@ class StepAllSet extends ConsumerWidget {
               color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
-            child: Icon(Icons.check, color: Theme.of(context).primaryColor, size: 48),
+            child: Icon(Icons.check, color: Theme.of(context).colorScheme.secondary, size: 48),
           ).animate().scale(curve: Curves.easeOutBack, duration: 600.ms),
           
           SizedBox(height: 32),
@@ -62,11 +62,11 @@ class StepAllSet extends ConsumerWidget {
               children: [
                 _buildSummaryRow(context, 'Monthly income', '$currency ${state.monthlyIncome.toInt()}', Theme.of(context).colorScheme.onSurface),
                 Padding(padding: EdgeInsets.symmetric(vertical: 16), child: Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.15), height: 1)),
-                _buildSummaryRow(context, 'Auto-save (${(state.savingsRate * 100).toInt()}%)', '$currency ${state.autoSaveAmount.toInt()}', Theme.of(context).primaryColor),
+                _buildSummaryRow(context, 'Auto-save (${(state.savingsRate * 100).toInt()}%)', '$currency ${state.autoSaveAmount.toInt()}', Theme.of(context).colorScheme.secondary),
                 Padding(padding: EdgeInsets.symmetric(vertical: 16), child: Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.15), height: 1)),
                 _buildSummaryRow(context, 'Fixed costs', '$currency ${state.totalFixedCosts.toInt()}', Theme.of(context).colorScheme.onSurface),
                 Padding(padding: EdgeInsets.symmetric(vertical: 16), child: Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.15), height: 1)),
-                _buildSummaryRow(context, 'Free to budget', '$currency ${state.freeToBudget.toInt()}', Theme.of(context).primaryColor, isBold: true),
+                _buildSummaryRow(context, 'Free to budget', '$currency ${state.freeToBudget.toInt()}', Theme.of(context).colorScheme.secondary, isBold: true),
               ],
             ),
           ).animate().fadeIn(delay: 600.ms).slideY(begin: 0.1, end: 0),

@@ -6,6 +6,7 @@ import 'package:uuid/uuid.dart';
 import '../../domain/models/goal.dart';
 import '../../providers/goals_provider.dart';
 import '../../../wallet/providers/accounts_provider.dart';
+import '../../../../core/utils/currency_formatter.dart';
 
 class AddGoalBottomSheet extends ConsumerStatefulWidget {
   final GoalModel? goalToEdit;
@@ -42,10 +43,10 @@ class _AddGoalBottomSheetState extends ConsumerState<AddGoalBottomSheet> {
     if (widget.goalToEdit != null) {
       final goal = widget.goalToEdit!;
       _titleController.text = goal.title;
-      _targetController.text = goal.targetAmount.toStringAsFixed(0);
+      _targetController.text =CurrencyFormatter.format(goal.targetAmount);
       _dateController.text = goal.targetDate ?? '';
-      _monthlyController.text = goal.monthlyContribution.toStringAsFixed(0);
-      _currentController.text = goal.currentAmount.toStringAsFixed(0);
+      _monthlyController.text =CurrencyFormatter.format(goal.monthlyContribution);
+      _currentController.text =CurrencyFormatter.format(goal.currentAmount);
       _selectedColor = Color(goal.colorValue ?? Theme.of(context).primaryColor.toARGB32());
       _isAutoDeduct = goal.isAutoDeduct;
       _linkedAccountId = goal.linkedAccountId;
@@ -184,7 +185,7 @@ class _AddGoalBottomSheetState extends ConsumerState<AddGoalBottomSheet> {
                       ...ref.watch(accountsProvider).map((account) {
                         return DropdownMenuItem<String?>(
                           value: account.id,
-                          child: Text('${account.name} (${currency} ${account.balance.toStringAsFixed(0)})', style: GoogleFonts.manrope()),
+                          child: Text('${account.name} (${currency} ${CurrencyFormatter.format(account.balance)})', style: GoogleFonts.manrope()),
                         );
                       }).toList(),
                     ],

@@ -95,7 +95,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           'Money',
                           style: Theme.of(context).textTheme.titleLarge?.copyWith(
                                 fontWeight: FontWeight.bold,
-                                color: Theme.of(context).primaryColor,
+                                color: Theme.of(context).colorScheme.secondary,
                               ),
                         ),
                       ],
@@ -109,7 +109,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                             ),
                         children: [
                           TextSpan(text: 'Plan.\nSave.\n'),
-                          TextSpan(text: 'Grow.', style: TextStyle(color: Theme.of(context).primaryColor)),
+                          TextSpan(text: 'Grow.', style: TextStyle(color: Theme.of(context).colorScheme.secondary)),
                         ],
                       ),
                     ),
@@ -150,11 +150,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       ),
       child: Column(
         children: [
-          _buildBudgetBar('Food', '\$120 / \$180', 0.66, Theme.of(context).primaryColor),
+          _buildBudgetBar('Food', '\$120 / \$180', 0.66, Theme.of(context).colorScheme.secondary),
           SizedBox(height: 24),
-          _buildBudgetBar('Fuel', '\$170 / \$200', 0.85, Theme.of(context).primaryColor),
+          _buildBudgetBar('Fuel', '\$170 / \$200', 0.85, Theme.of(context).colorScheme.secondary),
           SizedBox(height: 24),
-          _buildBudgetBar('Fun', '\$20 / \$150', 0.13, Theme.of(context).primaryColor),
+          _buildBudgetBar('Fun', '\$20 / \$150', 0.13, Theme.of(context).colorScheme.secondary),
         ],
       ),
     );
@@ -206,7 +206,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 value: value,
                 strokeWidth: 12,
                 backgroundColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.15),
-                color: Theme.of(context).primaryColor,
+                color: Theme.of(context).colorScheme.secondary,
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,

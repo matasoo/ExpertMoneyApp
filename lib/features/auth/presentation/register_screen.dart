@@ -94,7 +94,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     'Money',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: Theme.of(context).primaryColor,
+                          color: Theme.of(context).colorScheme.secondary,
                         ),
                   ),
                 ],
@@ -183,7 +183,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           TextSpan(
                             text: 'Terms',
                             style: TextStyle(
-                              color: Theme.of(context).primaryColor,
+                              color: Theme.of(context).colorScheme.secondary,
                               fontWeight: FontWeight.w600,
                             ),
                             recognizer: TapGestureRecognizer()
@@ -198,7 +198,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           TextSpan(
                             text: 'Privacy Policy',
                             style: TextStyle(
-                              color: Theme.of(context).primaryColor,
+                              color: Theme.of(context).colorScheme.secondary,
                               fontWeight: FontWeight.w600,
                             ),
                             recognizer: TapGestureRecognizer()
@@ -222,10 +222,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 height: 56,
                 child: ElevatedButton(
                   onPressed: (_agreeToTerms && !ref.watch(authControllerProvider).isLoading) ? _register : null,
-                  style: ElevatedButton.styleFrom(
-                    disabledBackgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.3),
-                    disabledForegroundColor: Colors.black38,
-                  ),
                   child: ref.watch(authControllerProvider).isLoading
                       ? CircularProgressIndicator(color: Theme.of(context).colorScheme.onSurface)
                       : Text('Create account'),

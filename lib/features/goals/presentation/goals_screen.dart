@@ -14,6 +14,7 @@ import 'widgets/add_budget_bottom_sheet.dart';
 import '../../../../core/providers/shared_prefs_provider.dart';
 import '../../../../core/widgets/tutorial_slider.dart';
 import '../../wallet/providers/accounts_provider.dart';
+import '../../../core/utils/currency_formatter.dart';
 
 class GoalsScreen extends ConsumerStatefulWidget {
   const GoalsScreen({super.key});
@@ -23,49 +24,9 @@ class GoalsScreen extends ConsumerStatefulWidget {
 }
 
 class _GoalsScreenState extends ConsumerState<GoalsScreen> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final hasSeen = ref.read(hasSeenGoalsTutorialProvider);
-      if (!hasSeen) {
-        _showTutorial();
-      }
-    });
-  }
 
-  void _showTutorial() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => TutorialSlider(
-        slides: [
-          TutorialSlide(
-            title: 'Smart Budgets',
-            description: 'Set spending limits by category and track how much you have left.',
-            icon: Icons.track_changes,
-          ),
-          TutorialSlide(
-            title: 'Savings Goals',
-            description: 'Save for your dreams. Create goals and add contributions.',
-            icon: Icons.savings,
-            color: Colors.green,
-          ),
-          TutorialSlide(
-            title: 'Automated Tracking',
-            description: 'Set goals on autopilot with automatic monthly deductions.',
-            icon: Icons.autorenew,
-            color: Colors.blue,
-          ),
-        ],
-        onDismiss: () {
-          ref.read(hasSeenGoalsTutorialProvider.notifier).set(true);
-          Navigator.pop(context);
-        },
-      ),
-    );
-  }
+
+
 
   Future<void> _showAddFundsDialog(GoalModel goal) async {
     final currency = ref.read(currencyProvider);
@@ -90,7 +51,7 @@ class _GoalsScreenState extends ConsumerState<GoalsScreen> {
                 prefixText: ref.watch(currencyProvider),
                 prefixStyle: GoogleFonts.inter(color: Theme.of(context).colorScheme.onSurface, fontSize: 16),
                 enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2))),
-                focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Theme.of(context).primaryColor)),
+                focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary)),
               ),
             ),
           ],
@@ -114,7 +75,7 @@ class _GoalsScreenState extends ConsumerState<GoalsScreen> {
               }
               Navigator.pop(context);
             },
-            child: Text('Add', style: GoogleFonts.inter(color: Theme.of(context).primaryColor, fontWeight: FontWeight.w600)),
+            child: Text('Add', style: GoogleFonts.inter(color: Theme.of(context).colorScheme.secondary, fontWeight: FontWeight.w600)),
           ),
         ],
       ),
@@ -194,7 +155,7 @@ class _GoalsScreenState extends ConsumerState<GoalsScreen> {
                         children: [
                           Text(goal.title, style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w500)),
                           if (linkedAccountName.isNotEmpty)
-                            Text('Linked: $linkedAccountName', style: GoogleFonts.inter(color: Theme.of(context).primaryColor, fontSize: 11, fontWeight: FontWeight.w500)),
+                            Text('Linked: $linkedAccountName', style: GoogleFonts.inter(color: Theme.of(context).colorScheme.secondary, fontSize: 11, fontWeight: FontWeight.w500)),
                         ],
                       ),
                     ],
@@ -225,8 +186,8 @@ class _GoalsScreenState extends ConsumerState<GoalsScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('${ref.watch(currencyProvider)} ${currentAmount.toStringAsFixed(0)} / ${ref.watch(currencyProvider)} ${goal.targetAmount.toStringAsFixed(0)}', style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 13, fontWeight: FontWeight.w400)),
-                  Text('+${ref.watch(currencyProvider)} ${goal.monthlyContribution.toStringAsFixed(0)}/mo', style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 13, fontWeight: FontWeight.w400)),
+                  Text('${ref.watch(currencyProvider)} ${CurrencyFormatter.format(currentAmount)} / ${ref.watch(currencyProvider)} ${CurrencyFormatter.format(goal.targetAmount)}', style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 13, fontWeight: FontWeight.w400)),
+                  Text('+${ref.watch(currencyProvider)} ${CurrencyFormatter.format(goal.monthlyContribution)}/mo', style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 13, fontWeight: FontWeight.w400)),
                 ],
               ),
               SizedBox(height: 12),
@@ -252,7 +213,7 @@ class _GoalsScreenState extends ConsumerState<GoalsScreen> {
     double percentage = budget.limitAmount > 0 ? budget.currentSpent / budget.limitAmount : 0;
     if (percentage > 1.0) percentage = 1.0;
     final isOverBudget = budget.currentSpent > budget.limitAmount;
-    final barColor = isOverBudget ? Theme.of(context).colorScheme.error : Theme.of(context).primaryColor;
+    final barColor = isOverBudget ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.secondary;
 
     return Dismissible(
       key: Key(budget.id),
@@ -307,7 +268,7 @@ class _GoalsScreenState extends ConsumerState<GoalsScreen> {
                     ],
                   ),
                   Text(
-                    '${ref.watch(currencyProvider)} ${budget.currentSpent.toStringAsFixed(0)}',
+                    '${ref.watch(currencyProvider)} ${CurrencyFormatter.format(budget.currentSpent)}',
                     style: GoogleFonts.inter(color: isOverBudget ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.onSurface, fontSize: 16, fontWeight: FontWeight.w500),
                   ),
                 ],
@@ -317,7 +278,7 @@ class _GoalsScreenState extends ConsumerState<GoalsScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('${budget.resetPeriod} limit', style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 13, fontWeight: FontWeight.w400)),
-                  Text('of ${ref.watch(currencyProvider)} ${budget.limitAmount.toStringAsFixed(0)}', style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 13, fontWeight: FontWeight.w400)),
+                  Text('of ${ref.watch(currencyProvider)} ${CurrencyFormatter.format(budget.limitAmount)}', style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5), fontSize: 13, fontWeight: FontWeight.w400)),
                 ],
               ),
               SizedBox(height: 12),
@@ -391,7 +352,7 @@ class _GoalsScreenState extends ConsumerState<GoalsScreen> {
                     ).animate().fadeIn(duration: 600.ms),
                     SizedBox(height: 8),
                     Text(
-                      '${ref.watch(currencyProvider)} ${totalSaved.toStringAsFixed(2)}',
+                      '${ref.watch(currencyProvider)} ${CurrencyFormatter.format(totalSaved)}',
                       style: GoogleFonts.inter(color: Theme.of(context).colorScheme.onSurface, fontSize: 48, fontWeight: FontWeight.w300, letterSpacing: -2.0),
                     ).animate().fadeIn(duration: 600.ms).slideY(begin: -0.1, end: 0, curve: Curves.easeOut),
                   ],

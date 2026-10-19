@@ -49,8 +49,9 @@ class AuthController extends AsyncNotifier<void> {
           googleProvider.addScope('email');
           await FirebaseAuth.instance.signInWithPopup(googleProvider);
         } else {
-          final GoogleSignInAccount googleUser = await GoogleSignIn.instance.authenticate();
-          final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+          final GoogleSignInAccount? googleUser = await GoogleSignIn.instance.authenticate();
+          if (googleUser == null) throw 'Login canceled';
+          final GoogleSignInAuthentication googleAuth = googleUser.authentication;
           
           final AuthCredential credential = GoogleAuthProvider.credential(
             idToken: googleAuth.idToken,

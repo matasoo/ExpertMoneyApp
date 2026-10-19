@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../security/providers/privacy_provider.dart';
+import '../../../../core/utils/currency_formatter.dart';
 
 class DynamicBalanceCard extends ConsumerStatefulWidget {
   final int accountsCount;
@@ -97,8 +98,8 @@ class _DynamicBalanceCardState extends ConsumerState<DynamicBalanceCard> with Si
                     builder: (context, ref, child) {
                       final isPrivacyOn = ref.watch(privacyProvider);
                       final currency = ref.watch(currencyProvider);
-                      final displayBalance = isPrivacyOn ? '****' : widget.totalBalance.toStringAsFixed(2);
-                      final displayNetWorth = isPrivacyOn ? '****' : widget.netWorth.toStringAsFixed(2);
+                      final displayBalance = isPrivacyOn ? '****' :CurrencyFormatter.format(widget.totalBalance);
+                      final displayNetWorth = isPrivacyOn ? '****' :CurrencyFormatter.format(widget.netWorth);
                       final netWorthColor = widget.netWorth >= 0 
                           ? Theme.of(context).primaryColor 
                           : Theme.of(context).colorScheme.error;
@@ -124,14 +125,14 @@ class _DynamicBalanceCardState extends ConsumerState<DynamicBalanceCard> with Si
                     children: [
                       Icon(
                         widget.monthlyChange >= 0 ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down, 
-                        color: widget.monthlyChange >= 0 ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.error, 
+                        color: widget.monthlyChange >= 0 ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.error, 
                         size: 16
                       ),
                       SizedBox(width: 4),
                       Text(
-                        '${widget.monthlyChange >= 0 ? '+' : '-'} ${ref.watch(currencyProvider)} ${widget.monthlyChange.abs().toStringAsFixed(2)} in ${widget.currentMonthName}',
+                        '${widget.monthlyChange >= 0 ? '+' : '-'} ${ref.watch(currencyProvider)} ${CurrencyFormatter.format(widget.monthlyChange.abs())} in ${widget.currentMonthName}',
                         style: GoogleFonts.manrope(
-                          color: widget.monthlyChange >= 0 ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.error, 
+                          color: widget.monthlyChange >= 0 ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.error, 
                           fontSize: 13, 
                           fontWeight: FontWeight.w600
                         ),

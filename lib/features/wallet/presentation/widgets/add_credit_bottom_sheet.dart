@@ -102,6 +102,11 @@ class _AddCreditBottomSheetState extends ConsumerState<AddCreditBottomSheet> {
       builder: (context, child) {
         return Theme(
           data: ThemeData.dark().copyWith(
+            datePickerTheme: DatePickerThemeData(
+              cancelButtonStyle: TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.secondary),
+              confirmButtonStyle: TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.secondary),
+              todayForegroundColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.secondary),
+            ),
             colorScheme: ColorScheme.dark(
               primary: Theme.of(context).primaryColor,
               onPrimary: Theme.of(context).colorScheme.onSurface,
@@ -268,7 +273,7 @@ class _AddCreditBottomSheetState extends ConsumerState<AddCreditBottomSheet> {
                         color: isSelected ? Theme.of(context).primaryColor.withValues(alpha: 0.1) : Colors.transparent,
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      child: Icon(icon, color: isSelected ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.onSurface, size: 28),
+                      child: Icon(icon, color: isSelected ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.onSurface, size: 28),
                     ),
                   );
                 }).toList(),

@@ -104,7 +104,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
 
     final focusedPinTheme = defaultPinTheme.copyWith(
       decoration: defaultPinTheme.decoration?.copyWith(
-        border: Border.all(color: Theme.of(context).primaryColor, width: 2),
+        border: Border.all(color: Theme.of(context).colorScheme.secondary, width: 2),
       ),
     );
 
@@ -120,7 +120,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const SizedBox(height: 32),
-            Icon(Icons.mark_email_unread_outlined, size: 80, color: Theme.of(context).primaryColor),
+            Icon(Icons.mark_email_unread_outlined, size: 80, color: Theme.of(context).colorScheme.secondary),
             const SizedBox(height: 24),
             Text(
               'Enter Verification Code',

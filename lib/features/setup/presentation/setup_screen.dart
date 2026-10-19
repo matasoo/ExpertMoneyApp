@@ -103,7 +103,7 @@ class _SetupScreenState extends ConsumerState<SetupScreen> {
                     widthFactor: value,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
+                        color: Theme.of(context).colorScheme.secondary,
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),

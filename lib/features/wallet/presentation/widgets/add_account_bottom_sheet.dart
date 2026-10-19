@@ -179,7 +179,7 @@ class _AddAccountBottomSheetState extends ConsumerState<AddAccountBottomSheet> {
                         color: isSelected ? Theme.of(context).primaryColor.withValues(alpha: 0.1) : Colors.transparent,
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      child: Icon(icon, color: isSelected ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.onSurface, size: 28),
+                      child: Icon(icon, color: isSelected ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.onSurface, size: 28),
                     ),
                   );
                 }).toList(),

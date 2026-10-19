@@ -105,7 +105,7 @@ class StepProfile extends ConsumerWidget {
         decoration: BoxDecoration(
           color: isSelected ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: isSelected ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1)),
+          border: Border.all(color: isSelected ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -140,15 +140,15 @@ class StepProfile extends ConsumerWidget {
         decoration: BoxDecoration(
           color: isSelected ? Theme.of(context).primaryColor.withOpacity(0.1) : Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: isSelected ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.onSurface.withOpacity(0.1), width: 2),
+          border: Border.all(color: isSelected ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.onSurface.withOpacity(0.1), width: 2),
         ),
         child: Column(
           children: [
-            Icon(icon, size: 32, color: isSelected ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.onSurface),
+            Icon(icon, size: 32, color: isSelected ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.onSurface),
             const SizedBox(height: 12),
             Text(title, style: TextStyle(
               fontWeight: FontWeight.w600,
-              color: isSelected ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.onSurface,
+              color: isSelected ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.onSurface,
             )),
           ],
         ),

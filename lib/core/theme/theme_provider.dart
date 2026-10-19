@@ -17,8 +17,8 @@ class ThemeNotifier extends Notifier<ThemeMode> {
     if (themeString == 'light') return ThemeMode.light;
     if (themeString == 'dark') return ThemeMode.dark;
     
-    // Default to dark theme for ExpertMoney
-    return ThemeMode.dark;
+    // Default to the light theme for ExpertMoney
+    return ThemeMode.light;
   }
 
   Future<void> toggleTheme() async {

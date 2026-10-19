@@ -99,6 +99,11 @@ class _AddRecurringPaymentBottomSheetState extends ConsumerState<AddRecurringPay
       builder: (context, child) {
         return Theme(
           data: ThemeData.dark().copyWith(
+            datePickerTheme: DatePickerThemeData(
+              cancelButtonStyle: TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.secondary),
+              confirmButtonStyle: TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.secondary),
+              todayForegroundColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.secondary),
+            ),
             colorScheme: ColorScheme.dark(
               primary: Theme.of(context).primaryColor,
               onPrimary: Theme.of(context).colorScheme.onSurface,
@@ -124,6 +129,11 @@ class _AddRecurringPaymentBottomSheetState extends ConsumerState<AddRecurringPay
       builder: (context, child) {
         return Theme(
           data: ThemeData.dark().copyWith(
+            datePickerTheme: DatePickerThemeData(
+              cancelButtonStyle: TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.secondary),
+              confirmButtonStyle: TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.secondary),
+              todayForegroundColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.secondary),
+            ),
             colorScheme: ColorScheme.dark(
               primary: Theme.of(context).primaryColor,
               onPrimary: Theme.of(context).colorScheme.onSurface,
@@ -274,13 +284,13 @@ class _AddRecurringPaymentBottomSheetState extends ConsumerState<AddRecurringPay
                       decoration: BoxDecoration(
                         color: isSelected ? Theme.of(context).primaryColor.withValues(alpha: 0.2) : Theme.of(context).colorScheme.surface,
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: isSelected ? Theme.of(context).primaryColor : Colors.transparent),
+                        border: Border.all(color: isSelected ? Theme.of(context).colorScheme.secondary : Colors.transparent),
                       ),
                       alignment: Alignment.center,
                       child: Text(
                         name,
                         style: GoogleFonts.manrope(
-                          color: isSelected ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.onSurface,
+                          color: isSelected ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.onSurface,
                           fontWeight: isSelected ? FontWeight.w700 : FontWeight.w600,
                         ),
                       ),
@@ -309,7 +319,7 @@ class _AddRecurringPaymentBottomSheetState extends ConsumerState<AddRecurringPay
                         color: isSelected ? Theme.of(context).primaryColor.withValues(alpha: 0.1) : Colors.transparent,
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      child: Icon(icon, color: isSelected ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.onSurface, size: 28),
+                      child: Icon(icon, color: isSelected ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.onSurface, size: 28),
                     ),
                   );
                 }).toList(),

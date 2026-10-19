@@ -102,7 +102,7 @@ class _TutorialSliderState extends State<TutorialSlider> {
                       child: Icon(
                         slide.icon,
                         size: 64,
-                        color: slide.color ?? Theme.of(context).primaryColor,
+                        color: slide.color ?? Theme.of(context).colorScheme.secondary,
                       ),
                     ),
                     const SizedBox(height: 24),

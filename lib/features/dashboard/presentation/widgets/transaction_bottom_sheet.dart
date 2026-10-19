@@ -11,16 +11,18 @@ import 'package:image_picker/image_picker.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:flutter/foundation.dart'; // For kIsWeb
 import 'dart:io';
+import '../../../../core/utils/currency_formatter.dart';
 
 class TransactionBottomSheet extends ConsumerStatefulWidget {
-  const TransactionBottomSheet({super.key});
+  final bool isExpenseDefault;
+  const TransactionBottomSheet({super.key, this.isExpenseDefault = true});
 
   @override
   ConsumerState<TransactionBottomSheet> createState() => _TransactionBottomSheetState();
 }
 
 class _TransactionBottomSheetState extends ConsumerState<TransactionBottomSheet> {
-  bool _isExpense = true;
+  late bool _isExpense;
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _customCategoryController = TextEditingController();
@@ -42,6 +44,12 @@ class _TransactionBottomSheetState extends ConsumerState<TransactionBottomSheet>
     TransactionCategory.salary,
     TransactionCategory.other,
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _isExpense = widget.isExpenseDefault;
+  }
 
   @override
   void dispose() {
@@ -162,7 +170,7 @@ class _TransactionBottomSheetState extends ConsumerState<TransactionBottomSheet>
           _titleController.text = extractedTitle;
         }
         if (maxAmount > 0) {
-          _amountController.text = maxAmount.toStringAsFixed(2);
+          _amountController.text =CurrencyFormatter.format(maxAmount);
         }
       });
       
@@ -245,13 +253,13 @@ class _TransactionBottomSheetState extends ConsumerState<TransactionBottomSheet>
                       decoration: BoxDecoration(
                         color: !_isExpense ? Theme.of(context).primaryColor.withValues(alpha: 0.2) : Colors.transparent,
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: !_isExpense ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.15)),
+                        border: Border.all(color: !_isExpense ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.15)),
                       ),
                       alignment: Alignment.center,
                       child: Text(
                         'Income',
                         style: GoogleFonts.manrope(
-                          color: !_isExpense ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                          color: !_isExpense ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -277,7 +285,7 @@ class _TransactionBottomSheetState extends ConsumerState<TransactionBottomSheet>
                 contentPadding: EdgeInsets.zero,
                 suffixIcon: IconButton(
                   onPressed: _scanReceipt,
-                  icon: Icon(Icons.document_scanner, color: Theme.of(context).primaryColor),
+                  icon: Icon(Icons.document_scanner, color: Theme.of(context).colorScheme.secondary),
                   tooltip: 'Scan Receipt',
                 ),
               ),

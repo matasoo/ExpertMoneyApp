@@ -21,7 +21,7 @@ class ExpertMoneyLogo extends ConsumerWidget {
             children: [
               TextSpan(
                 text: 'Money',
-                style: GoogleFonts.manrope(color: Theme.of(context).primaryColor),
+                style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.secondary),
               ),
             ],
           ),

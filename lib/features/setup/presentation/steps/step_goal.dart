@@ -78,14 +78,14 @@ class StepGoal extends ConsumerWidget {
         padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isSelected ? Theme.of(context).primaryColor.withValues(alpha: 0.05) : Theme.of(context).colorScheme.surface,
-          border: Border.all(color: isSelected ? Theme.of(context).primaryColor : Colors.transparent, width: 2),
+          border: Border.all(color: isSelected ? Theme.of(context).colorScheme.secondary : Colors.transparent, width: 2),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Icon(icon, color: isSelected ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), size: 28),
+            Icon(icon, color: isSelected ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), size: 28),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
@@ -93,7 +93,7 @@ class StepGoal extends ConsumerWidget {
                 Text(title, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
                 if (subtitle.isNotEmpty) ...[
                   SizedBox(height: 4),
-                  Text(subtitle, style: TextStyle(color: isSelected ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 12)),
+                  Text(subtitle, style: TextStyle(color: isSelected ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7), fontSize: 12)),
                 ]
               ],
             ),

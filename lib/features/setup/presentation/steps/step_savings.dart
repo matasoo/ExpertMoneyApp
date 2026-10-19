@@ -85,7 +85,7 @@ class StepSavings extends ConsumerWidget {
                         value: value,
                         strokeWidth: 16,
                         backgroundColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05),
-                        color: Theme.of(context).primaryColor,
+                        color: Theme.of(context).colorScheme.secondary,
                       ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -149,13 +149,13 @@ class StepSavings extends ConsumerWidget {
         padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         decoration: BoxDecoration(
           color: isSelected ? Colors.transparent : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05),
-          border: Border.all(color: isSelected ? Theme.of(context).primaryColor : Colors.transparent, width: 1.5),
+          border: Border.all(color: isSelected ? Theme.of(context).colorScheme.secondary : Colors.transparent, width: 1.5),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Text(
           '${(targetRate * 100).toInt()}%',
           style: TextStyle(
-            color: isSelected ? Theme.of(context).primaryColor : Theme.of(context).colorScheme.onSurface,
+            color: isSelected ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.onSurface,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
           ),
         ),

@@ -89,3 +89,43 @@ final hasSeenGoalsTutorialProvider = NotifierProvider<HasSeenGoalsTutorialNotifi
   return HasSeenGoalsTutorialNotifier();
 });
 
+class ChartVisibilityNotifier extends Notifier<bool> {
+  final String keyName;
+  ChartVisibilityNotifier(this.keyName);
+
+  @override
+  bool build() {
+    final prefs = ref.watch(sharedPreferencesProvider);
+    return prefs.getBool(keyName) ?? true;
+  }
+
+  void set(bool value) {
+    state = value;
+    ref.read(sharedPreferencesProvider).setBool(keyName, value);
+  }
+}
+
+final showSpendingOverviewProvider = NotifierProvider<ChartVisibilityNotifier, bool>(() {
+  return ChartVisibilityNotifier('showSpendingOverview');
+});
+
+final showWeeklyBreakdownProvider = NotifierProvider<ChartVisibilityNotifier, bool>(() {
+  return ChartVisibilityNotifier('showWeeklyBreakdown');
+});
+
+final showCategoriesChartProvider = NotifierProvider<ChartVisibilityNotifier, bool>(() {
+  return ChartVisibilityNotifier('showCategoriesChart');
+});
+
+final showIncomeExpensesChartProvider = NotifierProvider<ChartVisibilityNotifier, bool>(() {
+  return ChartVisibilityNotifier('showIncomeExpensesChart');
+});
+
+final showTopMerchantsChartProvider = NotifierProvider<ChartVisibilityNotifier, bool>(() {
+  return ChartVisibilityNotifier('showTopMerchantsChart');
+});
+
+final showBudgetsCardProvider = NotifierProvider<ChartVisibilityNotifier, bool>(() {
+  return ChartVisibilityNotifier('showBudgetsCard');
+});
+

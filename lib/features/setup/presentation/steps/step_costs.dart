@@ -113,7 +113,7 @@ class StepCosts extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Center(
-                        child: Text('+ Add another', style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold)),
+                        child: Text('+ Add another', style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontWeight: FontWeight.bold)),
                       ),
                     ),
                   ).animate().fadeIn(delay: 400.ms);
@@ -150,7 +150,7 @@ class StepCosts extends ConsumerWidget {
                         children: [
                           Text(cost.name, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
                           if (cost.amount == 0)
-                            Text('Tap to set ${ref.watch(currencyProvider)}', style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold))
+                            Text('Tap to set ${ref.watch(currencyProvider)}', style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontWeight: FontWeight.bold))
                           else
                             Text('${ref.watch(currencyProvider)} ${cost.amount.toInt()}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                         ],
@@ -169,7 +169,7 @@ class StepCosts extends ConsumerWidget {
             decoration: BoxDecoration(
               color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Theme.of(context).primaryColor.withValues(alpha: 0.3)),
+              border: Border.all(color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.3)),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -177,7 +177,7 @@ class StepCosts extends ConsumerWidget {
                 Text('Total fixed', style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.w600, fontSize: 16)),
                 Text(
                   '${ref.watch(currencyProvider)} ${setupState.totalFixedCosts.toInt()}',
-                  style: TextStyle(color: Theme.of(context).primaryColor, fontWeight: FontWeight.bold, fontSize: 20),
+                  style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontWeight: FontWeight.bold, fontSize: 20),
                 ),
               ],
             ),

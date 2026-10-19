@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/providers/currency_provider.dart';
 import '../../domain/models/transaction.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import '../../../../core/utils/currency_formatter.dart';
 
 class MoneyOverviewBottomSheet extends ConsumerWidget {
   final List<TransactionModel> transactions;
@@ -142,17 +143,17 @@ class MoneyOverviewBottomSheet extends ConsumerWidget {
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Theme.of(context).primaryColor.withValues(alpha: 0.2)),
+                  border: Border.all(color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.2)),
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.insights, color: Theme.of(context).primaryColor, size: 24),
+                    Icon(Icons.insights, color: Theme.of(context).colorScheme.secondary, size: 24),
                     const SizedBox(width: 16),
                     Expanded(
                       child: Text(
                         remaining > 0 
-                          ? 'Great job! You are saving ${(remaining / totalIncome * 100).toStringAsFixed(0)}% of your income this month.'
-                          : 'Your highest expense this month is ${sortedCategories.first.key} at $currency ${sortedCategories.first.value.toStringAsFixed(0)}.',
+                          ? 'Great job! You are saving ${CurrencyFormatter.format((remaining / totalIncome * 100))}% of your income this month.'
+                          : 'Your highest expense this month is ${sortedCategories.first.key} at $currency ${CurrencyFormatter.format(sortedCategories.first.value)}.',
                         style: GoogleFonts.manrope(
                           color: Theme.of(context).colorScheme.onSurface,
                           fontSize: 14,
@@ -171,7 +172,7 @@ class MoneyOverviewBottomSheet extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Income (100%)', style: GoogleFonts.manrope(fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.onSurface)),
-                Text('$currency ${totalIncome.toStringAsFixed(0)}', style: GoogleFonts.manrope(fontWeight: FontWeight.w800, color: Theme.of(context).colorScheme.onSurface)),
+                Text('$currency ${CurrencyFormatter.format(totalIncome)}', style: GoogleFonts.manrope(fontWeight: FontWeight.w800, color: Theme.of(context).colorScheme.onSurface)),
               ],
             ),
             const SizedBox(height: 24),
@@ -216,7 +217,7 @@ class MoneyOverviewBottomSheet extends ConsumerWidget {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              Text('$currency ${cat.value.toStringAsFixed(0)}', style: GoogleFonts.manrope(fontWeight: FontWeight.w700)),
+                              Text('$currency ${CurrencyFormatter.format(cat.value)}', style: GoogleFonts.manrope(fontWeight: FontWeight.w700)),
                               Text('${percentage.toStringAsFixed(1)}%', style: GoogleFonts.manrope(fontSize: 12, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6))),
                             ],
                           ),
@@ -241,14 +242,14 @@ class MoneyOverviewBottomSheet extends ConsumerWidget {
                           Expanded(
                             child: Text(
                               'Remaining (Savings)',
-                              style: GoogleFonts.manrope(fontSize: 15, fontWeight: FontWeight.w700, color: Theme.of(context).primaryColor),
+                              style: GoogleFonts.manrope(fontSize: 15, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.secondary),
                             ),
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              Text('$currency ${remaining.toStringAsFixed(0)}', style: GoogleFonts.manrope(fontWeight: FontWeight.w800, color: Theme.of(context).primaryColor)),
-                              Text('${(remaining / totalIncome * 100).toStringAsFixed(1)}%', style: GoogleFonts.manrope(fontSize: 12, fontWeight: FontWeight.w600, color: Theme.of(context).primaryColor.withValues(alpha: 0.7))),
+                              Text('$currency ${CurrencyFormatter.format(remaining)}', style: GoogleFonts.manrope(fontWeight: FontWeight.w800, color: Theme.of(context).colorScheme.secondary)),
+                              Text('${CurrencyFormatter.format((remaining / totalIncome * 100))}%', style: GoogleFonts.manrope(fontSize: 12, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.7))),
                             ],
                           ),
                         ],

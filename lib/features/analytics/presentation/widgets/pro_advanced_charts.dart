@@ -4,6 +4,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import 'dart:math' as math;
 import '../../../dashboard/domain/models/transaction.dart';
+import '../../../../core/utils/currency_formatter.dart';
 
 class ProCategoriesChart extends StatelessWidget {
   final List<TransactionModel> transactions;
@@ -44,14 +45,24 @@ class ProCategoriesChart extends StatelessWidget {
       topCategories.add(MapEntry('Other', otherTotal));
     }
 
-    final colors = [
-      const Color(0xFF4ADE80),
-      const Color(0xFF6EE7B7),
-      const Color(0xFFA7F3D0),
-      const Color(0xFF4B5563),
-      const Color(0xFF374151),
-      const Color(0xFF1F2937),
-    ];
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = isDark
+        ? const [
+            Color(0xFFD6F26A),
+            Color(0xFF9BC53D),
+            Color(0xFF5E8C2A),
+            Color(0xFF4B5563),
+            Color(0xFF374151),
+            Color(0xFF1F2937),
+          ]
+        : const [
+            Color(0xFF111111),
+            Color(0xFF3B7A1A),
+            Color(0xFF8DB63C),
+            Color(0xFFD6F26A),
+            Color(0xFF9A9A92),
+            Color(0xFFC9C9C0),
+          ];
 
     return Container(
       padding: const EdgeInsets.all(24),
@@ -65,13 +76,13 @@ class ProCategoriesChart extends StatelessWidget {
         children: [
           Text(
             'CATEGORIES',
-            style: GoogleFonts.manrope(color: Colors.grey[400], fontSize: 12, letterSpacing: 1.2, fontWeight: FontWeight.bold),
+            style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55), fontSize: 12, letterSpacing: 1.2, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 24),
           if (totalExpense == 0)
             Center(child: Padding(
               padding: const EdgeInsets.all(20.0),
-              child: Text('No expenses this period', style: GoogleFonts.manrope(color: Colors.grey[500])),
+              child: Text('No expenses this period', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6))),
             ))
           else
             Row(
@@ -103,8 +114,8 @@ class ProCategoriesChart extends StatelessWidget {
                         Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text('$currency ${totalExpense.toStringAsFixed(0)}', style: GoogleFonts.manrope(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w800)),
-                            Text('this period', style: GoogleFonts.manrope(color: Colors.grey[500], fontSize: 11)),
+                            Text('$currency ${CurrencyFormatter.format(totalExpense)}', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 20, fontWeight: FontWeight.w800)),
+                            Text('this period', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6), fontSize: 11)),
                           ],
                         ),
                       ],
@@ -117,8 +128,8 @@ class ProCategoriesChart extends StatelessWidget {
                   child: Column(
                     children: List.generate(topCategories.length, (i) {
                       final item = topCategories[i];
-                      final percentage = (item.value / totalExpense * 100).toStringAsFixed(0);
-                      return _buildLegendItem(colors[i % colors.length], item.key, '$percentage%');
+                      final percentage =CurrencyFormatter.format((item.value / totalExpense * 100));
+                      return _buildLegendItem(context, colors[i % colors.length], item.key, '$percentage%');
                     }),
                   ),
                 ),
@@ -129,15 +140,15 @@ class ProCategoriesChart extends StatelessWidget {
     );
   }
 
-  Widget _buildLegendItem(Color color, String name, String percentage) {
+  Widget _buildLegendItem(BuildContext context, Color color, String name, String percentage) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Row(
         children: [
           Container(width: 10, height: 10, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
           const SizedBox(width: 10),
-          Expanded(child: Text(name, style: GoogleFonts.manrope(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600), overflow: TextOverflow.ellipsis)),
-          Text(percentage, style: GoogleFonts.manrope(color: Colors.grey[400], fontSize: 13, fontWeight: FontWeight.w500)),
+          Expanded(child: Text(name, style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 13, fontWeight: FontWeight.w600), overflow: TextOverflow.ellipsis)),
+          Text(percentage, style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55), fontSize: 13, fontWeight: FontWeight.w500)),
         ],
       ),
     );
@@ -198,17 +209,17 @@ class ProIncomeExpensesChart extends StatelessWidget {
             children: [
               Text(
                 'INCOME VS EXPENSES',
-                style: GoogleFonts.manrope(color: Colors.grey[400], fontSize: 12, letterSpacing: 1.2, fontWeight: FontWeight.bold),
+                style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55), fontSize: 12, letterSpacing: 1.2, fontWeight: FontWeight.bold),
               ),
               Row(
                 children: [
-                  Container(width: 8, height: 8, decoration: const BoxDecoration(color: Color(0xFF4ADE80), shape: BoxShape.circle)),
+                  Container(width: 8, height: 8, decoration: BoxDecoration(color: Theme.of(context).colorScheme.secondary, shape: BoxShape.circle)),
                   const SizedBox(width: 4),
-                  Text('Income', style: GoogleFonts.manrope(color: Colors.grey[400], fontSize: 11)),
+                  Text('Income', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55), fontSize: 11)),
                   const SizedBox(width: 12),
                   Container(width: 8, height: 8, decoration: const BoxDecoration(color: Color(0xFF4B5563), shape: BoxShape.circle)),
                   const SizedBox(width: 4),
-                  Text('Expenses', style: GoogleFonts.manrope(color: Colors.grey[400], fontSize: 11)),
+                  Text('Expenses', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55), fontSize: 11)),
                 ],
               ),
             ],
@@ -245,20 +256,20 @@ class ProIncomeExpensesChart extends StatelessWidget {
                 gridData: FlGridData(show: false),
                 borderData: FlBorderData(show: false),
                 barGroups: List.generate(months.length, (i) {
-                  return _buildGroup(i, monthlyData[i]['income']!, monthlyData[i]['expense']!);
+                  return _buildGroup(context, i, monthlyData[i]['income']!, monthlyData[i]['expense']!);
                 }),
               ),
             ),
           ),
           const SizedBox(height: 24),
-          const Divider(color: Color(0xFF27272A)),
+          Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08)),
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildSummaryItem('Income', '$currency ${currentIncome.toStringAsFixed(0)}', Colors.white),
-              _buildSummaryItem('Expenses', '$currency ${currentExpense.toStringAsFixed(0)}', Colors.white),
-              _buildSummaryItem('Saved', '${saved >= 0 ? '+' : '-'}$currency ${saved.abs().toStringAsFixed(0)}', saved >= 0 ? const Color(0xFF4ADE80) : Colors.redAccent),
+              _buildSummaryItem(context, 'Income', '$currency ${CurrencyFormatter.format(currentIncome)}', Theme.of(context).colorScheme.onSurface),
+              _buildSummaryItem(context, 'Expenses', '$currency ${CurrencyFormatter.format(currentExpense)}', Theme.of(context).colorScheme.onSurface),
+              _buildSummaryItem(context, 'Saved', '${saved >= 0 ? '+' : '-'}$currency ${CurrencyFormatter.format(saved.abs())}', saved >= 0 ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.error),
             ],
           ),
         ],
@@ -266,22 +277,23 @@ class ProIncomeExpensesChart extends StatelessWidget {
     );
   }
 
-  BarChartGroupData _buildGroup(int x, double income, double expense) {
+  BarChartGroupData _buildGroup(BuildContext context, int x, double income, double expense) {
+    final color = Theme.of(context).colorScheme.secondary;
     return BarChartGroupData(
       x: x,
       barsSpace: 4,
       barRods: [
-        BarChartRodData(toY: income, color: const Color(0xFF4ADE80), width: 12, borderRadius: BorderRadius.circular(2)),
+        BarChartRodData(toY: income, color: color, width: 12, borderRadius: BorderRadius.circular(2)),
         BarChartRodData(toY: expense, color: const Color(0xFF4B5563), width: 12, borderRadius: BorderRadius.circular(2)),
       ],
     );
   }
 
-  Widget _buildSummaryItem(String title, String amount, Color amountColor) {
+  Widget _buildSummaryItem(BuildContext context, String title, String amount, Color amountColor) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: GoogleFonts.manrope(color: Colors.grey[400], fontSize: 11)),
+        Text(title, style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55), fontSize: 11)),
         const SizedBox(height: 4),
         Text(amount, style: GoogleFonts.manrope(color: amountColor, fontSize: 16, fontWeight: FontWeight.w800)),
       ],
@@ -323,25 +335,25 @@ class ProTopMerchantsChart extends StatelessWidget {
         children: [
           Text(
             'TOP MERCHANTS',
-            style: GoogleFonts.manrope(color: Colors.grey[400], fontSize: 12, letterSpacing: 1.2, fontWeight: FontWeight.bold),
+            style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55), fontSize: 12, letterSpacing: 1.2, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 24),
           if (topMerchants.isEmpty)
             Center(child: Padding(
               padding: const EdgeInsets.all(20.0),
-              child: Text('No expenses this period', style: GoogleFonts.manrope(color: Colors.grey[500])),
+              child: Text('No expenses this period', style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6))),
             ))
           else
             ...topMerchants.map((m) {
               final percentage = (m.value / maxAmount).clamp(0.0, 1.0);
-              return _buildMerchantItem(m.key, '$currency ${m.value.toStringAsFixed(2)}', percentage);
+              return _buildMerchantItem(context, m.key, '$currency ${CurrencyFormatter.format(m.value)}', percentage);
             }),
         ],
       ),
     );
   }
 
-  Widget _buildMerchantItem(String name, String amount, double percentage) {
+  Widget _buildMerchantItem(BuildContext context, String name, String amount, double percentage) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 20.0),
       child: Column(
@@ -350,8 +362,8 @@ class ProTopMerchantsChart extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(name, style: GoogleFonts.manrope(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600)),
-              Text(amount, style: GoogleFonts.manrope(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w800)),
+              Text(name, style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 14, fontWeight: FontWeight.w600)),
+              Text(amount, style: GoogleFonts.manrope(color: Theme.of(context).colorScheme.onSurface, fontSize: 14, fontWeight: FontWeight.w800)),
             ],
           ),
           const SizedBox(height: 8),
@@ -360,13 +372,13 @@ class ProTopMerchantsChart extends StatelessWidget {
               Container(
                 height: 6, // Slightly thicker
                 width: double.infinity,
-                decoration: BoxDecoration(color: const Color(0xFF27272A), borderRadius: BorderRadius.circular(3)),
+                decoration: BoxDecoration(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08), borderRadius: BorderRadius.circular(3)),
               ),
               FractionallySizedBox(
                 widthFactor: percentage,
                 child: Container(
                   height: 6,
-                  decoration: BoxDecoration(color: const Color(0xFF4ADE80), borderRadius: BorderRadius.circular(3)),
+                  decoration: BoxDecoration(color: Theme.of(context).colorScheme.secondary, borderRadius: BorderRadius.circular(3)),
                 ),
               ),
             ],

@@ -46,7 +46,7 @@ class _AppLockScreenState extends ConsumerState<AppLockScreen> {
               Icon(
                 Icons.lock_outline_rounded,
                 size: 80,
-                color: Theme.of(context).primaryColor,
+                color: Theme.of(context).colorScheme.secondary,
               ),
               const SizedBox(height: 24),
               Text(

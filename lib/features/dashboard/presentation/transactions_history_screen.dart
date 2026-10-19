@@ -4,6 +4,7 @@ import '../../../core/providers/currency_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../domain/models/transaction.dart';
 import '../providers/transactions_provider.dart';
+import '../../../core/utils/currency_formatter.dart';
 
 class TransactionsHistoryScreen extends ConsumerWidget {
   const TransactionsHistoryScreen({super.key});
@@ -136,8 +137,8 @@ class TransactionsHistoryScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    t.isExpense ? '- ${ref.watch(currencyProvider)} ${t.amount.toStringAsFixed(2)}' : '+ ${ref.watch(currencyProvider)} ${t.amount.toStringAsFixed(2)}',
-                    style: GoogleFonts.manrope(color: t.isExpense ? Color(0xFFE74C3C) : Theme.of(context).primaryColor, fontSize: 16, fontWeight: FontWeight.w800),
+                    t.isExpense ? '- ${ref.watch(currencyProvider)} ${CurrencyFormatter.format(t.amount)}' : '+ ${ref.watch(currencyProvider)} ${CurrencyFormatter.format(t.amount)}',
+                    style: GoogleFonts.manrope(color: t.isExpense ? Color(0xFFE74C3C) : Theme.of(context).colorScheme.secondary, fontSize: 16, fontWeight: FontWeight.w800),
                   ),
                   SizedBox(height: 4),
                   Text(
